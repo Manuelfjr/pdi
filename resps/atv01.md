@@ -249,3 +249,4 @@ c) Através do cálculo da dessaturação, como abaixo:
 
 Primeiro, vamos visualizar a matriz formada pela combinação de R, G e B, dada abaixo:
 
+![q06-01](https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-01.png?raw=true)
