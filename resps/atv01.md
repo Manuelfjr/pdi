@@ -1,5 +1,4 @@
-# Atividade: Teoria da Utilidade
-
+# Atividade 01
 
 * **Aluno:** Manuel Ferreira Junior
 * **Disciplina:** Processamento Digital de Imagens
@@ -100,7 +99,7 @@ Sabendo-se que a forma para equallização é a abaixo:
 
 * **Imagem anexo**
 
-![q4](/assets/atv04-q04.png)
+![q4](https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q04.png?raw=true)
 
 # Questão 05:
 
