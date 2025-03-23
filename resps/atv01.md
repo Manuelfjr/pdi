@@ -412,3 +412,6 @@ Z = (R + G + B) / 3 = (R / 3) + (G / 3) + (B / 3) =
 
 Resultando na imagem:
 
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-02.png?raw=true" alt="q06-02" width="400"/>
+</p>
