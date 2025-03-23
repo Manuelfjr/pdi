@@ -249,4 +249,166 @@ c) Através do cálculo da dessaturação, como abaixo:
 
 Primeiro, vamos visualizar a matriz formada pela combinação de R, G e B, dada abaixo:
 
-![q06-01](https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-01.png?raw=true)
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-01.png?raw=true" alt="q06-01" width="400"/>
+</p>
+
+
+## Item A) 
+
+Vamos aplicar a média dos termos, então temos:
+
+<p>
+    Z = (R + G + B) / 3 = (R / 3) + (G / 3) + (B / 3)
+</p>
+
+
+Onde:
+
+<div style="display: flex;">
+R / 3 = 
+  <table>
+    <tr>
+      <td>(255/3)</td><td>(240/3)</td><td>(200/3)</td><td>(150/3)</td><td>(120/3)</td>
+    </tr>
+    <tr>
+      <td>(230/3)</td><td>(220/3)</td><td>(180/3)</td><td>(160/3)</td><td>(100/3)</td>
+    </tr>
+    <tr>
+      <td>(210/3)</td><td>(190/3)</td><td>(170/3)</td><td>(145/3)</td><td>(90/3)</td>
+    </tr>
+    <tr>
+      <td>(170/3)</td><td>(160/3)</td><td>(140/3)</td><td>(130/3)</td><td>(80/3)</td>
+    </tr>
+    <tr>
+      <td>(185/3)</td><td>(165/3)</td><td>(155/3)</td><td>(135/3)</td><td>(122/3)</td>
+    </tr>
+  </table>
+  = 
+    <table>
+    <tr>
+        <td>85</td><td>80</td><td>67</td><td>50</td><td>40</td>
+    </tr>
+    <tr>
+        <td>77</td><td>73</td><td>60</td><td>53</td><td>33</td>
+    </tr>
+    <tr>
+        <td>70</td><td>63</td><td>57</td><td>48</td><td>30</td>
+    </tr>
+    <tr>
+        <td>57</td><td>53</td><td>47</td><td>43</td><td>27</td>
+    </tr>
+    <tr>
+        <td>62</td><td>55</td><td>52</td><td>45</td><td>41</td>
+    </tr>
+    </table>
+</div>
+
+
+
+<div style="display: flex;">
+G / 3 = 
+  <table>
+    <tr>
+      <td>(255/3)</td><td>(240/3)</td><td>(230/3)</td><td>(235/3)</td><td>(210/3)</td>
+    </tr>
+    <tr>
+      <td>(240/3)</td><td>(245/3)</td><td>(250/3)</td><td>(255/3)</td><td>(180/3)</td>
+    </tr>
+    <tr>
+      <td>(230/3)</td><td>(220/3)</td><td>(0/3)</td><td>(230/3)</td><td>(200/3)</td>
+    </tr>
+    <tr>
+      <td>(240/3)</td><td>(245/3)</td><td>(250/3)</td><td>(255/3)</td><td>(180/3)</td>
+    </tr>
+    <tr>
+      <td>(255/3)</td><td>(240/3)</td><td>(230/3)</td><td>(235/3)</td><td>(210/3)</td>
+    </tr>
+  </table>
+  = 
+  <table>
+    <tr>
+        <td>85</td><td>80</td><td>77</td><td>78</td><td>70</td>
+    </tr>
+    <tr>
+        <td>80</td><td>82</td><td>83</td><td>85</td><td>60</td>
+    </tr>
+    <tr>
+        <td>77</td><td>73</td><td>0</td><td>77</td><td>67</td>
+    </tr>
+    <tr>
+        <td>80</td><td>82</td><td>83</td><td>85</td><td>60</td>
+    </tr>
+    <tr>
+        <td>85</td><td>80</td><td>77</td><td>78</td><td>70</td>
+    </tr>
+  </table>
+</div>
+
+
+<div style="display: flex;">
+B / 3 = 
+  <table>
+    <tr>
+      <td>(255/3)</td><td>(255/3)</td><td>(200/3)</td><td>(180/3)</td><td>(160/3)</td>
+    </tr>
+    <tr>
+      <td>(240/3)</td><td>(230/3)</td><td>(190/3)</td><td>(140/3)</td><td>(120/3)</td>
+    </tr>
+    <tr>
+      <td>(245/3)</td><td>(235/3)</td><td>(0/3)</td><td>(180/3)</td><td>(160/3)</td>
+    </tr>
+    <tr>
+      <td>(240/3)</td><td>(230/3)</td><td>(190/3)</td><td>(140/3)</td><td>(120/3)</td>
+    </tr>
+    <tr>
+      <td>(255/3)</td><td>(255/3)</td><td>(200/3)</td><td>(180/3)</td><td>(160/3)</td>
+    </tr>
+  </table>
+  = 
+  <table>
+    <tr>
+        <td>85</td><td>85</td><td>67</td><td>60</td><td>53</td>
+    </tr>
+    <tr>
+        <td>80</td><td>77</td><td>63</td><td>47</td><td>40</td>
+    </tr>
+    <tr>
+        <td>82</td><td>78</td><td>0</td><td>60</td><td>53</td>
+    </tr>
+    <tr>
+        <td>80</td><td>77</td><td>63</td><td>47</td><td>40</td>
+    </tr>
+    <tr>
+        <td>85</td><td>85</td><td>67</td><td>60</td><td>53</td>
+    </tr>
+  </table>
+</div>
+
+
+Logo, temos que:
+
+
+<div style="display: flex;">
+Z = (R + G + B) / 3 = (R / 3) + (G / 3) + (B / 3) = 
+  <table>
+    <tr>
+        <td>255</td><td>245</td><td>210</td><td>188</td><td>163</td>
+    </tr>
+    <tr>
+        <td>237</td><td>232</td><td>207</td><td>185</td><td>133</td>
+    </tr>
+    <tr>
+        <td>228</td><td>215</td><td>57</td><td>185</td><td>150</td>
+    </tr>
+    <tr>
+        <td>217</td><td>212</td><td>193</td><td>175</td><td>127</td>
+    </tr>
+    <tr>
+        <td>232</td><td>220</td><td>195</td><td>183</td><td>164</td>
+    </tr>
+  </table>
+</div>
+
+Resultando na imagem:
+
