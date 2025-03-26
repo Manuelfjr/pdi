@@ -3,19 +3,82 @@
 * **Aluno:** Manuel Ferreira Junior
 * **Disciplina:** Processamento Digital de Imagens
 
+# Questão 01
+
+**Considere a imagem do cameraman na atividade (120x120 pixels).**
+
+**A fotografia (física) original foi digitalizada com 75 dpi, gerando uma imagem com 120 x 120 pixels. Após a digitalização, o usuário achou que a imagem ficou pequena e decidiu ampliá-la para o dobro do tamanho (240x240 pixels). Disserte sobre o que haverá de semelhanças e diferenças entre essa imagem ampliada e uma imagem gerada por um novo processo de digitalização feito a 150 dpi.**
+
+**R.:**
+
+* **Semelhanças**:
+  
+  * **Mesma imagem**: apesar dos processos de digitalização serem diferentes (um a 75 dpi e outro a 150 dpi), a imagem devera representar o mesmo cenário.
+  
+  * **Dimensões**: as dimensões devem se conservar.
+  
+* **Diferenças**:
+  
+  * **Qualidade**: Qualidade da iamgem pode ser reduzida drasticamente quando comparamos uma imagem de 75 dpi com uma de 150 dpi.
+
+  * **Nitidez**: A imagem com 150 dpi deve apresentar uma riqueza maior de detalhes na imagem quando comparada a 
+
+  * **Tamanho**: O tamanho do arquivo pode aumentar significativamente para a imagem de 150 dpi;
+
+
+# Questão 02
+
+
+
 # Questão 03
 
 **Sabendo que o modelo CMYK é usado em dispositivos de impressão e que 
 cada valor de Ciano (C), Magenta (M), Amarelo (Y) e Preto (K) correspondem a 
 uma quantidade de tinta a ser usada na mistura para impressão, gerando 
 diferentes cores. Considerando a conversão de RGB para CMYK apresentada no 
-slide 18 da aula de Modelos de Cores, que problema p2oderíamos ter se o cálculo 
+slide 18 da aula de Modelos de Cores, que problema poderíamos ter se o cálculo 
 da componente K fosse dado como abaixo?** 
 
 <p align="center">
 <strong>K = 1 - (R + G + B) / 3</strong>
 </p>
 
+**R.:**
+
+Sendo K = 1 - (R + G + B) / 3, logo substituindo no CMY(K), temos:
+
+para K &ne; 1:
+
+<p align="center">
+    C = (1 - R - K) / (1 - K) = [1 - R - (R + G + B) / 3] / [1 - (R + G + B) / 3 ] = <br>
+    = {[3 - 3 &times; R - (R + G + B)] / 3} &times; {3 / [3 - (R + G + B)]} = <br>
+    = (-3 &times; R) / [3 - (R + G + B)] + [3 - (R + G + B)] / [3 - (R + G + B)] = <br>
+    = 1 - 3 &times; R / [3 - (R + G + B)] = 1 - 3 &times; R / {3 &times; [1 - (R + G + B) / 3]} = 
+    = 1 - R / [1 - (R + G + B)/3] = 1 - R / K
+</p>
+
+logo, analogamente, temos:
+
+<p align="center">
+    C = 1 - R / K <br>
+    M = 1 - G / K <br>
+    Y = 1 - B / K <br>
+</p>
+
+note que K &ne; 0, ou seja:
+
+<p align="center">
+    [1 - (R + G + B) / 3] &ne; 0 => <br>
+    => (R + G + B) / 3 &ne; 1 => <br>
+    => (R + G + B)  &ne; 3
+</p>
+
+Logo, R &ne; 1, G &ne; 1 e B &ne; 1.
+
+Além disso, K > R, K > G e K > B, uma vez que se ao menos um desses não ocorra, acarretará em C ou M ou Y negativo.
+
+Logo, é possivel notar que nesse cenário o branco 100% não deve ocorrer, uma vez que (R + G + B) &ne; 3.
+<!-- 
 **R.:** Considerando que R, G e B estão em escala normalizada e K deve representar o preto, esse cálculo pode levar  um preto ainda mais forte do que oque realmente deveria ser, por exemplo, suponha o cenário aonde temos um (R, G, B) = (120, 40, 100), ou seja, em escala normalizada temos (0.47, 0.16, 0.39), vamos calcular K pelo espaço CMYK e por esse apresentado na questão:
 
 
@@ -32,7 +95,7 @@ K = 1 - (R + G + B) / 3 = 1 - (0.47 + 0.16 + 0.39) / 3 = 1 - 0.34 = 0.66
 </p>
 
 
-nesse caso podemos notar um enfase na tonalidade do preto, enfatizando ainda mais, podendo prejudicar a visualização da imagem, com o preto em maior enfase, ou seja, imagens um pouco mais escuras, com menores valores de R, G e B podem ser consequente transformadas em tons ainda mais escuros devido a essa transformação. Um outro exemplo, seria o caso (R, G, B) = (0.4, 0.3, 0.2), que para a escala CMYK, teremos K = 0.4, mas pela transformação em questão teremos K = 1 - (0.4 + 0.3 + 0.2)/ 3 = 1 - 0.3 = 0.7.
+nesse caso podemos notar um enfase na tonalidade do preto, enfatizando ainda mais, podendo prejudicar a visualização da imagem, com o preto em maior enfase, ou seja, imagens um pouco mais escuras, com menores valores de R, G e B podem ser consequente transformadas em tons ainda mais escuros devido a essa transformação. Um outro exemplo, seria o caso (R, G, B) = (0.4, 0.3, 0.2), que para a escala CMYK, teremos K = 0.4, mas pela transformação em questão teremos K = 1 - (0.4 + 0.3 + 0.2)/ 3 = 1 - 0.3 = 0.7. -->
 
 
 # Questão 04
@@ -141,7 +204,7 @@ Considerando o vetor original [10, 20, 10, 50, 40, 40, 20, 20, 10, 10], vamos co
 
 
 
-| x | r = x / 255 | lm<sub>out</sub> = 1 &times; (lm<sub>in</sub>)<sup>3</sup> | x = r \times 255 |
+| x | r = x / 255 | lm<sub>out</sub> = 1 &times; (lm<sub>in</sub>)<sup>3</sup> | x = r &times; 255 |
 |----|--------------|--------------|----------------|
 | 10 | 0.0392      | 1 &times; (0.0392)<sup>3</sup> = 0.0000603 | 0.0000603 &times; 255 = 0.0154 &approx; 0 |
 | 20 | 0.0784      | 1 &times; (0.0784)<sup>3</sup> = 0.0004828 | 0.0004828 &times; 255 = 0.1231 &approx; 0 |
@@ -414,4 +477,436 @@ Resultando na imagem:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-02.png?raw=true" alt="q06-02" width="400"/>
+</p>
+
+
+## Item B)
+
+Para esse item, vamos considerar os mesmo pesos utilizados no slide 47 de exemplo (0.29, 0.59, 0.11). Então:
+
+<div style="display: flex;">
+R &times; 0.29 = 
+  <table>
+    <tr>
+      <td>(255 &times; 0.29)</td><td>(240 &times; 0.29)</td><td>(200 &times; 0.29)</td><td>(150 &times; 0.29)</td><td>(120 &times; 0.29)</td>
+    </tr>
+    <tr>
+      <td>(230 &times; 0.29)</td><td>(220 &times; 0.29)</td><td>(180 &times; 0.29)</td><td>(160 &times; 0.29)</td><td>(100 &times; 0.29)</td>
+    </tr>
+    <tr>
+      <td>(210 &times; 0.29)</td><td>(190 &times; 0.29)</td><td>(170 &times; 0.29)</td><td>(145 &times; 0.29)</td><td>(90 &times; 0.29)</td>
+    </tr>
+    <tr>
+      <td>(170 &times; 0.29)</td><td>(160 &times; 0.29)</td><td>(140 &times; 0.29)</td><td>(130 &times; 0.29)</td><td>(80 &times; 0.29)</td>
+    </tr>
+    <tr>
+      <td>(185 &times; 0.29)</td><td>(165 &times; 0.29)</td><td>(155 &times; 0.29)</td><td>(135 &times; 0.29)</td><td>(122 &times; 0.29)</td>
+    </tr>
+  </table>
+  = 
+    <table>
+     <tr>
+        <td>74</td><td>70</td><td>58</td><td>44</td><td>35</td>
+    </tr>
+    <tr>
+        <td>67</td><td>64</td><td>52</td><td>46</td><td>29</td>
+    </tr>
+    <tr>
+        <td>61</td><td>55</td><td>49</td><td>42</td><td>26</td>
+    </tr>
+    <tr>
+        <td>49</td><td>46</td><td>41</td><td>38</td><td>23</td>
+    </tr>
+    <tr>
+        <td>54</td><td>48</td><td>45</td><td>39</td><td>35</td>
+    </tr>
+    </table>
+</div>
+
+
+
+<div style="display: flex;">
+G &times; 0.59 = 
+  <table>
+    <tr>
+      <td>(255 &times; 0.59)</td><td>(240 &times; 0.59)</td><td>(230 &times; 0.59)</td><td>(235 &times; 0.59)</td><td>(210 &times; 0.59)</td>
+    </tr>
+    <tr>
+      <td>(240 &times; 0.59)</td><td>(245 &times; 0.59)</td><td>(250 &times; 0.59)</td><td>(255 &times; 0.59)</td><td>(180 &times; 0.59)</td>
+    </tr>
+    <tr>
+      <td>(230 &times; 0.59)</td><td>(220 &times; 0.59)</td><td>(0 &times; 0.59)</td><td>(230 &times; 0.59)</td><td>(200 &times; 0.59)</td>
+    </tr>
+    <tr>
+      <td>(240 &times; 0.59)</td><td>(245 &times; 0.59)</td><td>(250 &times; 0.59)</td><td>(255 &times; 0.59)</td><td>(180 &times; 0.59)</td>
+    </tr>
+    <tr>
+      <td>(255 &times; 0.59)</td><td>(240 &times; 0.59)</td><td>(230 &times; 0.59)</td><td>(235 &times; 0.59)</td><td>(210 &times; 0.59)</td>
+    </tr>
+  </table>
+  = 
+  <table>
+    <tr>
+        <td>150</td><td>142</td><td>136</td><td>139</td><td>124</td>
+    </tr>
+    <tr>
+        <td>142</td><td>145</td><td>148</td><td>150</td><td>106</td>
+    </tr>
+    <tr>
+        <td>136</td><td>130</td><td>0</td><td>136</td><td>118</td>
+    </tr>
+    <tr>
+        <td>142</td><td>145</td><td>148</td><td>150</td><td>106</td>
+    </tr>
+    <tr>
+        <td>150</td><td>142</td><td>136</td><td>139</td><td>124</td>
+    </tr>
+  </table>
+</div>
+
+
+<div style="display: flex;">
+B &times; 0.11 = 
+  <table>
+    <tr>
+      <td>(255 &times; 0.11)</td><td>(255 &times; 0.11)</td><td>(200 &times; 0.11)</td><td>(180 &times; 0.11)</td><td>(160 &times; 0.11)</td>
+    </tr>
+    <tr>
+      <td>(240 &times; 0.11)</td><td>(230 &times; 0.11)</td><td>(190 &times; 0.11)</td><td>(140 &times; 0.11)</td><td>(120 &times; 0.11)</td>
+    </tr>
+    <tr>
+      <td>(245 &times; 0.11)</td><td>(235 &times; 0.11)</td><td>(0 &times; 0.11)</td><td>(180 &times; 0.11)</td><td>(160 &times; 0.11)</td>
+    </tr>
+    <tr>
+      <td>(240 &times; 0.11)</td><td>(230 &times; 0.11)</td><td>(190 &times; 0.11)</td><td>(140 &times; 0.11)</td><td>(120 &times; 0.11)</td>
+    </tr>
+    <tr>
+      <td>(255 &times; 0.11)</td><td>(255 &times; 0.11)</td><td>(200 &times; 0.11)</td><td>(180 &times; 0.11)</td><td>(160 &times; 0.11)</td>
+    </tr>
+  </table>
+  = 
+  <table>
+    <tr>
+        <td>28</td><td>28</td><td>22</td><td>20</td><td>18</td>
+    </tr>
+    <tr>
+        <td>26</td><td>25</td><td>21</td><td>15</td><td>13</td>
+    </tr>
+    <tr>
+        <td>27</td><td>26</td><td>0</td><td>20</td><td>18</td>
+    </tr>
+    <tr>
+        <td>26</td><td>25</td><td>21</td><td>15</td><td>13</td>
+    </tr>
+    <tr>
+        <td>28</td><td>28</td><td>22</td><td>20</td><td>18</td>
+    </tr>
+  </table>
+</div>
+
+
+Logo, temos que:
+
+
+<div style="display: flex;">
+Z = (R &times; 0.29) + (G &times; 0.59) + (B &times; 0.11) = 
+  <table>
+    <tr>
+        <td>252</td><td>240</td><td>216</td><td>203</td><td>177</td>
+    </tr>
+    <tr>
+        <td>235</td><td>234</td><td>221</td><td>211</td><td>148</td>
+    </tr>
+    <tr>
+        <td>224</td><td>211</td><td>49</td><td>198</td><td>162</td>
+    </tr>
+    <tr>
+        <td>217</td><td>216</td><td>210</td><td>203</td><td>142</td>
+    </tr>
+    <tr>
+        <td>232</td><td>218</td><td>203</td><td>198</td><td>177</td>
+    </tr>
+  </table>
+</div>
+
+Gerando a imagem abaixo:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-03.png?raw=true" alt="q06-03" width="400"/>
+</p>
+
+<br>
+<br>
+<br>
+
+## Item C)
+
+
+<div style="display: flex;">
+Z = [max(R, G, B) + min(R, G, B)] / 2 = 
+  <table>
+    <tr>
+      <td>(255 + 255) / 2</td><td>(255 + 240) / 2</td><td>(230 + 200) / 2</td><td>(235 + 150) / 2</td><td>(210 + 120) / 2</td>
+    </tr>
+    <tr>
+      <td>(240 + 230) / 2</td><td>(245 + 220) / 2</td><td>(250 + 180) / 2</td><td>(255 + 140) / 2</td><td>(180 + 100) / 2</td>
+    </tr>
+    <tr>
+      <td>(245 + 210) / 2</td><td>(235 + 190) / 2</td><td>(170 + 0) / 2</td><td>(230 + 145) / 2</td><td>(200 + 90) / 2</td>
+    </tr>
+    <tr>
+      <td>(240 + 170) / 2</td><td>(245 + 160) / 2</td><td>(250 + 140) / 2</td><td>(255 + 130) / 2</td><td>(180 + 80) / 2</td>
+    </tr>
+    <tr>
+      <td>(255 + 185) / 2</td><td>(255 + 165) / 2</td><td>(230 + 155) / 2</td><td>(235 + 135) / 2</td><td>(210 + 122) / 2</td>
+    </tr>
+  </table>
+  = 
+  <table>
+    <tr>
+        <td>255</td><td>247</td><td>215</td><td>192</td><td>165</td>
+    </tr>
+    <tr>
+        <td>235</td><td>232</td><td>215</td><td>197</td><td>140</td>
+    </tr>
+    <tr>
+        <td>227</td><td>212</td><td>85</td><td>187</td><td>145</td>
+    </tr>
+    <tr>
+        <td>205</td><td>202</td><td>195</td><td>192</td><td>130</td>
+    </tr>
+    <tr>
+        <td>220</td><td>210</td><td>192</td><td>185</td><td>166</td>
+    </tr>
+  </table>
+</div>
+
+Gerando a imagem abaixo:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-04.png?raw=true" alt="q06-04" width="400"/>
+</p>
+
+## Conclusão
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q06-05.png?raw=true" alt="q06-05" width="1200"/>
+</p>
+
+A ponderação deu uma clareada maior, em geral, na imagem, diferentemente dos outros metodos, como o uso da média, que apresenta uma coloração mais homogenea, mas sem enfatizar muito o branco e  o preto. Já a dessaturação parece retratar melhor detalhes das cores da imagem, enfatizando melhor o preto.
+
+# Questão 07
+
+<strong>
+Considere a imagem IM abaixo em 256 tons de cinza no sistema RGB: 
+</strong>
+
+<table align="center" border="1" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>120</td>
+    <td>140</td>
+    <td>120</td>
+  </tr>
+  <tr>
+    <td>160</td>
+    <td>180</td>
+    <td>70</td>
+  </tr>
+</table>
+
+<strong>
+Considere a versão reduzida da matriz de Floyd-Steinberg: 
+
+
+<div style="text-align: center;">
+    <p>
+        <span style="font-size: 1.5em;">(1 / 16) &times; </span>
+        <table style="display: inline-table; border-spacing: 0; border-collapse: collapse;">
+            <tr>
+                <td style="border: 1px solid black; padding: 5px;">0</td>
+                <td style="border: 1px solid black; padding: 5px;">X</td>
+                <td style="border: 1px solid black; padding: 5px;">7</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 5px;">3</td>
+                <td style="border: 1px solid black; padding: 5px;">5</td>
+                <td style="border: 1px solid black; padding: 5px;">1</td>
+            </tr>
+        </table>
+    </p>
+</div>
+
+onde X marca o pixel sendo processado. Em uma implementação, X pode ser 
+substituído por zero, já que o que importa é a porcentagem do erro transmitido aos 
+vizinhos.
+
+Calcule a imagem binarizada resultante do uso da máscara de Floyd-Steinberg em 
+IM, considerando 127 como ponto de corte. Apresente todos os cálculos.</strong>
+
+
+**R.:**
+
+
+
+Vamos processar, começando pelo pixel P(0, 0) = 120, logo:
+
+1) <strong>P(0, 0) temos: </strong>
+<p align="center">
+  P(0, 1) = 140 + 120 &times; 7/16 = 193  
+  <br>
+  P(1, 0) = 160 + 120 &times; 5/16 = 198  
+  <br>
+  P(1, 1) = 180 + 120 &times; 1/16 = 188
+</p>
+
+Logo, temos:
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>193</td>
+    <td>120</td>
+  </tr>
+  <tr>
+    <td>198</td>
+    <td>188</td>
+    <td>70</td>
+  </tr>
+</table>
+
+2) <strong>Para P(0, 1), temos:</strong>
+
+<p align="center">
+P(0, 2) = 120 + (-63) &times; 7/16 = 93  
+<br>
+P(1, 0) = 198 + (-63) &times; 3/16 = 186  
+<br>
+P(1, 1) = 188 + (-63) &times; 5/16 = 168  
+<br>
+P(1, 2) = 70 + (-63) &times; 1/16 = 66  
+</p>
+
+Logo, temos:
+
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>255</td>
+    <td>93</td>
+  </tr>
+  <tr>
+    <td>186</td>
+    <td>168</td>
+    <td>66</td>
+  </tr>
+</table>
+
+3) <strong>Para P(0, 2), temos:</strong>
+
+<p align="center">
+  P(1, 1) = 168 + 93 &times; 3/16 = 185  
+  <br>
+  P(1, 2) = 66 + 93 &times; 5/16 = 95  
+</p>
+
+Logo, temos:
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>186</td>
+    <td>185</td>
+    <td>95</td>
+  </tr>
+</table>
+
+
+4) <strong>Para P(1, 0), temos:</strong>
+
+<p align="center">
+  P(1, 1) = 185 + (-69) &times; 7/16 = 155
+</p>
+
+Logo, temos:
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>255</td>
+    <td>155</td>
+    <td>95</td>
+  </tr>
+</table>
+
+5) <strong>Para P(1, 1), temos:</strong>
+
+<p align="center">
+  P(1, 2) = 95 + (-100) &times; 7/16 = 51
+</p>
+
+Logo, temos:
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>255</td>
+    <td>255</td>
+    <td>51</td>
+  </tr>
+</table>
+
+6) <strong>Para P(1, 2), temos:</strong>
+
+Como P(1, 2) = 51 < 127, e ultima entrada, então podemos atribuir 0 direto.
+
+Logo, temos:
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>255</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+</table>
+
+## Conclusão
+
+A matriz binarizada pode ser encontrada abaixo:
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+  <tr>
+    <td>0</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>255</td>
+    <td>255</td>
+    <td>0</td>
+  </tr>
+</table>
+
+Podemos comparar a imagem original versus a binarizada da mascara de Floyd-Steinberg abaixo:
+
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q07-01.png?raw=true" alt="q06-05" width="1200"/>
 </p>
