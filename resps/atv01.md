@@ -27,7 +27,7 @@
 
 
 # Questão 02
-
+**Disserte sobre a relação entre amostragem e quantização e o espaço necessário para armazenamento de uma imagem**
 
 
 # Questão 03
@@ -45,41 +45,83 @@ da componente K fosse dado como abaixo?**
 
 **R.:**
 
-Sendo K = 1 - (R + G + B) / 3, logo substituindo no CMY(K), temos:
 
-para K &ne; 1:
+Sabendo que, para CMYK e K $\ne$ 1, temos:
 
-<p align="center">
-    C = (1 - R - K) / (1 - K) = [1 - R - (R + G + B) / 3] / [1 - (R + G + B) / 3 ] = <br>
-    = {[3 - 3 &times; R - (R + G + B)] / 3} &times; {3 / [3 - (R + G + B)]} = <br>
-    = (-3 &times; R) / [3 - (R + G + B)] + [3 - (R + G + B)] / [3 - (R + G + B)] = <br>
-    = 1 - 3 &times; R / [3 - (R + G + B)] = 1 - 3 &times; R / {3 &times; [1 - (R + G + B) / 3]} = 
-    = 1 - R / [1 - (R + G + B)/3] = 1 - R / K
-</p>
-
-logo, analogamente, temos:
 
 <p align="center">
-    C = 1 - R / K <br>
-    M = 1 - G / K <br>
-    Y = 1 - B / K <br>
+  C = (1 - R - K) / (1 - K)
 </p>
 
-note que K &ne; 0, ou seja:
+manipulando, nos temos:
 
 <p align="center">
-    [1 - (R + G + B) / 3] &ne; 0 => <br>
-    => (R + G + B) / 3 &ne; 1 => <br>
-    => (R + G + B)  &ne; 3
+  C = (1 - R - K) / (1 - K) = [(1 - K) / (1 - K)] - R / (1 - K) = 1 - R / (1 - K)
 </p>
 
-Logo, R &ne; 1, G &ne; 1 e B &ne; 1.
+dado já que K $\ne$ 1, temos tambem que:
 
-Além disso, K > R, K > G e K > B, uma vez que se ao menos um desses não ocorra, acarretará em C ou M ou Y negativo.
+<p align="center">
+  1 - K &ge;  R &rarr; - K  &ge; R - 1 &rarr; K &le; 1 - R
+</p>
 
-Logo, é possivel notar que nesse cenário o branco 100% não deve ocorrer, uma vez que (R + G + B) &ne; 3.
-<!-- 
-**R.:** Considerando que R, G e B estão em escala normalizada e K deve representar o preto, esse cálculo pode levar  um preto ainda mais forte do que oque realmente deveria ser, por exemplo, suponha o cenário aonde temos um (R, G, B) = (120, 40, 100), ou seja, em escala normalizada temos (0.47, 0.16, 0.39), vamos calcular K pelo espaço CMYK e por esse apresentado na questão:
+
+
+analogo, temos que:
+
+
+<table align="center" style="border-collapse: collapse; text-align: left;">
+  <tr>
+    <td>K &leq; 1 - R, para C</td>
+  </tr>
+  <tr>
+    <td>K &leq; 1 - G, para M</td>
+  </tr>
+  <tr>
+    <td>K &leq; 1 - B, para Y</td>
+  </tr>
+</table>
+
+portanto, K &le; min{1 - R, 1 - G, 1 - B}. Dado isso, e aplicando a formula definida na questão, temos (fixando primeiro C, analogo para os outros):
+
+<table align="center" style="border-collapse: collapse; text-align: left;">
+  <tr>
+    <td>1 - (R + G + B) / 3 &leq; 1 - R</td>
+  </tr>
+  <tr>
+    <td>(R + G + B) / 3 &geq; R</td>
+  </tr>
+  <tr>
+    <td>R + G + B &geq; 3 &times; R</td>
+  </tr>
+  <tr>
+    <td>G + B &geq; 2 &times; R</td>
+  </tr>
+</table>
+
+analogo, por fim, temos as condições para que 1 - K &ge; R, para C, analogo para MY, que:
+
+<p style="text-align: center;">
+    G + B &ge; 2 &times; R
+</p>
+
+<p style="text-align: center;">
+    logo:
+</p>
+
+<table align="center" style="border-collapse: collapse; text-align: center;">
+    <tr>
+        <td>G + B &ge; 2 &times; R, para C</td>
+    </tr>
+    <tr>
+        <td>R + B &ge; 2 &times; G, para M</td>
+    </tr>
+    <tr>
+        <td>G + R &ge; 2 &times; B, para Y</td>
+    </tr>
+</table>
+
+Alem disso, esse cálculo pode levar  um preto ainda mais forte do que oque realmente deveria ser, por exemplo, suponha o cenário aonde temos um (R, G, B) = (120, 40, 100), ou seja, em escala normalizada temos (0.47, 0.16, 0.39), vamos calcular K pelo espaço CMYK e por esse apresentado na questão:
 
 
 * **CMYK**
@@ -95,7 +137,7 @@ K = 1 - (R + G + B) / 3 = 1 - (0.47 + 0.16 + 0.39) / 3 = 1 - 0.34 = 0.66
 </p>
 
 
-nesse caso podemos notar um enfase na tonalidade do preto, enfatizando ainda mais, podendo prejudicar a visualização da imagem, com o preto em maior enfase, ou seja, imagens um pouco mais escuras, com menores valores de R, G e B podem ser consequente transformadas em tons ainda mais escuros devido a essa transformação. Um outro exemplo, seria o caso (R, G, B) = (0.4, 0.3, 0.2), que para a escala CMYK, teremos K = 0.4, mas pela transformação em questão teremos K = 1 - (0.4 + 0.3 + 0.2)/ 3 = 1 - 0.3 = 0.7. -->
+nesse caso podemos notar um enfase na tonalidade do preto, enfatizando ainda mais, podendo prejudicar a visualização da imagem, com o preto em maior enfase, ou seja, imagens um pouco mais escuras, com menores valores de R, G e B podem ser consequentemente transformadas em tons mais escuros devido a essa transformação.
 
 
 # Questão 04
@@ -909,4 +951,11 @@ Podemos comparar a imagem original versus a binarizada da mascara de Floyd-Stein
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv04-q07-01.png?raw=true" alt="q06-05" width="1200"/>
+</p>
+
+# Questão 08
+
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/q08-img.png?raw=true" alt="q08-img" width="1200"/>
 </p>
