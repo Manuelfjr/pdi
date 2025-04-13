@@ -29,6 +29,10 @@
 # Questão 02
 **Disserte sobre a relação entre amostragem e quantização e o espaço necessário para armazenamento de uma imagem**
 
+**R.:**
+
+Amostragem define a resolução, ou seja, quantos pixels representarão a imagem, enquanto a quantização determina a quantidade de bits usados para armazenar cada pixel, influenciando a intensidade de cor. O espaço necessário para armazenar a imagem depende da resolução e da quantidade de bits por pixel, ou seja, a intensidade por pixel. Existe uma relação diretamente proporcional entre resolução e intensidade da cor com o tamanho do arquivo, quanto maior a resolução e a intensidade, Quanto maior a resolução e a intensidade de cor, maior será o tamanho do arquivo.
+
 
 # Questão 03
 
@@ -790,7 +794,7 @@ IM, considerando 127 como ponto de corte. Apresente todos os cálculos.</strong>
 
 
 
-Vamos processar, começando pelo pixel P(0, 0) = 120, logo:
+Vamos processar, começando pelo pixel P(0, 0) = 120 (como 120 < 127, logo Erro = 120 - 0 = 120), logo:
 
 1) <strong>P(0, 0) temos: </strong>
 <p align="center">
@@ -816,7 +820,7 @@ Logo, temos:
   </tr>
 </table>
 
-2) <strong>Para P(0, 1), temos:</strong>
+2) <strong>Para P(0, 1) (como 193 > 127, logo Erro = 193 - 255 = -63), temos:</strong>
 
 <p align="center">
 P(0, 2) = 120 + (-63) &times; 7/16 = 93  
@@ -844,7 +848,7 @@ Logo, temos:
   </tr>
 </table>
 
-3) <strong>Para P(0, 2), temos:</strong>
+3) <strong>Para P(0, 2) (como 93 < 127, logo Erro = 93 - 0 = 93), temos:</strong>
 
 <p align="center">
   P(1, 1) = 168 + 93 &times; 3/16 = 185  
@@ -868,7 +872,7 @@ Logo, temos:
 </table>
 
 
-4) <strong>Para P(1, 0), temos:</strong>
+4) <strong>Para P(1, 0) (como 186 > 127, logo Erro = 186 - 255 = -69), temos:</strong>
 
 <p align="center">
   P(1, 1) = 185 + (-69) &times; 7/16 = 155
@@ -889,7 +893,7 @@ Logo, temos:
   </tr>
 </table>
 
-5) <strong>Para P(1, 1), temos:</strong>
+5) <strong>Para P(1, 1) (como 155 > 127, logo Erro = 155 - 255 = -100), temos:</strong>
 
 <p align="center">
   P(1, 2) = 95 + (-100) &times; 7/16 = 51
@@ -955,7 +959,40 @@ Podemos comparar a imagem original versus a binarizada da mascara de Floyd-Stein
 
 # Questão 08
 
+**Considere os histogramas abaixo correspondendo a duas versões diferentes de uma mesma imagem em tons de cinza no sistema RGB:**
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/q08-img.png?raw=true" alt="q08-img" width="1200"/>
 </p>
+
+<strong>
+Os dois histogramas estão apresentados na mesma escala. Lembrando que são 
+diferentes versões de uma mesma imagem: 
+
+<br>
+
+a) O que se pode dizer sobre cada uma dessas imagens apenas olhando para 
+seus histogramas? 
+
+<br>
+
+b) Se o objetivo fosse binarização, qual das duas imagens mais provavelmente 
+geraria uma imagem em preto e branco de melhor qualidade? Especule e 
+justifique.
+
+</strong>
+
+**R.:**
+
+a)
+
+Ambas imagens estão em escala de tons de cinza, porém a primeira imagem tras mais niveis de cinza, ou seja, mais contraste, variando entre o preto completo e o branco máximo, tendo ali uma concentração maior no ponto médio de cinza e um grande conjunto de pixels isolado proximo ao preto completo. Essa imagem possivelmente pode apresentar um nivel de detalhes maior que a segunda imagem, uma vez que a segunda esta transformada para niveis mais escuro, evidenciando uma imagem com menor nivel de detalhes, mais escura, possivelmente ofuscando diversos detalhes que são enfatizados pelo nivel de branco original.
+
+
+
+b) 
+
+**Selecionando a figura (1):** a primeira imagem pode trazer uma binarização de maior qualidade, uma vez que os valores estão mais espalhados nos niveis de cinza, podendo conservar as regiões de preto intenso e branco intenso da imagem.
+
+**Selecionando a figura (2):** apesar da primeira imagem apresentar mais niveis de cinza, maior constrate, a segunda imagem pode apresentar uma binarização interessante quando selecionado o vale encontrado mais proximo do preto, ou seja, podendo destacar ainda mais a região preta da imagem e, consequentemente, gerando uma imagem com uma grande área de branco. Isso pode interessante dependendo da situação, como talvez para um modelo que aquela região mais escura seja o principal objetivo dele. 
+
