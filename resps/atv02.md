@@ -12,7 +12,7 @@ apresentada à direita:
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-01.png?raw=true" alt="q01-i1-img" width="1200"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-01.png?raw=true" alt="q01-i1-img" width="600"/>
 </p>
 
 <strong>
@@ -23,7 +23,7 @@ especule sobre o resultado esperado.
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-02.png?raw=true" alt="q01-i2-img" width="1200"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-02.png?raw=true" alt="q01-i2-img" width="600"/>
 </p>
 
 
@@ -34,7 +34,7 @@ A Transformada de Fourier tem como foco principal analisar a distribuicao das fr
 Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-05.png?raw=true" alt="q01-i3-img" width="1200"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-05.png?raw=true" alt="q01-i3-img" width="600"/>
 </p>
 
 
@@ -46,7 +46,7 @@ Vimos, nos slides 16 e 17 da aula de filtragem, que o embaçamento de uma imagem
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-01.png?raw=true" alt="q02-i01-img" width="1200"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-01.png?raw=true" alt="q02-i01-img" width="500"/>
 </p>
 
 <strong>
@@ -54,7 +54,7 @@ Essa imagem gera a magnitude da transformada de Fourier a seguir:
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-02.png?raw=true" alt="q02-i02-img" width="1200"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-02.png?raw=true" alt="q02-i02-img" width="500"/>
 </p>
 
 <strong>
@@ -66,7 +66,7 @@ esse distúrbio em alguma parte (bem definida) da imagem.
 
 **R.:**
 
-
+Uma possivel estrategia seria quebrar a imagem em 
 
 Separar em quadrantes
 
