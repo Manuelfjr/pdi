@@ -39,8 +39,34 @@ Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada 
 
 
 
-
 # Questão 02
+
+<strong>
+Vimos, nos slides 16 e 17 da aula de filtragem, que o embaçamento de uma imagem provoca grandes mudanças na magnitude da transformada de Fourier dessa imagem. Considere a imagem abaixo:
+</strong>
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-01.png?raw=true" alt="q02-i01-img" width="1200"/>
+</p>
+
+<strong>
+Essa imagem gera a magnitude da transformada de Fourier a seguir:
+</strong>
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-02.png?raw=true" alt="q02-i02-img" width="1200"/>
+</p>
+
+<strong>
+Em comparação com a imagem da direita do slide 17, da aula de filtragem, vemos 
+que o borramento parcial no canto inferior da direita, apesar de bastante forte, não 
+está tão nítido na transformada. Sugira uma estratégia para detectar que houve 
+esse distúrbio em alguma parte (bem definida) da imagem.
+</strong>
+
+**R.:**
+
+
 
 Separar em quadrantes
 
