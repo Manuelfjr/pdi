@@ -1,6 +1,7 @@
 <script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML-full">
 </script>
+
 
 # Atividade 02
 
@@ -138,6 +139,7 @@ f * h = h * f, onde * é a operação de convolução.
 
 Comprove isso fazendo a convolução discreta dos dois filtros abaixo. Analise sua resposta.
 
+
 <div style="display: flex; align-items: center;">
   <div>
     <p>(1 / 9) * f:</p>
@@ -188,20 +190,49 @@ das duas matrizes acima, operadas em ordens inversas: f * h e h * f.
 
 **R.:**
 
-Para realizarmos a rotação de uma matriz 
+**Obs.:** Durante a questão, será marcado em **vermelho** os valores a serem somados para compor a sua localização  na matriz **m x n**.
 
 1) <strong>Para f * h:</strong>
 
-  Primeiramente, vamos espelhar a segunda matriz, sendo ela **h**, ficando:
+  Primeiramente, vamos rotacionar a segunda matriz, sendo ela **h**, ficando:
 
-  $$
-  h = \Bigg[\begin{matrix}
-    1 & 0 & -1 \\
-    1 & 0 & -1 \\
-    1 & 0 & -1
-  \end{matrix}\Bigg]
-  $$
+  <!-- $$
+  h = \Bigg[
+  \begin{array}{ccc}
+  1 & 0 & -1 \\
+  1 & 0 & -1 \\
+  1 & 0 & -1
+  \end{array}
+  \Bigg]
+  $$ -->
 
+
+<div style="text-align: center;">
+  <p>
+    h = 
+    <span style="font-size: 1.5em;">
+      <table style="display: inline-table; border-collapse: collapse; text-align: center;">
+        <tr>
+          <td>1</td>
+          <td>0</td>
+          <td>-1</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>0</td>
+          <td>-1</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>0</td>
+          <td>-1</td>
+        </tr>
+      </table>
+    </span>
+  </p>
+</div>
+
+Então, aplicando a convolução teremos:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="800"/>
@@ -209,7 +240,7 @@ Para realizarmos a rotação de uma matriz
 
 2) <strong>Para h * f:</strong>
 
-  Primeiramente, vamos espelhar a segunda matriz, sendo ela **f**, devido a sua natureza, a rotação dela é igual a original, logo aplicando a revolução teremos:
+  Primeiramente, vamos rotacionar a segunda matriz, sendo ela **f**, devido a sua natureza, a rotação dela é igual a original, logo aplicando a revolução teremos:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="800"/>
@@ -217,3 +248,9 @@ Para realizarmos a rotação de uma matriz
 
 
 # Questão 05
+
+<strong>
+5. Calcule uma janela para um possível filtro Gaussiano através da convolução 
+discreta de três filtros Box, como abaixo: 
+Filtro Box = 
+</strong>
