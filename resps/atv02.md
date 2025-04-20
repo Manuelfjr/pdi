@@ -66,14 +66,134 @@ esse distúrbio em alguma parte (bem definida) da imagem.
 
 **R.:**
 
-Uma possivel estrategia seria quebrar a imagem em 
 
-Separar em quadrantes
+Uma possivel estrategia para detectar esse tipo de anomalia localizada, como  o borramento em regiões especificas, pode ser segmentar a imagem em regiões menores, em especial no exemplo da questão, em quatro quadrantes, ai então aplicar a transformada de Fourier em cada quadrante. A ideia é que, ao analisar o espectro  individualmente para cada quadrante, será possível comparar as distribuições entre as regiões. O quadrante afetado pelo desfoque apresentará uma caracteristica diferente das outras, evidenciando o borramento.
+
+
+Na imagem abaixo, da para ntoar a aplicação dessa solução de separação de quadrantes:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-07.png?raw=true" alt="q02-i07-img" width="500"/>
+</p>
 
 # Questão 03
 
-1 - H(u, v)
+<strong>
+    Considere o filtro passa baixa de Butterworth
+</strong>
+
+$$
+H(u, v) = \frac{1}{1 + \bigg[\frac{D(u, v) }{D_0}\bigg]^{2 \cdot n}}
+$$
+
+<strong>
+Calcule a expressão que representa o filtro passa alta de Butterworth, a partir desse filtro passa baixa. Dicas: Observe o que foi comentado no slide 57 da aula de filtragem. Lá, é para um filtro Gaussiano, mas o raciocínio é o mesmo. O resultado final a ser calculado está no slide 65; esse é o resultado a ser alcançado. Você deve calcular como chegar nele.
+</strong>
+
+**R.:**
+
+
+Sabendo que o filtro passa-alta nada mais é que o complementar do filtro passa baixa, temos então que:
+
+$$
+H_{FPA}(u, v) = 1 - H_{FPB}(u, v)
+$$
+
+Logo, substituindo a equação do filtro passa baixa de Butterworth, temos que:
+
+$$
+H_{FPA}(u, v) = 1 - \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2\cdot n}} = \frac{\cancel{1} + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n} - \cancel{1}}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}} = \frac{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}
+$$
+
+Então,  sabendo que $\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n} \cdot \bigg[\frac{D(u, v)}{D_0}\bigg]^{- 2 \cdot n} = 1$, logo:
+
+$$
+H_{FPA}(u, v) = \frac{\cancel{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}}{\cancel{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}   \bigg\{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{-2 \cdot n}\bigg\}} = \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{-2 \cdot n}}
+$$
+
+Como $ \bigg[\frac{D(u, v)}{D_0}\bigg]^{- 2 \cdot n} =  \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}$, então temos:
+
+$$
+H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{-2 \cdot n}} = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}}
+$$
+
+
+$\therefore$ temos $H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}}$ $\square$
 
 # Questão 04
 
-Aula de filtragem, slide 76 a 81
+<strong>
+A convolução discreta é uma operação comutativa. Ou seja:
+
+f * h = h * f, onde * é a operação de convolução.
+
+Comprove isso fazendo a convolução discreta dos dois filtros abaixo. Analise sua resposta.
+
+<div style="display: flex; align-items: center;">
+  <div>
+    <p>(1 / 9) * f:</p>
+    <table border="1" style="border-collapse: collapse; text-align: center; margin-right: 20px;">
+      <tr>
+        <td>1 / 9</td>
+        <td>1 / 9</td>
+        <td>1 / 9</td>
+      </tr>
+      <tr>
+        <td>1 / 9</td>
+        <td>1 / 9</td>
+        <td>1 / 9</td>
+      </tr>
+      <tr>
+        <td>1 / 9</td>
+        <td>1 / 9</td>
+        <td>1 / 9</td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <p>h:</p>
+    <table border="1" style="border-collapse: collapse; text-align: center;">
+      <tr>
+        <td>-1</td>
+        <td>0</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>-1</td>
+        <td>0</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>-1</td>
+        <td>0</td>
+        <td>1</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+Ou seja, você deve calcular (e apresentar todos os cálculos) da convolução discreta 
+das duas matrizes acima, operadas em ordens inversas: f * h e h * f.
+</strong>
+
+
+**R.:**
+
+Para realizarmos a rotação de uma matriz 
+
+1) <strong>Para f * h:</strong>
+
+  Primeiramente, vamos espelhar a segunda matriz, sendo ela **h**, teremos o seguinte processo:
+
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="500"/>
+</p>
+
+2) <strong>Para h * f:</strong>
+
+  Primeiramente, vamos espelhar a segunda matriz, sendo ela **f**, teremos o seguinte processo:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="500"/>
+</p>
