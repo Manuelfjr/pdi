@@ -1,3 +1,7 @@
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
 # Atividade 02
 
 * **Aluno:** Manuel Ferreira Junior
@@ -102,23 +106,28 @@ $$
 Logo, substituindo a equação do filtro passa baixa de Butterworth, temos que:
 
 $$
-H_{FPA}(u, v) = 1 - \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2\cdot n}} = \frac{\cancel{1} + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n} - \cancel{1}}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}} = \frac{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}
+H_{FPA}(u, v) = 1 - \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2\cdot n}} = \frac{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n} - 1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}} = \frac{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}
 $$
 
-Então,  sabendo que $\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n} \cdot \bigg[\frac{D(u, v)}{D_0}\bigg]^{- 2 \cdot n} = 1$, logo:
+Então,  sabendo que
+
+$$\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n} \cdot \bigg[\frac{D(u, v)}{D_0}\bigg]^{- 2 \cdot n} = 1$$
+
+logo:
 
 $$
-H_{FPA}(u, v) = \frac{\cancel{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}}{\cancel{\bigg[\frac{D(u, v)}{D_0}\bigg]^{2 \cdot n}}   \bigg\{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{-2 \cdot n}\bigg\}} = \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{-2 \cdot n}}
+H_{FPA}(u, v) = \frac{\bigg(\frac{D(u, v)}{D_0}\bigg)^{2 \cdot n}}{\bigg(\frac{D(u, v)}{D_0}\bigg)^{2 \cdot n}   \bigg[1 + \bigg(\frac{D(u, v)}{D_0}\bigg)^{-2 \cdot n}\bigg]} = \frac{1}{1 + \bigg(\frac{D(u, v)}{D_0}\bigg)^{-2 \cdot n}}
 $$
 
-Como $ \bigg[\frac{D(u, v)}{D_0}\bigg]^{- 2 \cdot n} =  \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}$, então temos:
+Como $$ \bigg[\frac{D(u, v)}{D_0}\bigg]^{- 2 \cdot n} =  \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}$$
+
+Então temos:
 
 $$
 H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D(u, v)}{D_0}\bigg]^{-2 \cdot n}} = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}}
 $$
 
-
-$\therefore$ temos $H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}}$ $\square$
+$$\therefore H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cdot n}} \square$$
 
 # Questão 04
 
