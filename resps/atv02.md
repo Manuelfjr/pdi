@@ -192,17 +192,28 @@ Para realizarmos a rotação de uma matriz
 
 1) <strong>Para f * h:</strong>
 
-  Primeiramente, vamos espelhar a segunda matriz, sendo ela **h**, teremos o seguinte processo:
+  Primeiramente, vamos espelhar a segunda matriz, sendo ela **h**, ficando:
+
+  $$
+  h = \Bigg[\begin{matrix}
+    1 & 0 & -1 \\
+    1 & 0 & -1 \\
+    1 & 0 & -1
+  \end{matrix}\Bigg]
+  $$
 
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="500"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="800"/>
 </p>
 
 2) <strong>Para h * f:</strong>
 
-  Primeiramente, vamos espelhar a segunda matriz, sendo ela **f**, teremos o seguinte processo:
+  Primeiramente, vamos espelhar a segunda matriz, sendo ela **f**, devido a sua natureza, a rotação dela é igual a original, logo aplicando a revolução teremos:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="500"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="800"/>
 </p>
+
+
+# Questão 05
