@@ -407,3 +407,48 @@ Ilustrando graficamente o efeito desse filtro box, temos:
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-04.png?raw=true" alt="atv02-q05-04-img" width="800"/>
 </p>
+
+
+# Questão 06
+
+<strong>
+Considere a imagem abaixo, uma imagem em 16 tons de cinza. Apresente o resultado da aplicação de um filtro Box 3x3 (o mesmo Box da questão anterior) nessa imagem. Apresente os cálculos e explique todas as decisões tomadas para realizar a filtragem, observando que sua saída deve também ser uma imagem em 16 tons de cinza.
+</strong>
+
+
+
+<div style="display: flex; align-items: center;" align="center">
+  <div>
+    <table border="1" style="border-collapse: collapse; text-align: center; margin-right: 20px;" align="center">
+      <tr>
+        <td>1</td>
+        <td>3</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>2</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>3</td>
+        <td>1</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+**R.:**
+
+**Obs.:** Durante a questão, será marcado em **vermelho** os valores a serem somados para compor a sua localização  na matriz **m x n**.
+
+Como visto nas questões anteriores, a rotação da matriz de filtro box 3x3 é simétrica, então sua rotação será igual a ela mesma. 
+
+Como visto na aula de filtragem, apartir do slide 98, vamos aplicar uma convolução entre um filtro e uma imagem, logo usaremos a **Correlação Cruzada**, definindo como estratégia para a borda será a extensão nula, e apos aplicar o processo, multiplicaremos a constante 1 / 9.
+
+Logo:
+
+<!-- <p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-04.png?raw=true" alt="atv02-q05-04-img" width="800"/>
+</p> -->
