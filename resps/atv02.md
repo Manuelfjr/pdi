@@ -209,8 +209,7 @@ das duas matrizes acima, operadas em ordens inversas: f * h e h * f.
 
 <div style="text-align: center;">
   <p>
-    h = 
-    <span style="font-size: 1.5em;">
+    h: <span style="font-size: 1.5em;">
       <table style="display: inline-table; border-collapse: collapse; text-align: center;">
         <tr>
           <td>1</td>
@@ -250,7 +249,41 @@ Então, aplicando a convolução teremos:
 # Questão 05
 
 <strong>
-5. Calcule uma janela para um possível filtro Gaussiano através da convolução 
+Calcule uma janela para um possível filtro Gaussiano através da convolução 
 discreta de três filtros Box, como abaixo: 
-Filtro Box = 
+
+<div style="text-align: center;">
+  <p>
+    Filtro Box: <span style="font-size: 1.5em;">
+      <table style="display: inline-table; border-collapse: collapse; text-align: center;">
+        <tr>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+      </table>
+    </span>
+  </p>
+</div>
 </strong>
+
+**R.:**
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-01.png?raw=true" alt="atv02-q05-01-img" width="800"/>
+</p>
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-02.png?raw=true" alt="atv02-q05-02-img" width="800"/>
+</p>
+
