@@ -79,7 +79,7 @@ Uma possivel estrategia para detectar esse tipo de anomalia localizada, como  o 
 Na imagem abaixo, da para ntoar a aplicação dessa solução de separação de quadrantes:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-07.png?raw=true" alt="q02-i07-img" width="500"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i07-img" width="500"/>
 </p>
 
 # Questão 03
