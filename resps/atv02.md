@@ -379,6 +379,31 @@ $$
 
 3) <strong>Conclusão:</strong>
 
+Temos o produto resultante abaixo:
+
+<p>
+$$
+(B * B) * B = \left[
+  \begin{matrix}
+    0.0014 & 0.0041 & 0.0082 & 0.0096 & 0.0082 & 0.0041 & 0.0014 \\
+    0.0041 & 0.0123 & 0.0247 & 0.0288 & 0.0247 & 0.0123 & 0.0041 \\
+    0.0082 & 0.0247 & 0.0494 & 0.0576 & 0.0494 & 0.0247 & 0.0082 \\
+    0.0096 & 0.0288 & 0.0576 & 0.0672 & 0.0576 & 0.0288 & 0.0096 \\
+    0.0082 & 0.0247 & 0.0494 & 0.0576 & 0.0494 & 0.0247 & 0.0082 \\
+    0.0041 & 0.0123 & 0.0247 & 0.0288 & 0.0247 & 0.0123 & 0.0041 \\
+    0.0014 & 0.0041 & 0.0082 & 0.0096 & 0.0082 & 0.0041 & 0.0014
+  \end{matrix}
+\right]
+$$
+</p>
+
+
+Ilustrando graficamente o efeito desse filtro box, temos:
+
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-03.png?raw=true" alt="atv02-q05-03-img" width="800"/>
+</p>
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-04.png?raw=true" alt="atv02-q05-04-img" width="800"/>
 </p>
