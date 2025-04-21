@@ -76,7 +76,7 @@ esse distúrbio em alguma parte (bem definida) da imagem.
 Uma possivel estrategia para detectar esse tipo de anomalia localizada, como  o borramento em regiões especificas, pode ser segmentar a imagem em regiões menores, em especial no exemplo da questão, em quatro quadrantes, ai então aplicar a transformada de Fourier em cada quadrante. A ideia é que, ao analisar o espectro  individualmente para cada quadrante, será possível comparar as distribuições entre as regiões. O quadrante afetado pelo desfoque apresentará uma caracteristica diferente das outras, evidenciando o borramento.
 
 
-Na imagem abaixo, da para ntoar a aplicação dessa solução de separação de quadrantes:
+Na imagem abaixo, da para notar a aplicação dessa solução de separação de quadrantes:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i07-img" width="500"/>
