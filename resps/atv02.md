@@ -449,6 +449,39 @@ Como visto na aula de filtragem, apartir do slide 98, vamos aplicar uma convolu√
 
 Logo:
 
-<!-- <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-04.png?raw=true" alt="atv02-q05-04-img" width="800"/>
-</p> -->
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q06-01.png?raw=true" alt="atv02-q06-01-img" width="800"/>
+</p>
+
+Ent√£o temos:
+
+<p>
+  $$
+  \frac{1}{9} \cdot \text{(Img * B)} = \frac{1}{9} \cdot \left[
+    \begin{matrix}
+      8  & 11 & 8 \\
+      12 & 16 & 12 \\
+      8  & 12 & 9
+    \end{matrix}
+  \right] = \left[
+    \begin{matrix}
+      0.8889 & 1.2222 & 0.8889 \\
+      1.3333 & 1.7778 & 1.3333 \\
+      0.8889 & 1.3333 & 1
+    \end{matrix}
+    \right]
+  $$
+</p>
+
+Aplicando os devidos arredondamentos, temos:
+
+
+$$
+\frac{1}{9} \cdot \text{(Img * B)} = \left[
+  \begin{matrix}
+    1 & 1 & 1 \\
+    1 & 2 & 1 \\
+    1 & 1 & 1
+  \end{matrix}
+  \right]
+$$
