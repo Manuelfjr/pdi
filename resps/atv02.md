@@ -7,6 +7,8 @@
 * **Aluno:** Manuel Ferreira Junior
 * **Disciplina:** Processamento Digital de Imagens
 
+* **Obs.:** Questões com necessidade de calculo de convolução, estarão todas as expressões no [link](https://docs.google.com/spreadsheets/d/1cWB3zNBbDXzFNvEKotBCVPIlnS8cde-SXRjCP55ISTM/edit?usp=sharing), para facilitar a visualização e leitura da atividade. Além disso, cada questão em anexo possui uma copia da sua operação que deve ser realizada. Cada sheet do link em anexo, possui no seu titulo a questão referente e operação referente.
+
 # Questão 01
 
 <strong>
@@ -131,12 +133,11 @@ $$\therefore H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cd
 
 # Questão 04
 
-<strong>
-A convolução discreta é uma operação comutativa. Ou seja:
+**A convolução discreta é uma operação comutativa. Ou seja:**
 
-f * h = h * f, onde * é a operação de convolução.
+**f * h = h * f, onde * é a operação de convolução.**
 
-Comprove isso fazendo a convolução discreta dos dois filtros abaixo. Analise sua resposta.
+**Comprove isso fazendo a convolução discreta dos dois filtros abaixo. Analise sua resposta.**
 
 
 <div style="display: flex; align-items: center;">
@@ -182,9 +183,8 @@ Comprove isso fazendo a convolução discreta dos dois filtros abaixo. Analise s
   </div>
 </div>
 
-Ou seja, você deve calcular (e apresentar todos os cálculos) da convolução discreta 
-das duas matrizes acima, operadas em ordens inversas: f * h e h * f.
-</strong>
+**Ou seja, você deve calcular (e apresentar todos os cálculos) da convolução discreta das duas matrizes acima, operadas em ordens inversas: f * h e h * f.**
+
 
 
 **R.:**
@@ -475,13 +475,35 @@ Então temos:
 
 Aplicando os devidos arredondamentos, temos:
 
+<p>
+  $$
+  \frac{1}{9} \cdot \text{(Img * B)} = \left[
+    \begin{matrix}
+      1 & 1 & 1 \\
+      1 & 2 & 1 \\
+      1 & 1 & 1
+    \end{matrix}
+    \right]
+  $$
+</p>
 
-$$
-\frac{1}{9} \cdot \text{(Img * B)} = \left[
-  \begin{matrix}
-    1 & 1 & 1 \\
-    1 & 2 & 1 \\
-    1 & 1 & 1
-  \end{matrix}
-  \right]
-$$
+A ilustração gráfica do procedimento realizado esta abaixo:
+
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q06-02.png?raw=true" alt="atv02-q06-02-img" width="800"/>
+</p>
+
+# Questão 07
+
+**Disserte sobre a seguinte afirmação:**
+
+**"As operações morfológicas de Erosão e Dilatação, aplicadas com um mesmo elemento estruturante, não são, necessariamente, operações inversas uma da outra."**
+
+**R.:**
+
+Enquanto a dilatação tem como objetivo expandir um objeto, a erosão visa torná-lo mais estreito. Essas operações não são necessariamente inversas, e isso pode ser exemplificado por um caso em que a erosão elimina um ponto isolado. Se uma dilatação for aplicada em seguida, esse ponto não poderá ser recuperado, uma vez que a dilatação expande apenas regiões já existentes. Se o ponto era isolado e não está mais presente na imagem, não há nada a ser expandido.
+
+O cenário oposto também pode ocorrer: ao se aplicar uma dilatação, duas regiões próximas podem se unir. Após isso, uma erosão não será capaz de separá-las novamente, pois agora a imagem possui apenas uma única região contínua. Assim, não é possível aplicar uma suavização que recupere a separação original entre essas regiões.
+
+Ao inves de serem tratadas como operações inversas, elas são complementares, os quais são definidos como Abertura (Suavisação de contornos em objetos, Remoção de ramos em objetos e Expansão de regiões de preto) e Fechamento (Preenchimento de falhas em regiões com contorno, diminuição de áreas de preto), a qual a primeira é a aplicação de uma erosão seguida de uma dilatação e a outra é uma dilatação seguida de uma erosão, ambas com o uso de um mesmo elemento estruturante.
