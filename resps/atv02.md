@@ -2,7 +2,6 @@
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML-full">
 </script>
 
-
 # Atividade 02
 
 * **Aluno:** Manuel Ferreira Junior
@@ -237,6 +236,37 @@ Então, aplicando a convolução teremos:
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="800"/>
 </p>
 
+Logo, a matriz resultante da convolução será:
+
+<!-- <div>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML-full">
+  </script>
+  <p>
+    $$ 
+    CV^{1} = \begin{matrix}
+      -0.11 & -0.11 & 0 & 0.11 & 0.11 \\
+      -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+      -0.33 & -0.33 & 0 & 0.33 & 0.33 \\
+      -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+      -0.11 & -0.11 & 0 & 0.11 & 0.11
+    \end{matrix}
+    $$
+  </p>
+</div> -->
+<p>
+  $$ 
+  f * h = \left[\begin{matrix}
+    -0.11 & -0.11 & 0 & 0.11 & 0.11 \\
+    -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+    -0.33 & -0.33 & 0 & 0.33 & 0.33 \\
+    -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+    -0.11 & -0.11 & 0 & 0.11 & 0.11
+  \end{matrix}\right]
+  $$
+</p>
+
+
 2) <strong>Para h * f:</strong>
 
   Primeiramente, vamos rotacionar a segunda matriz, sendo ela **f**, devido a sua natureza, a rotação dela é igual a original, logo aplicando a revolução teremos:
@@ -246,44 +276,109 @@ Então, aplicando a convolução teremos:
 </p>
 
 
+Analogo ao item anterior, temos:
+
+<p>
+  $$ 
+  h * f = \left[\begin{matrix}
+    -0.11 & -0.11 & 0 & 0.11 & 0.11 \\
+    -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+    -0.33 & -0.33 & 0 & 0.33 & 0.33 \\
+    -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+    -0.11 & -0.11 & 0 & 0.11 & 0.11
+  \end{matrix}\right]
+  $$
+</p>
+
+3) **Conclusão:**
+
+Logo, temos de fato que f * h = h * f.
+
+<p>
+  $$ 
+  f * h = h * f = \left[\begin{matrix}
+    -0.11 & -0.11 & 0 & 0.11 & 0.11 \\
+    -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+    -0.33 & -0.33 & 0 & 0.33 & 0.33 \\
+    -0.22 & -0.22 & 0 & 0.22 & 0.22 \\
+    -0.11 & -0.11 & 0 & 0.11 & 0.11
+  \end{matrix}\right] \square
+  $$
+</p>
+
 # Questão 05
 
 <strong>
 Calcule uma janela para um possível filtro Gaussiano através da convolução 
 discreta de três filtros Box, como abaixo: 
 
-<div style="text-align: center;">
-  <p>
-    Filtro Box: <span style="font-size: 1.5em;">
-      <table style="display: inline-table; border-collapse: collapse; text-align: center;">
-        <tr>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-        </tr>
-      </table>
-    </span>
-  </p>
-</div>
+<p>
+  $$
+    \text{Filtro Box} = \left[\begin{matrix}
+      1 & 1 & 1 \\
+      1 & 1 & 1 \\
+      1 & 1 & 1
+    \end{matrix}\right]
+  $$
+</p>
 </strong>
 
 **R.:**
+
+**Obs.:** Durante a questão, será marcado em **vermelho** os valores a serem somados para compor a sua localização  na matriz **m x n**. Vamos tomar como **B = Filtro Box**, para simplificar.
+
+## 1) <strong>B * B</strong>
+
+Calculando, devido a simetria de B, a rotação será igual, logo temos:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-01.png?raw=true" alt="atv02-q05-01-img" width="800"/>
 </p>
 
+
+Resultando em:
+
+<p>
+$$
+B * B = \left[\begin{matrix}
+  0.0123 & 0.0247 & 0.0370 & 0.0247 & 0.0123 \\
+  0.0247 & 0.0494 & 0.0741 & 0.0494 & 0.0247 \\
+  0.0370 & 0.0741 & 0.1111 & 0.0741 & 0.0370 \\
+  0.0247 & 0.0494 & 0.0741 & 0.0494 & 0.0247 \\
+  0.0123 & 0.0247 & 0.0370 & 0.0247 & 0.0123 \\
+\end{matrix}\right]
+$$
+</p>
+
+
+## 2) <strong>(B * B) * B</strong>
+
+Analogo ao item anterior, devido a simetria de B, teremos rotação igual, logo temos:
+
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-02.png?raw=true" alt="atv02-q05-02-img" width="800"/>
 </p>
 
+Resultado em:
+
+<p>
+$$
+(B * B) * B = \left[
+  \begin{matrix}
+    0.0014 & 0.0041 & 0.0082 & 0.0096 & 0.0082 & 0.0041 & 0.0014 \\
+    0.0041 & 0.0123 & 0.0247 & 0.0288 & 0.0247 & 0.0123 & 0.0041 \\
+    0.0082 & 0.0247 & 0.0494 & 0.0576 & 0.0494 & 0.0247 & 0.0082 \\
+    0.0096 & 0.0288 & 0.0576 & 0.0672 & 0.0576 & 0.0288 & 0.0096 \\
+    0.0082 & 0.0247 & 0.0494 & 0.0576 & 0.0494 & 0.0247 & 0.0082 \\
+    0.0041 & 0.0123 & 0.0247 & 0.0288 & 0.0247 & 0.0123 & 0.0041 \\
+    0.0014 & 0.0041 & 0.0082 & 0.0096 & 0.0082 & 0.0041 & 0.0014
+  \end{matrix}
+\right]
+$$
+</p>
+
+3) <strong>Conclusão:</strong>
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-03.png?raw=true" alt="atv02-q05-03-img" width="800"/>
+</p>
