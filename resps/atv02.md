@@ -40,7 +40,7 @@ A Transformada de Fourier tem como foco principal analisar a distribuicao das fr
 Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-05.png?raw=true" alt="q01-i3-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-06.png?raw=true" alt="q01-i3-img" width="600"/>
 </p>
 
 
