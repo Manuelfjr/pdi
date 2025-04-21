@@ -489,7 +489,6 @@ Aplicando os devidos arredondamentos, temos:
 
 A ilustração gráfica do procedimento realizado esta abaixo:
 
-
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q06-02.png?raw=true" alt="atv02-q06-02-img" width="800"/>
 </p>
