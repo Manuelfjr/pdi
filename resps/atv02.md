@@ -9,6 +9,61 @@
 
 * **Obs.:** Questões com necessidade de calculo de convolução, estarão todas as expressões no [link](https://docs.google.com/spreadsheets/d/1cWB3zNBbDXzFNvEKotBCVPIlnS8cde-SXRjCP55ISTM/edit?usp=sharing), para facilitar a visualização e leitura da atividade. Além disso, cada questão em anexo possui uma copia da sua operação que deve ser realizada. Cada sheet do link em anexo, possui no seu titulo a questão referente e operação referente.
 
+# Funções 
+
+Abaixo, temos as funções criadas para utilizar ao decorrer da atividade, para as questões de implementação.
+
+```py
+def find_contorno(imagem):
+    """Verifica se a imagem contém a letra A maiúscula"""
+    # Binariza a imagem (inversão: fundo branco, letras pretas)
+    _, img_bin = cv2.threshold(imagem, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+    # Encontra contornos (possíveis letras)
+    contornos, _ = cv2.findContours(img_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    return contornos, img_bin
+
+def tm_ccoef_normed(image: np.ndarray, template: np.ndarray) -> np.ndarray:
+    """
+    Calcula a correlação cruzada normalizada (TM_CCOEFF_NORMED) entre a imagem e o template.
+
+    Parâmetros:
+    - image: imagem de entrada (2D, em escala de cinza)
+    - template: template a ser comparado (2D, em escala de cinza)
+
+    Retorna:
+    - result: mapa de similaridade (valores entre -1 e 1)
+    """
+    img_h, img_w = image.shape
+    tpl_h, tpl_w = template.shape
+
+    # Média e T' do template
+    template_mean = np.mean(template)
+    template_prime = template - template_mean
+    template_prime_squared_sum = np.sum(template_prime ** 2)
+
+    # Saída terá tamanho reduzido
+    result_h = img_h - tpl_h + 1
+    result_w = img_w - tpl_w + 1
+    result = np.zeros((result_h, result_w), dtype=np.float32)
+
+    # Para cada posição possível (x, y) na imagem:
+    for y in range(result_h):
+        for x in range(result_w):
+            region = image[y:(y + tpl_h), x:(x + tpl_w)]
+            region_mean = np.mean(region)
+            region_prime = region - region_mean
+            region_prime_squared_sum = np.sum(region_prime ** 2)
+
+            numerator = np.sum(template_prime * region_prime)
+            denominator = np.sqrt(template_prime_squared_sum * region_prime_squared_sum)
+
+            result[y, x] = numerator / denominator if denominator != 0 else 0.0
+
+    return result
+
+```
+
 # Questão 01
 
 <strong>
@@ -541,6 +596,21 @@ R(x, y) = \frac{\sum_{x^{'}, y^{'}} (T^{'}(x^{'}, y^{'}) \cdot I^{'}(x + x^{'}, 
 $$
 </p>
 
+Sendo:
+
+<p>
+$$
+\begin{cases} 
+x, y, & \text{coordenadas relativas do ponto na imagem;}\\
+x^{'}, y^{'} & \text{coordenadas relativas do ponto no template;}\\
+T^{'}(x^{'}, y^{'}), & \text{Valor do pixel (com T centralizado na média) no template para o ponto $(x^{'}, y^{'})$;}\\
+I^{'}(x + x^{'}, y + y^{'}) & \text{Representando o pixel na imagem de entrada (com I centralizado) em uma posição deslocada}.
+\end{cases}
+$$
+</p>
+
+
+
 3) **Definição de corte para a similaridade:** será necessário a seleção de um ponto de corte da similaridade para definir um objeto contornado como uma letra **A**, para tanto será selecionado um ponto de corte de 0.5, ou seja:
 
 <p>
@@ -616,20 +686,23 @@ for i, contorno in enumerate(contornos):
 
     letra = img_bin[y:(y + h), x:(x + w)]  # recorta a letra da iamgem
     letra_resized = cv2.resize(
-      letra,
-      (image_template.shape[1], image_template.shape[0])
+        letra,
+        (image_template.shape[1], image_template.shape[0])
     )  # redimensiona para o tamanho do template
 
     letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
 
-    # simililarity = np.sum(letra_norm * image_template)
-    res = cv2.matchTemplate(
-        letra_norm.astype(np.float32),
-        image_template.astype(np.float32),
-        cv2.TM_CCOEFF_NORMED
-    )  # calculo de similaridade explicitado
+    # Outro formato de uso usando a biblioteca OpenCV ###############################################################
+    # res = cv2.matchTemplate(
+    #     letra_norm.astype(np.float32),
+    #     image_template.astype(np.float32),
+    #     cv2.TM_CCOEFF_NORMED
+    # )[0][0]  # calculo de similaridade explicitado
+    #################################################################################################################
+    res = tm_ccoef_normed(letra_norm, image_template)  # calculo de similaridade
+    # simililarity = res[0][0]
     simililarity = res[0][0]
-    
+
     contents["contornos"].append(contorno)
     contents["letra"].append(letra)
     contents["letra_norm"].append(letra_norm)
@@ -778,18 +851,23 @@ for i, contorno in enumerate(contornos):
     x, y, w, h = cv2.boundingRect(contorno)
 
     letra = img_bin[y:(y + h), x:(x + w)]  # recorta a letra da iamgem
-    letra_resized = cv2.resize(letra, (image_template.shape[1], image_template.shape[0]))  # redimensiona para o tamanho do template
+    letra_resized = cv2.resize(
+        letra,
+        (image_template.shape[1], image_template.shape[0])
+    )  # redimensiona para o tamanho do template
 
     letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
 
-    # simililarity = np.sum(letra_norm * image_template)
-    res = cv2.matchTemplate(
-        letra_norm.astype(np.float32),
-        image_template.astype(np.float32),
-        cv2.TM_CCOEFF_NORMED
-    )  # calculo de similaridade explicitado
+    # Outro formato de uso usando a biblioteca OpenCV ###############################################################
+    # res = cv2.matchTemplate(
+    #     letra_norm.astype(np.float32),
+    #     image_template.astype(np.float32),
+    #     cv2.TM_CCOEFF_NORMED
+    # )[0][0]  # calculo de similaridade explicitado
+    #################################################################################################################
+    res = tm_ccoef_normed(letra_norm, image_template)  # calculo de similaridade
     simililarity = res[0][0]
-    
+
     contents["contornos"].append(contorno)
     contents["letra"].append(letra)
     contents["letra_norm"].append(letra_norm)
@@ -869,3 +947,76 @@ else:
 
 
 **R.:**
+
+
+# Questão 10
+
+**Análise Escala-Espaço: Observamos o mundo ao nosso redor em diferentes escalas. Sempre temos, à nossa frente, objetos mais próximos e objetos mais distantes. Nesse sentido, tomando como base a teoria de Marr, Pietro Perona e Jitendra Malik propuseram um método de detecção de bordas, usando a teoria escala-espaço. A ideia principal é que, em diferentes escalas da imagem, diferentes bordas se sobressaem. Essa variação de escala poderia ser conseguida com a aplicação de sucessivos resizes na imagem. No entanto, como cada resize tem como consequência, além da mudança de dimensões de uma imagem, a perda de detalhes, essa operação foi substituída pela aplicação de filtros Gaussianos de diferentes parâmetros. À medida que o filtro se torna mais forte (maior o desvio padrão), mais embaçada a imagem fica o que gera a perda de detalhes esperada.**
+
+**Comprove a aplicação da teoria escala-espaço na detecção de bordas com o seguinte experimento: na imagem cameraman.png, aplique três filtros gaussianos diferentes (parte de um mais fraco e vá até um mais forte), detecte as bordas de cada um com o detector de Canny (precisa usar os mesmos parâmetros para todas as imagens) e, por fim, avalie os resultados finais, verificando se diferentes bordas foram encontradas.**
+
+**OBS: Não se preocupe em achar um resultado final de boa qualidade; não é esse o objetivo do experimento**
+
+**R.:**
+
+* **Leitura**
+
+```py
+img_names = ["cameraman.png"]
+imgs = {
+    i.split(".")[0]: cv2.imread(path_imgs_atv / i, cv2.IMREAD_GRAYSCALE) for i in img_names
+}
+```
+
+* **Configurando parâmetros**
+
+```py
+# Sigmas para o filtro gaussiano
+sigmas = [1, 2, 4]
+
+# Parametros para o método de deteccao de canny
+low = 50
+high = 150
+```
+
+* **Implementação e geração de gráficos**
+
+```py
+fig, ax = plt.subplots(1, len(sigmas), figsize=(16, 8))
+ax = ax.flatten()
+for i, sigma in enumerate(sigmas):
+    # Aplica filtro Gaussiano com sigma definido
+    blurred = cv2.GaussianBlur(
+        imgs["cameraman"],
+        (0, 0),
+        sigmaX=sigma,
+        sigmaY=sigma
+    )
+
+    # Detecta bordas com Canny
+    edges = cv2.Canny(
+        blurred,
+        low,
+        high
+    )
+
+    # Exibe os resultados
+    ax[i].imshow(edges, cmap='gray')
+    ax[i].set_title(f'Canny{low, high} | Filtro gaussiano:' + rf'$\sigma$={sigma}')
+    ax[i].axis('off')
+fig.tight_layout()
+fig.savefig(path_assets / "atv02-q10-01.png", dpi=400, bbox_inches='tight')
+plt.show()
+```
+
+A ideia central é que diferentes escalas revelam diferentes tipos de bordas em uma imagem, o que é evidenciado ao aplicar filtros Gaussianos com diferentes valores de desvio padrão (σ) antes da detecção de bordas com o método de Canny.
+
+Na imagem gerada:
+
+À esquerda (σ = 1): vemos muitas bordas finas e detalhes da imagem preservados. Isso ocorre porque o filtro Gaussiano é fraco e pouco embaça a imagem, mantendo pequenos detalhes que o detector de Canny reconhece como bordas.
+
+No centro (σ = 2): os detalhes mais finos já começam a desaparecer. O filtro Gaussiano mais forte suaviza regiões pequenas, e o detector de bordas passa a destacar contornos mais marcantes e estruturais.
+
+À direita (σ = 4): apenas as bordas principais da imagem são visíveis. Com o aumento da suavização, muitos detalhes são eliminados, e apenas as transições de intensidade mais relevantes permanecem.
+
+Essa progressão demonstra que, ao aumentar o valor de σ no filtro Gaussiano, estamos efetivamente observando a imagem em uma escala mais ampla, na qual apenas bordas maiores e mais importantes são mantidas. Dessa forma, diferentes bordas aparecem em diferentes escalas, validando a ideia da análise escala-espaço como uma ferramenta útil na segmentação e compreensão de imagens complexas.
