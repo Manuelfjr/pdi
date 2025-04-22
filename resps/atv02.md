@@ -506,3 +506,91 @@ Enquanto a dilatação tem como objetivo expandir um objeto, a erosão visa torn
 O cenário oposto também pode ocorrer: ao se aplicar uma dilatação, duas regiões próximas podem se unir. Após isso, uma erosão não será capaz de separá-las novamente, pois agora a imagem possui apenas uma única região contínua. Assim, não é possível aplicar uma suavização que recupere a separação original entre essas regiões.
 
 Ao inves de serem tratadas como operações inversas, elas são complementares, os quais são definidos como Abertura (Suavisação de contornos em objetos, Remoção de ramos em objetos e Expansão de regiões de preto) e Fechamento (Preenchimento de falhas em regiões com contorno, diminuição de áreas de preto), a qual a primeira é a aplicação de uma erosão seguida de uma dilatação e a outra é uma dilatação seguida de uma erosão, ambas com o uso de um mesmo elemento estruturante.
+
+# Questão 08
+
+**Considere as imagens Book_1.png e Book_2.png disponibilizadas. Utilizando apenas técnicas de processamento de imagens, crie um algoritmo que verifique se essas imagens possuem a letra A ou não. Apenas o A maiúsculo deve ser procurado e não precisa retornar quantos têm; apenas se tem ou não. Observe que as imagens estão em preto e branco.**
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_1.png?raw=true" alt="atv02-q08-01-img" width="600"/>
+</p>
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_2.png?raw=true" alt="atv02-q08-02-img" width="600"/>
+</p>
+
+**R.:**
+
+
+**Obs.:** O notebook criado para esse item pode ser encontrado neste [link](https://github.com/Manuelfjr/pdi/blob/develop/resps/atv02.pdf). Nele pode ser encontrado a resolução em um formato de notebook, se for do interesse.
+
+Antes  de prosseguir a atividade, é necessário a definição de alguns pontos, sendo eles os abaixos:
+
+1) **Definição de um target ou template:** para podermos comparar contornos e objetos encontrados pelo algoritmo em uma imagem, se faz necessário um objeto para comparação, ou seja, um template do objeto de interesse, que nesse caso será a letra **A**. O template utilizado pode ser visualizado abaixo:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-01_template_A.png?raw=true" alt="atv02-q08-01-img" width="600"/>
+</p>
+
+2) **Métrica para definir similaridade:** durante a questão, se faz necessário um meio de mensurar a similaridade entre uma imagem e o template, para tanto será definido a métrica `TM_CCOEFF_NORMED`, disponibilizada pelo proprio [*OpenCV*](https://docs.opencv.org/4.x/df/dfb/group__imgproc__object.html#ga3a7850640f1fe1f58fe91a2d7583695d), a qual é dada pela expressão abaixo:
+
+
+<p>
+$$
+R(x, y) = \frac{\sum_{x^{'}, y^{'}} (T^{'}(x^{'}, y^{'}) \cdot I^{'}(x + x^{'}, y + y^{'}))}{\sqrt{\sum_{x^{'}, y^{'}} T^{'}(x^{'}, y^{'})^{2} \cdot \sum_{x^{'}, y^{'}} I^{'}(x + x^{'}, y + y^{'})^{2}}}
+$$
+</p>
+
+3) **Definição de corte para a similaridade:** será necessário a seleção de um ponto de corte da similaridade para definir um objeto contornado como uma letra **A**, para tanto será selecionado um ponto de corte de 0.5, ou seja:
+
+<p>
+$$
+\text{Resultado} = 
+\begin{cases} 
+\text{Letra 'A' encontrada}, & \text{se } thres \geq 0.5 \\
+\text{Letra 'A' não encontrada}, & \text{se } thres < 0.5
+\end{cases}
+$$
+</p>
+
+
+## 1) 1º Imagem
+
+
+### 1.1) Leitura das imagens
+
+Primeiro, vamos realizar a leitura das imagens seguindo o código abaixo:
+
+```py
+# Leitura de imagens
+file_path_template_A = str(path_assets / "atv02-q08-01_template_A.png")
+image_path = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
+
+image_book = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+image_template = cv2.imread(file_path_template_A, cv2.IMREAD_GRAYSCALE)
+```
+
+### 1.2) Ilustração do processo de binarização e contornos
+
+Abaixo temos a imagem binarizada, apos a inversão e ao lado o contorno de cada letra encontrada.
+
+```py
+# Mostra imagem binarizada e com contornos lado a lado
+fig1, ax1 = plt.subplots(1, 2, figsize=(12, 5))
+ax1[0].set_title("Imagem Binarizada (Inversa)")
+ax1[0].imshow(img_bin, cmap='gray')
+ax1[0].axis('off')
+
+ax1[1].set_title("Contornos Detectados")
+ax1[1].imshow(imagem_com_contornos, cmap='gray')
+ax1[1].axis('off')
+
+fig1.tight_layout()
+fig1.savefig(path_assets / "atv02-q08-i02_k03.png", dpi=400, bbox_inches='tight')
+plt.show()
+```
+
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03-img" width="600"/>
+</p>
