@@ -522,14 +522,14 @@ Ao inves de serem tratadas como operações inversas, elas são complementares, 
 **R.:**
 
 
-**Obs.:** O notebook criado para esse item pode ser encontrado neste [link](https://github.com/Manuelfjr/pdi/blob/develop/resps/atv02.pdf). Nele pode ser encontrado a resolução em um formato de notebook, se for do interesse.
+**Obs.:** O notebook criado para esse item pode ser encontrado neste [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_atv02_code_q08.ipynb). Nele pode ser encontrado a resolução em um formato de notebook, se for do interesse.
 
 Antes  de prosseguir a atividade, é necessário a definição de alguns pontos, sendo eles os abaixos:
 
 1) **Definição de um target ou template:** para podermos comparar contornos e objetos encontrados pelo algoritmo em uma imagem, se faz necessário um objeto para comparação, ou seja, um template do objeto de interesse, que nesse caso será a letra **A**. O template utilizado pode ser visualizado abaixo:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-01_template_A.png?raw=true" alt="atv02-q08-01-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-01_template_A.png?raw=true" alt="atv02-q08-01-img" width="300"/>
 </p>
 
 2) **Métrica para definir similaridade:** durante a questão, se faz necessário um meio de mensurar a similaridade entre uma imagem e o template, para tanto será definido a métrica `TM_CCOEFF_NORMED`, disponibilizada pelo proprio [*OpenCV*](https://docs.opencv.org/4.x/df/dfb/group__imgproc__object.html#ga3a7850640f1fe1f58fe91a2d7583695d), a qual é dada pela expressão abaixo:
@@ -568,6 +568,15 @@ image_path = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
 
 image_book = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 image_template = cv2.imread(file_path_template_A, cv2.IMREAD_GRAYSCALE)
+
+# parametros para salvar
+contents = {
+    "contornos": [],
+    "letra": [],
+    "letra_norm": [],
+    "similarity": [],
+    "check_is_valid": []
+}
 ```
 
 ### 1.2) Ilustração do processo de binarização e contornos
@@ -586,11 +595,164 @@ ax1[1].imshow(imagem_com_contornos, cmap='gray')
 ax1[1].axis('off')
 
 fig1.tight_layout()
-fig1.savefig(path_assets / "atv02-q08-i02_k03.png", dpi=400, bbox_inches='tight')
+fig1.savefig(path_assets / "atv02-q08-i01_k03.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03-img" width="800"/>
+</p>
+
+### 1.3) Busca de similaridade com o template utilizado
+
+Abaixo, será aplicado a cada contorno encontrado um calculo de similaridade mencionado anteriormente (`TM_CCOEFF_NORMED`), com a implementação disponibilizada pela *OpenCV*. 
+
+```py
+fig, ax = plt.subplots(10, 10, figsize=(18, 16))
+ax = ax.flatten()
+for i, contorno in enumerate(contornos):
+    x, y, w, h = cv2.boundingRect(contorno)
+
+    letra = img_bin[y:(y + h), x:(x + w)]  # recorta a letra da iamgem
+    letra_resized = cv2.resize(
+      letra,
+      (image_template.shape[1], image_template.shape[0])
+    )  # redimensiona para o tamanho do template
+
+    letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
+
+    # simililarity = np.sum(letra_norm * image_template)
+    res = cv2.matchTemplate(
+        letra_norm.astype(np.float32),
+        image_template.astype(np.float32),
+        cv2.TM_CCOEFF_NORMED
+    )  # calculo de similaridade explicitado
+    simililarity = res[0][0]
+    
+    contents["contornos"].append(contorno)
+    contents["letra"].append(letra)
+    contents["letra_norm"].append(letra_norm)
+    contents["similarity"].append(simililarity)
+
+    if w < 10 or h < 10:  # contornos muito pequenos não serão mostrados
+        if i < (10 * 10):
+            ax[i].axis("off")
+        contents["check_is_valid"].append(False)
+        continue
+    contents["check_is_valid"].append(True)
+
+    if i < (10 * 10):
+        ax[i].imshow(letra_norm, cmap='gray')
+        ax[i].axis("off")
+        ax[i].set_title(f"Sim: {simililarity:.2f}")
+fig.savefig(path_assets / "atv02-q08-i01_k04.png", dpi=400, bbox_inches='tight')
+fig.suptitle("Amostra de letras e similaridade calculada")
+```
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png?raw=true" alt="atv02-q08-i01_k04-img" width="600"/>
+</p>
+
+### 1.4) Threshold para similaridade
+
+Como dito anteriormente, vamos considerar um *threshold* de similaridade de 0.5, para definir que o objeto encontrado pelo contorno é a letra **A**. Podemos visualizar logo abaixo:
+
+```py
+p = 0.5
+ks = np.where(
+  (np.array(contents["similarity"]) >= p) & (np.array(contents["check_is_valid"]) == True)
+)[0]  # achando os indices das letras com similirade >= 0.5
+n = math.ceil(math.sqrt(len(ks)))
+
+if n != 0:
+    fig, axes = plt.subplots(
+        n,
+        n,
+        figsize=(n * 3, n * 3)
+    )
+
+
+    for value, _axes in zip(ks, axes.flatten()):
+        _axes.imshow(contents["letra_norm"][value], cmap="gray")
+        _axes.set_title(f"Contorno: {value}")
+
+    for _axes in axes.flatten():
+        _axes.axis('off')
+
+    text = f"Letra 'A' {'encontrada' if len(ks) >= 1 else 'inexistente'}"
+    text += f" | Total: {len(ks)}"
+    fig.suptitle(text, fontsize=16, weight='bold')
+    fig.savefig(path_assets / "atv02-q08-i01_k05.png", dpi=400, bbox_inches='tight')
+    plt.show()
+else:
+    fig, axes = plt.subplots(
+        1,
+        1,
+        figsize=(16, 8)
+    )
+    axes.set_title("Letra 'A' não encontrada")
+    axes.axis('off')
+    fig.savefig(path_assets / "atv02-q08-i01_k05.png", dpi=400, bbox_inches='tight')
+```
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k05.png?raw=true" alt="atv02-q08-i01_k05-img" width="600"/>
+</p>
+
+
+### 1.5) Conclusão
+
+Ao aplicarmos o algoritmo anterior, para a imagem do `Book_1.png`, foi visto que ele possuí a letra **A** em sua imagem. Um ponto a mais, com o formato da implementação utilizada, é possível listar o número de **A**'s encontrados, totalizando 10 para a imagem `Book_1.png`.
+
+
+## 2) 2º Imagem
+
+O procedimento para a segunda imagem será  analogo a primeira imagem, mudando apenas o objeto na leitura.
+
+### 2.1) Leitura das imagens
+
+Primeiro, vamos realizar a leitura das imagens seguindo o código abaixo:
+
+```py
+# Leitura de imagens
+file_path_template_A = str(path_assets / "atv02-q08-01_template_A.png")
+image_path = str(path_assets / "atv02_lista02-assets" / "Book_2.png")
+
+image_book = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+image_template = cv2.imread(file_path_template_A, cv2.IMREAD_GRAYSCALE)
+
+# parametros para salvar
+contents = {
+    "contornos": [],
+    "letra": [],
+    "letra_norm": [],
+    "similarity": [],
+    "check_is_valid": []
+}
+```
+
+### 2.2) Ilustração do processo de binarização e contornos
+
+Como no item anterior (1.2), fizemos a mesma inversão de cores, com a binarização, e ao lado o contorno de cada letra encontrada:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k03.png?raw=true" alt="atv02-q08-i02_k03-img" width="800"/>
+</p>
+
+
+### 2.3) Busca de similaridade com o template utilizado
+
+Aplicando a mesma logica de similaridade do item (1.3), utilizando a similaridade escolhida. Podemos visualizar a amostra de alguns objetos encontrados abaixo:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k04.png?raw=true" alt="atv02-q08-i02_k04-img" width="600"/>
+</p>
+
+### 2.4) Conclusão
+
+Aplicando o *threshold* de 0.5, não foi encontrado nenhuma letra **A** pelo algoritmo
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k05.png?raw=true" alt="atv02-q08-i02_k05-img" width="600"/>
 </p>
