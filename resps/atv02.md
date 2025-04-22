@@ -948,6 +948,8 @@ else:
 
 **R.:**
 
+* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q09.ipynb).
+
 
 # Questão 10
 
@@ -958,6 +960,10 @@ else:
 **OBS: Não se preocupe em achar um resultado final de boa qualidade; não é esse o objetivo do experimento**
 
 **R.:**
+
+* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb).
+
+O intuito desse experimento é verificar a detecção das bordas apos a aplicação de três filtros gaussianos, e analisar o contorno encontrado apos cada filtro. Dessa forma, o esperado é que o nível de detalhe caia, a medida que se aumenta o sigma do filtro gaussiano, causando um efeito de perca de detalhes.
 
 * **Leitura**
 
@@ -1009,14 +1015,14 @@ fig.savefig(path_assets / "atv02-q10-01.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
-A ideia central é que diferentes escalas revelam diferentes tipos de bordas em uma imagem, o que é evidenciado ao aplicar filtros Gaussianos com diferentes valores de desvio padrão (σ) antes da detecção de bordas com o método de Canny.
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q10-01.png?raw=true" alt="atv02-q10-01-img" width="800"/>
+</p>
 
-Na imagem gerada:
+* **&sigma; = 1**: existe diversas bordas, mostrando um nivel de detalhe bem significante, preservando pontos princiapis da imagem e secundários também. Isso se da possivelmente pelo valor de &sigma; baixo, causando um efeito de emabaçamento menor. 
 
-À esquerda (σ = 1): vemos muitas bordas finas e detalhes da imagem preservados. Isso ocorre porque o filtro Gaussiano é fraco e pouco embaça a imagem, mantendo pequenos detalhes que o detector de Canny reconhece como bordas.
+* **&sigma; = 2**: destaque nos detalhes principais, sumindo parcialmente traços mais secundários como os da grama. O filtro Gaussiano mais forte suaviza regiões pequenas, e o detector de bordas começa  a destacar contornos mais marcantes.
 
-No centro (σ = 2): os detalhes mais finos já começam a desaparecer. O filtro Gaussiano mais forte suaviza regiões pequenas, e o detector de bordas passa a destacar contornos mais marcantes e estruturais.
+* **&sigma; = 4**: apenas as bordas principais da imagem são visíveis. Com o aumento da suavização, diversos detalhes desaparecem, restando apenas as transições de contraste mais evidentes.
 
-À direita (σ = 4): apenas as bordas principais da imagem são visíveis. Com o aumento da suavização, muitos detalhes são eliminados, e apenas as transições de intensidade mais relevantes permanecem.
-
-Essa progressão demonstra que, ao aumentar o valor de σ no filtro Gaussiano, estamos efetivamente observando a imagem em uma escala mais ampla, na qual apenas bordas maiores e mais importantes são mantidas. Dessa forma, diferentes bordas aparecem em diferentes escalas, validando a ideia da análise escala-espaço como uma ferramenta útil na segmentação e compreensão de imagens complexas.
+Essa progressão demonstra que, ao aumentar o valor de &sigma; no filtro Gaussiano, esta focando na imagem apenas os pontos mais caracteristicos, ou seja, apenas bordas maiores e mais importantes são conservadas. Dessa forma, diferentes bordas aparecem em diferentes escalas, demonstrando a ideia da análise escala-espaço como uma ferramenta bem interessante na segmentação  de imagens com muitos objetos visuais.
