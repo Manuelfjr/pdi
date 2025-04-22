@@ -950,6 +950,28 @@ else:
 
 * **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q09.ipynb).
 
+## b)
+
+```py
+filtered_img = {
+    "Filtro box 2x2": cv2.blur(imgs["cameraman_pattern"], (2, 2)),  # aplicando um filtro box de dimensão 2x2
+    "Filtro gaussiano": cv2.GaussianBlur(
+        imgs["cameraman_pattern"],
+        (0, 0),
+        sigmaX=1,
+        sigmaY=1
+    )  # Aplicando um filtro gaussiano, com sigma = 1
+}
+```
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-01.png?raw=true" alt="atv02-q09-01-img" width="800"/>
+</p>
+
+### Conclusão
+
+Ambos os filtros aplicados conseguiram sumir com as linhas existentes na imagem, porém ambos ainda sim causando um efeito de borramento, como era esperado de ambos. Para esse cenário especifico, o filtro box 2x2 conseguiu recuperar com mais detalhes, menos borrado quando comparado ao filtro gaussiano, não sendo tão fiel aos detalhes original.
+
 
 # Questão 10
 
