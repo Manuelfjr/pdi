@@ -512,11 +512,11 @@ Ao inves de serem tratadas como operações inversas, elas são complementares, 
 **Considere as imagens Book_1.png e Book_2.png disponibilizadas. Utilizando apenas técnicas de processamento de imagens, crie um algoritmo que verifique se essas imagens possuem a letra A ou não. Apenas o A maiúsculo deve ser procurado e não precisa retornar quantos têm; apenas se tem ou não. Observe que as imagens estão em preto e branco.**
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_1.png?raw=true" alt="atv02-q08-01-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_1.png?raw=true" alt="atv02-q08-01-img" width="400"/>
 </p>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_2.png?raw=true" alt="atv02-q08-02-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_2.png?raw=true" alt="atv02-q08-02-img" width="400"/>
 </p>
 
 **R.:**
@@ -554,10 +554,10 @@ $$
 </p>
 
 
-## 1) 1º Imagem
+## 1) **1º Imagem**
 
 
-### 1.1) Leitura das imagens
+### 1.1) **Leitura das imagens**
 
 Primeiro, vamos realizar a leitura das imagens seguindo o código abaixo:
 
@@ -579,7 +579,7 @@ contents = {
 }
 ```
 
-### 1.2) Ilustração do processo de binarização e contornos
+### 1.2) **Ilustração do processo de binarização e contornos**
 
 Abaixo temos a imagem binarizada, apos a inversão e ao lado o contorno de cada letra encontrada.
 
@@ -601,10 +601,10 @@ plt.show()
 
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03-img" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03-img" width="600"/>
 </p>
 
-### 1.3) Busca de similaridade com o template utilizado
+### 1.3) **Busca de similaridade com o template utilizado**
 
 Abaixo, será aplicado a cada contorno encontrado um calculo de similaridade mencionado anteriormente (`TM_CCOEFF_NORMED`), com a implementação disponibilizada pela *OpenCV*. 
 
@@ -651,10 +651,10 @@ fig.suptitle("Amostra de letras e similaridade calculada")
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png?raw=true" alt="atv02-q08-i01_k04-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png?raw=true" alt="atv02-q08-i01_k04-img" width="400"/>
 </p>
 
-### 1.4) Threshold para similaridade
+### 1.4) **Threshold para similaridade**
 
 Como dito anteriormente, vamos considerar um *threshold* de similaridade de 0.5, para definir que o objeto encontrado pelo contorno é a letra **A**. Podemos visualizar logo abaixo:
 
@@ -697,20 +697,20 @@ else:
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k05.png?raw=true" alt="atv02-q08-i01_k05-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k05.png?raw=true" alt="atv02-q08-i01_k05-img" width="400"/>
 </p>
 
 
-### 1.5) Conclusão
+### 1.5) **Conclusão**
 
 Ao aplicarmos o algoritmo anterior, para a imagem do `Book_1.png`, foi visto que ele possuí a letra **A** em sua imagem. Um ponto a mais, com o formato da implementação utilizada, é possível listar o número de **A**'s encontrados, totalizando 10 para a imagem `Book_1.png`.
 
 
-## 2) 2º Imagem
+## 2) **2º Imagem**
 
 O procedimento para a segunda imagem será  analogo a primeira imagem, mudando apenas o objeto na leitura.
 
-### 2.1) Leitura das imagens
+### 2.1) **Leitura das imagens**
 
 Primeiro, vamos realizar a leitura das imagens seguindo o código abaixo:
 
@@ -732,12 +732,38 @@ contents = {
 }
 ```
 
-### 2.2) Ilustração do processo de binarização e contornos
+### 2.2) **Ilustração do processo de binarização e contornos**
 
 Como no item anterior (1.2), fizemos a mesma inversão de cores, com a binarização, e ao lado o contorno de cada letra encontrada:
 
+```py
+# Pega os contornos e a imagem binarizada
+contornos, img_bin = find_contorno(image_book)
+
+# Faz uma cópia colorida da imagem original (para desenhar colorido)
+imagem_com_contornos = cv2.cvtColor(image_book, cv2.COLOR_GRAY2BGR)
+
+# Desenha os contornos
+_ = cv2.drawContours(imagem_com_contornos, contornos, -1, (0, 255, 0), 1)
+
+# Mostra imagem binarizada e com contornos lado a lado
+fig1, ax1 = plt.subplots(1, 2, figsize=(12, 5))
+ax1[0].set_title("Imagem Binarizada (Inversa)")
+ax1[0].imshow(img_bin, cmap='gray')
+ax1[0].axis('off')
+
+ax1[1].set_title("Contornos Detectados")
+ax1[1].imshow(imagem_com_contornos, cmap='gray')
+ax1[1].axis('off')
+
+fig1.tight_layout()
+fig1.savefig(path_assets / "atv02-q08-i02_k03.png", dpi=400, bbox_inches='tight')
+plt.show()
+```
+
+
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k03.png?raw=true" alt="atv02-q08-i02_k03-img" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k03.png?raw=true" alt="atv02-q08-i02_k03-img" width="600"/>
 </p>
 
 
@@ -745,14 +771,101 @@ Como no item anterior (1.2), fizemos a mesma inversão de cores, com a binariza�
 
 Aplicando a mesma logica de similaridade do item (1.3), utilizando a similaridade escolhida. Podemos visualizar a amostra de alguns objetos encontrados abaixo:
 
+```py
+fig, ax = plt.subplots(10, 10, figsize=(18, 16))
+ax = ax.flatten()
+for i, contorno in enumerate(contornos):
+    x, y, w, h = cv2.boundingRect(contorno)
+
+    letra = img_bin[y:(y + h), x:(x + w)]  # recorta a letra da iamgem
+    letra_resized = cv2.resize(letra, (image_template.shape[1], image_template.shape[0]))  # redimensiona para o tamanho do template
+
+    letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
+
+    # simililarity = np.sum(letra_norm * image_template)
+    res = cv2.matchTemplate(
+        letra_norm.astype(np.float32),
+        image_template.astype(np.float32),
+        cv2.TM_CCOEFF_NORMED
+    )  # calculo de similaridade explicitado
+    simililarity = res[0][0]
+    
+    contents["contornos"].append(contorno)
+    contents["letra"].append(letra)
+    contents["letra_norm"].append(letra_norm)
+    contents["similarity"].append(simililarity)
+
+    if w < 10 or h < 10:  # contornos muito pequenos não serão mostrados
+        if i < (10 * 10):
+            ax[i].axis("off")
+        contents["check_is_valid"].append(False)
+        continue
+    contents["check_is_valid"].append(True)
+
+    if i < (10 * 10):
+        ax[i].imshow(letra_norm, cmap='gray')
+        ax[i].axis("off")
+        ax[i].set_title(f"Sim: {simililarity:.2f}")
+fig.savefig(path_assets / "atv02-q08-i02_k04.png", dpi=400, bbox_inches='tight')
+fig.suptitle("Amostra de letras e similaridade calculada")
+```
+
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k04.png?raw=true" alt="atv02-q08-i02_k04-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k04.png?raw=true" alt="atv02-q08-i02_k04-img" width="400"/>
 </p>
 
 ### 2.4) Conclusão
 
 Aplicando o *threshold* de 0.5, não foi encontrado nenhuma letra **A** pelo algoritmo
 
+```py
+ks = np.where((np.array(contents["similarity"]) >= 0.5) & (np.array(contents["check_is_valid"]) == True))[0]
+n = math.ceil(math.sqrt(len(ks)))
+
+if n != 0:
+    fig, axes = plt.subplots(
+        n,
+        n,
+        figsize=(n * 3, n * 3)
+    )
+
+
+    for value, _axes in zip(ks, axes.flatten()):
+        print("test")
+        _axes.imshow(contents["letra_norm"][value], cmap="gray")
+        _axes.set_title(f"Contorno: {value}")
+
+    for _axes in axes.flatten():
+        _axes.axis('off')
+
+    text = f"Letra 'A' {'encontrada' if len(ks) >= 1 else 'inexistente'}"
+    text += f" | Total: {len(ks)}"
+    fig.suptitle(text, fontsize=16, weight='bold')
+    fig.savefig(path_assets / "atv02-q08-i02_k05.png", dpi=400, bbox_inches='tight')
+    plt.show()
+else:
+    fig, axes = plt.subplots(
+        1,
+        1,
+        figsize=(16, 8)
+    )
+    axes.set_title("Letra 'A' não encontrada")
+    axes.axis('off')
+    fig.savefig(path_assets / "atv02-q08-i02_k05.png", dpi=400, bbox_inches='tight')
+```
+
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k05.png?raw=true" alt="atv02-q08-i02_k05-img" width="600"/>
 </p>
+
+
+# Questão 09
+
+**Considere a imagem `cameraman_pattern.png`. Tente eliminar o padrão de linhas que aparece nela, da melhor forma possível, usando:**
+
+**a) uma solução aplicada no domínio da frequência;**
+
+**b) uma solução aplicada no domínio espacial.**
+
+
+**R.:**
