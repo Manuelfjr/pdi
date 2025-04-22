@@ -689,7 +689,7 @@ else:
     fig, axes = plt.subplots(
         1,
         1,
-        figsize=(16, 8)
+        figsize=(1, 8)
     )
     axes.set_title("Letra 'A' não encontrada")
     axes.axis('off')
@@ -847,7 +847,7 @@ else:
     fig, axes = plt.subplots(
         1,
         1,
-        figsize=(16, 8)
+        figsize=(1, 8)
     )
     axes.set_title("Letra 'A' não encontrada")
     axes.axis('off')
