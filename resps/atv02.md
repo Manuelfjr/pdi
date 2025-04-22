@@ -1011,7 +1011,7 @@ for i, sigma in enumerate(sigmas):
     ax[i].set_title(f'Canny{low, high} | Filtro gaussiano:' + rf'$\sigma$={sigma}')
     ax[i].axis('off')
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q10-01.png", dpi=400, bbox_inches='tight')
+fig.savefig(path_assets / "atv02-q10-02.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
