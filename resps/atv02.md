@@ -90,7 +90,7 @@ especule sobre o resultado esperado.
 
 **R.:**
 
-A Transformada de Fourier tem como foco principal analisar a distribuicao das frequências da iamgem e não elementos dispostos no espaço da imagem, ou seja, a posição de qualquer conteúdo na imagem caso seja alterado, de forma igual a não alterar a frequências presente na imagem,  espera-se que o resultado da transformada de fourier permaneça igual. Logo, a transformada de fourier independe da localização dos pixels sobre a imagem, caso não exista variação de intensidade entre as imagens.
+A Transformada de Fourier tem como foco principal analisar a distribuicao das frequências da iamgem e não elementos dispostos no espaço da imagem, ou seja, a posição de qualquer conteúdo na imagem caso seja alterado, de forma igual a não alterar a frequências presente na imagem,  espera-se que o resultado da transformada de fourier permaneça igual. Logo, a transformada de fourier independe da localização dos pixels sobre a imagem, caso não exista variação de intensidade entre as imagens. Apesar da transformada ser igual, pois independe da localização do objeto na iamgem e sim das frequências, a fase da transformada de fourier sera diferente, apesar de mesma magnitude.
 
 Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
 
@@ -962,6 +962,24 @@ filtered_img = {
         sigmaY=1
     )  # Aplicando um filtro gaussiano, com sigma = 1
 }
+
+fig, ax = plt.subplots(1, len(filtered_img.keys()) + 2, figsize=(20, 10))
+ax[0].set_title('Original')
+ax[0].imshow(imgs["cameraman_pattern"], cmap='gray')
+ax[0].axis('off')
+
+ax[1].set_title('Original (sem linhas)')
+ax[1].imshow(imgs["cameraman"], cmap='gray')
+ax[1].axis('off')
+
+for _ax, (title, content) in zip(ax[2:], filtered_img.items()):
+    _ax.imshow(content, cmap='gray')
+    _ax.set_title(title)
+    _ax.axis('off')
+fig.tight_layout()
+fig.savefig(path_assets / "atv02-q09-01.png", dpi=400, bbox_inches='tight')
+plt.show()
+
 ```
 
 <p align="center" >
