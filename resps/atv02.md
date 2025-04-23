@@ -7,7 +7,17 @@
 * **Aluno:** Manuel Ferreira Junior
 * **Disciplina:** Processamento Digital de Imagens
 
-* **Obs.:** Questões com necessidade de calculo de convolução, estarão todas as expressões no [link](https://docs.google.com/spreadsheets/d/1cWB3zNBbDXzFNvEKotBCVPIlnS8cde-SXRjCP55ISTM/edit?usp=sharing), para facilitar a visualização e leitura da atividade. Além disso, cada questão em anexo possui uma copia da sua operação que deve ser realizada. Cada sheet do link em anexo, possui no seu titulo a questão referente e operação referente.
+* **Obs. (1):** Questões com necessidade de calculo de convolução, estarão todas as expressões no [link](https://docs.google.com/spreadsheets/d/1cWB3zNBbDXzFNvEKotBCVPIlnS8cde-SXRjCP55ISTM/edit?usp=sharing), para facilitar a visualização e leitura da atividade. Além disso, cada questão em anexo possui uma copia da sua operação que deve ser realizada. Cada sheet do link em anexo, possui no seu titulo a questão referente e operação referente.
+
+* **Obs. (2):** Com respeito as questões de implementação (8, 9 e 10), além do código disponibilizado no pdf, os links para os notebooks utilizados para as aplicações estão abaixo:
+
+  * `Questão 08:` [02_atv02_code_q08](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_atv02_code_q08.ipynb)
+  
+  * `Questão 09:` [03_atv02_code_q09](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb)
+
+  * `Questão 10:` [04_atv02_code_q10](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb)
+
+  * `[Rascunhos para validação de resoluções] Códigos para outras questões:` [01_atv02_code](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/01_atv02_code.ipynb)
 
 # Funções 
 
@@ -949,6 +959,97 @@ else:
 **R.:**
 
 * **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q09.ipynb).
+
+## Lendo as imagens
+
+```py
+img_names = ["cameraman.png", "cameraman_pattern.png"]
+# img = cv2.imread(path_assets / "atv02_lista02-assets" / 'cameraman_pattern.png', cv2.IMREAD_GRAYSCALE)
+imgs = {
+    i.split(".")[0]: cv2.imread(path_imgs_atv / i, cv2.IMREAD_GRAYSCALE) for i in img_names
+}
+```
+
+## Visualizando
+
+```py
+fourier = {
+    name: {
+        "tft": apply_fourier_transform(img)[1],
+        "spectrum": apply_fourier_transform(img)[0]
+    } for name, img in imgs.items()
+}
+# Mostrar imagem resultante
+fig, ax = plt.subplots(len(fourier), 2, figsize=(16, 10))
+for _ax, name in zip(ax, fourier.keys()):
+    _ax[0].imshow(imgs[name], cmap='gray')
+    _ax[0].set_title('Original')
+    _ax[1].imshow(fourier[name]["spectrum"].astype(float), cmap='gray')
+    _ax[1].set_title('Transformada de fourier')
+    #_ax[0].axis('off')
+    #_ax[1].axis('off')
+fig.savefig(path_assets / "atv02-q09-init.png", bbox_inches='tight', dpi=400)
+plt.show()
+
+```
+
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-init.png?raw=true" alt="atv02-q09-init-img" width="600"/>
+</p>
+
+
+## a)
+
+```py
+img = imgs["cameraman_pattern"]
+rows, cols = img.shape
+crow, ccol = rows // 2 , cols // 2  # centro da imagem
+
+# Aplicar a Transformada de Fourier
+dft = np.fft.fft2(img)
+dft_shift = np.fft.fftshift(dft)
+
+# Criar o filtro Gaussiano
+sigmas = [10, 20, 40, 50, 100]
+
+# Plot
+fig, ax = plt.subplots(2, (len(sigmas) // 2) + 1, figsize=(16, 10))
+ax = ax.flatten()
+ax[0].imshow(img, cmap='gray')
+ax[0].set_title('Original')
+ax[0].axis('off')
+for idx, sigma in enumerate(sigmas):
+    # Calcula filtro passa-baixa gaussiano
+    u = np.arange(-ccol, ccol)
+    v = np.arange(-crow, crow)
+    U, V = np.meshgrid(u, v)
+    D = np.sqrt(U**2 + V**2)
+    H = np.exp(-(D**2) / (2 * sigma**2))
+
+    # Aplicar o filtro
+    filtered_dft = dft_shift * H
+
+    # Transformada Inversa
+    f_ishift = np.fft.ifftshift(filtered_dft)
+    img_back = np.fft.ifft2(f_ishift)
+    img_back = np.abs(img_back)
+
+    ax[idx + 1].imshow(img_back, cmap='gray')
+    ax[idx + 1].set_title('Filtro Passa-Baixa Gaussiano ' + rf"($\sigma={sigma}$)")
+    ax[idx + 1].axis('off')
+fig.savefig(path_assets / "atv02-q09-a.png", bbox_inches='tight', dpi=400)
+plt.show()
+```
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-a.png?raw=true" alt="atv02-q09-a-img" width="600"/>
+</p>
+
+### Conclusão
+
+Foi escolhido o filtro passa-baixa gaussiano para aplicar na transformada de fourier, variando em um range de &sigma;'s, apenas com o intuito de encontrar oque conseguiria retirar o ruido das linhas horizontais e também recuperar o máximo possivel da imagem original. Dessa forma, ao aplicarmos um range de &sigma; = [10, 20, 40, 50, 100], podemos escolher &sigma; = 40, uma vez que foi oque apresentou menor borramento da imagem e conseguiu retirar as linhas horizontais (a  primeira vista) totalmente.
+
 
 ## b)
 
