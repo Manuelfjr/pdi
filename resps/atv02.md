@@ -11,13 +11,15 @@
 
 * **Obs. (2):** Com respeito as questões de implementação (8, 9 e 10), além do código disponibilizado no pdf, os links para os notebooks utilizados para as aplicações estão abaixo:
 
-  * `Questão 08:` [02_atv02_code_q08](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_atv02_code_q08.ipynb)
+  1) `Questão 08:` 
+     * `Solução 01:` [02_01_atv02_code_q08_sol1](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_01_atv02_code_q08_sol1.ipynb)
+     * `Solução 02:` [02_02_atv02_code_q08_sol2](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_02_atv02_code_q08_sol2.ipynb)
   
-  * `Questão 09:` [03_atv02_code_q09](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb)
+  2) `Questão 09:` [03_atv02_code_q09](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb)
 
-  * `Questão 10:` [04_atv02_code_q10](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb)
+  3) `Questão 10:` [04_atv02_code_q10](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb)
 
-  * `[Rascunhos para validação de resoluções] Códigos para outras questões:` [01_atv02_code](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/01_atv02_code.ipynb)
+  4) `[Rascunhos para validação de resoluções] Códigos para outras questões:` [01_atv02_code](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/01_atv02_code.ipynb)
 
 # Funções 
 
@@ -587,9 +589,361 @@ Ao inves de serem tratadas como operações inversas, elas são complementares, 
 **R.:**
 
 
-**Obs.:** O notebook criado para esse item pode ser encontrado neste [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_atv02_code_q08.ipynb). Nele pode ser encontrado a resolução em um formato de notebook, se for do interesse.
+Foi encontrado duas soluções possiveis para esse problema, sendo elas:
 
-Antes  de prosseguir a atividade, é necessário a definição de alguns pontos, sendo eles os abaixos:
+## 1) **[Lógica] Via erosão**
+
+Essa solução apresenta uma forma mais rápida para o match, aonde é recortado da propria matriz da imagem original o bloco referente a letra de interesse (`A`) e utilizado ela como `struct` na hora de aplicar a erosão, logo será buscado na imagem original locais a qual possua esse `struct`, em caso afirmativo sera colocado branco (ou pela logica da implementação, 1) para a região encontrada do algoritmo e preto (pela logica da implementação, 0) para a região de fora do `struct`.
+
+### 1.1) **Lógica do Algoritmo**
+
+1. **Recorte do Objeto de Interesse**  
+   Um recorte é realizado sobre a região de interesse da imagem, resultando em um template que será utilizado como struct.
+
+2. **Binarização**  
+   Binarização das imagens, tanto original quanto template.
+
+3. **Aplicação da Erosão**  
+   A operação de erosão é aplicada na imagem binarizada utilizando o template binarizado como struct.
+
+4. **Verificação da Presença da Letra "A"**  
+   Após a erosão, verifica-se se a matriz resultante contém ao menos um pixel com valor 1 (branco). Isso é feito somando os valores da matriz de erosão.
+
+
+5. **Conclusão**  
+
+  <p>
+  $$
+  \text{Resultado} = 
+  \begin{cases} 
+  \text{Letra 'A' encontrada}, & \text{se } \sum_{i = 1}^{n}\sum_{j}^{m}E_{ij} > 0 \\
+  \text{Letra 'A' não encontrada}, & \text{se } \sum_{i = 1}^{n}\sum_{j}^{m}E_{ij} = 0
+  \end{cases}
+  $$
+  </p>
+
+Sendo:
+  
+<p>
+  $$
+  \begin{cases} 
+  E, & \text{matriz de Erosão n x m}
+  \end{cases}
+  $$
+</p>
+
+
+### 1.2) **Vantagens**
+
+Método rápido e facil de aplicar.
+
+### 1.3) **Problema**
+
+Necessita que o corte para a imagem de template seja o mais preciso possivel, também é ainda mais sensivel a mudança de pixels e troca de fontes. Ao invés de recortar diretamente da imagem, e sim tirar um print da letra de interesse, o método pode não funcionar, uma vez que ele busca um struct especifico de pixels alinhados.
+
+## 2) **[Lógica] Via similaridade**
+
+Esse método busca dar um *match* entre um template escolhido e contornos de objetos encontrados na imagem, via uma métrica pré definida e também tendo um valor de corte para essa métrica (*threshold*), com o intuito de binarizar a decisão se a imagem contem **A** ou não.
+
+### 2.1) **Lógica do Algoritmo**
+
+1. **Seleção do template**  
+   Selecionar um template adequado, sendo o mais próximo possivel da fonte utilizada e também em dimensões.
+
+2. **Binarização**  
+   Binarização tanto da imagem original quanto do template.
+
+3. **Busca por contornos**  
+   Busca por contornos de possíveis letras ou objetos da imagem.
+
+4. **Calculo de similaridade**  
+   Calculo de similaridade entre template e contornos encontrados na imagem original. A métrica basea-se em uma correlação entre o template e a contorno de objetivo, sendo ela:
+
+<p>
+$$
+R(x, y) = \frac{\sum_{x^{'}, y^{'}} (T^{'}(x^{'}, y^{'}) \cdot I^{'}(x + x^{'}, y + y^{'}))}{\sqrt{\sum_{x^{'}, y^{'}} T^{'}(x^{'}, y^{'})^{2} \cdot \sum_{x^{'}, y^{'}} I^{'}(x + x^{'}, y + y^{'})^{2}}}
+$$
+</p>
+
+Sendo:
+
+<p>
+$$
+\begin{cases} 
+x, y, & \text{coordenadas relativas do ponto na imagem;}\\
+x^{'}, y^{'} & \text{coordenadas relativas do ponto no template;}\\
+T^{'}(x^{'}, y^{'}), & \text{Valor do pixel (com T centralizado na média) no template para o ponto $(x^{'}, y^{'})$;}\\
+I^{'}(x + x^{'}, y + y^{'}) & \text{Representando o pixel na imagem de entrada (com I centralizado) em uma posição deslocada}.
+\end{cases}
+$$
+</p>
+
+Perceba que essa métrica nada mais é do que uma correlação de pearson entre as duas variáveis, dado abaixo:
+
+<p>
+  $$
+  \rho_{X, Y} = \frac{COV(X, Y)}{\sigma_{X} \cdot \sigma_{Y}} = \frac{\sum_{i=1}^{n}[(x_{i} - \bar{x})\cdot (y_{i} - \bar{y})]}{\sqrt{\sum_{i=1}^{n}(x_{i} - \bar{x})^{2}\cdot \sum_{i=1}^{n}(y_{i} - \bar{y})^{2}}}
+  $$
+</p>
+
+5. **Conclusão**  
+   <p>
+  $$
+  \text{Resultado} = 
+  \begin{cases} 
+  \text{Letra 'A' encontrada}, & \text{se } thres \geq 0.5 \\
+  \text{Letra 'A' não encontrada}, & \text{se } thres < 0.5
+  \end{cases}
+  $$
+  </p>
+
+
+### 2.2) **Vantagens**
+
+Método pode considerar fontes com formato proximos, dando uma flexibilidade maior ao template utilizado, podendo ter formatos um pouco diferentes de posicionamento dos pixels. Customização de métrica de similaridade entre template e imagem.
+
+### 2.3) **Problema**
+
+Pode ser custoso mais custoso quando lidamos com imagens maiores e com mais informações, gerando muitos contornos e tornando a busca de match exaustiva para o algoritmo.
+
+
+## 3) **[Implementação] Via erosão**
+
+
+### 3.0) **Leitura de imagens**
+
+```py
+image_path_1 = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
+image_path_2 = str(path_assets / "atv02_lista02-assets" / "Book_2.png")
+
+image_book1 = cv2.imread(image_path_1, cv2.IMREAD_GRAYSCALE)
+image_book2 = cv2.imread(image_path_2, cv2.IMREAD_GRAYSCALE)
+```
+
+### 3.1) **Definição de cortes**
+
+Nesse momento, é feito a seleção de alguns cortes na imagem, para a seleção da letra de interesse para uso de template e `struct`. Cortes 2 e 3 são apenas ilustrativos do processo.
+
+```py
+# Configurando cortes das imagens para procura
+cortes = {
+    "Imagem completa": ((0, image_book1.shape[0]), (0, image_book1.shape[1])),
+    "Primeiro corte": ((0, image_book1.shape[0]), (55, 87)),
+    "Segundo corte": ((470, 570), (55, 87)),
+    "Template final": ((501, 529), (57, 86))
+}
+```
+
+Agora visualizando os cortes, temos:
+
+```py
+
+fig, ax = plt.subplots(1, len(cortes), figsize=(16, 12))
+if not isinstance(ax, np.ndarray):
+    ax = np.array([ax])
+for idx, (title, sliced) in enumerate(cortes.items()):
+    ax[idx].imshow(image_book1, cmap='gray')
+    ax[idx].axis('off')
+    if idx > 0:
+        ax[idx].set_ylim(sliced[0][1], sliced[0][0])
+        ax[idx].set_xlim(sliced[1][0], sliced[1][1])
+
+    #if idx == 0:
+    x_init, x_end = cortes["Template final"][1]
+    y_init, y_end = cortes["Template final"][0]
+    ax[idx].plot(
+        [x_init] * np.ones(len(np.arange(y_init, y_end +1 ))),
+        np.arange(y_init, y_end + 1),
+        color='red',
+        label='Média da linha'
+    )
+
+    ax[idx].plot(
+        [x_end] * np.ones(len(np.arange(y_init, y_end+ 1))),
+        np.arange(y_init, y_end + 1),
+        color='red',
+        label='Média da linha'
+    )
+    ax[idx].plot(
+        np.arange(x_init, x_end+ 1),
+        [y_init] * len(np.arange(x_init, x_end+ 1)),
+        color='red',
+        label='Média da linha'
+    )
+
+    ax[idx].plot(
+        np.arange(x_init, x_end+ 1),
+        [y_end] * len(np.arange(x_init, x_end+ 1)),
+        color='red',
+        label='Média da linha'
+    )
+    ax[idx].set_title(title)
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv02-q08-s1-00.png", dpi=400, bbox_inches='tight')
+plt.show()
+```
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-00.png?raw=true" alt="atv02-q08-s1-00.png" width="600"/>
+</p>
+
+Template utilizado então será:
+
+```py
+template = image_book1[
+    slice(*cortes["Template final"][0]),
+    slice(*cortes["Template final"][1])
+]
+fig, ax = plt.subplots(1, 2, figsize=(16, 10))
+
+ax[0].imshow(
+    image_book1, cmap="gray"
+)
+ax[0].set_title("Book_1")
+ax[1].imshow(
+    template,
+    cmap='gray'
+)
+ax[1].set_title("Template retirado")
+for _ax in ax:
+    _ax.axis("off")
+
+fig.savefig(path_assets / "atv02-q08-s1-01.png", dpi=400, bbox_inches='tight')
+``` 
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-01.png?raw=true" alt="atv02-q08-s1-01.png" width="600"/>
+</p>
+
+
+### 3.2) **Binarização**
+
+Aqui será feita a binarização da image, para fundo preto e letra branca.
+
+```py
+# binarização
+_, template_mask = cv2.threshold(template, 127, 255, cv2.THRESH_BINARY_INV)
+_, image_mask_1 = cv2.threshold(image_book1, 127, 255, cv2.THRESH_BINARY_INV)
+_, image_mask_2 = cv2.threshold(image_book2, 127, 255, cv2.THRESH_BINARY_INV)
+
+# dicionario a ser usado posteriormente
+imgs_mask = {
+    "Book_1 - Binarizado": image_mask_1,
+    "Book_2 - Binarizado": image_mask_2,
+    "Template - Binarizado": template_mask
+}
+lista_books = list(imgs_mask.keys())[:(-1)] # seleção apenas dos books (exceto o template)
+
+# Plot
+fig, ax = plt.subplots(1, len(imgs_mask.keys()), figsize=(16, 10))
+for (title, content), _ax in zip(imgs_mask.items(), ax.flatten()):
+    _ax.imshow(
+        content,
+        cmap="gray"
+    )
+    _ax.set_title(title)
+    _ax.axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv02-q08-s1-02.png", dpi=400, bbox_inches='tight')
+plt.show()
+```
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-02.png?raw=true" alt="atv02-q08-s1-02.png" width="600"/>
+</p>
+
+### 3.3) **Erosão**
+
+Neste momento, vamos aplicar o processo de erosão sobre o template, que será considerado o nosso struct.
+
+```py
+# aplicar erosão morfológica usando o template como struct
+eroded_results = {}
+for name in lista_books:
+    eroded_results[name] = {
+        "eroded": cv2.erode(
+            imgs_mask[name],
+            template_mask,
+            iterations=1
+        ) / 255  # Normalizando para [0, 1]
+    }
+    eroded_results[name]["contains_A"] = bool(eroded_results[name]["eroded"].sum() > 0)
+    eroded_results[name]["total-of_A"] = int(eroded_results[name]["eroded"].sum())
+```
+
+
+Para fins apenas ilustrativos, vamos dilatar o resultado dessa erosão apenas para conseguir plotar os pontos que foram encontrados de com o `struct`.
+
+
+```py
+# Aplicando uma dilatação apenas para visualizar melhor a localização dos A encontrados
+dilated = {}
+k_iter = 3
+for name in lista_books:
+    dilated[name] = cv2.dilate(
+        eroded_results[name]["eroded"].astype(np.uint8),
+        kernel=np.ones((3, 3), np.uint8), iterations=k_iter
+    )
+
+fig, ax = plt.subplots(2, 3, figsize=(22, 6))
+for idx, lista in enumerate(lista_books):
+    ax[idx, 0].imshow(
+        imgs_mask[lista],
+        cmap="gray"
+    )
+    ax[idx, 1].imshow(
+        eroded_results[lista]["eroded"],
+        cmap="gray"
+    )
+    ax[idx, 2].imshow(
+        dilated[lista],
+        cmap="gray"
+    )
+    for _ax in ax[idx, :]:
+        _ax.axis("off")
+    ax[idx, 0].set_title(lista)
+    ax[idx, 1].set_title(lista.split(" - ")[0] + " - Erosão")
+    ax[idx, 2].set_title(lista.split(" - ")[0] + f" - Dilatação com {k_iter} iterações")
+fig.savefig(path_assets / "atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
+```
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-03.png?raw=true" alt="atv02-q08-s1-03.png" width="600"/>
+</p>
+
+Com a erosão seguida com a dilatação, considerando 3 iterações, é mais facil de visualizar graficamente a presença da letra "A".
+
+### 3.4) **Conclusão**
+
+
+```py
+for key, content in eroded_results.items():
+    print("-" * 30)
+    print(key.split(" - ")[0])
+    print(f"Possuí a letra A: {content['contains_A']}")
+    if content["contains_A"]:
+        print(f"Total de letra A: {content['total-of_A']}")
+print("-"*30)
+```
+```
+------------------------------
+Book_1
+Possuí a letra A: True
+Total de letra A: 10
+------------------------------
+Book_2
+Possuí a letra A: False
+------------------------------
+```
+
+Apos a aplicação dessa solução, temos:
+
+1) `Book_1`: a letra `A` foi detectada na imagem, além de terem sido identificados 10 letras na imagem, pela logica do algoritmo implementado no decorrerda solução.
+
+2) `Book_2`: a letra `A` não foi detectada na imagem, pela logica do algoritmo implementado no decorrerda solução.
+
+------------------------------------
+<!-- Antes  de prosseguir a atividade, é necessário a definição de alguns pontos, sendo eles os abaixos:
 
 1) **Definição de um target ou template:** para podermos comparar contornos e objetos encontrados pelo algoritmo em uma imagem, se faz necessário um objeto para comparação, ou seja, um template do objeto de interesse, que nesse caso será a letra **A**. O template utilizado pode ser visualizado abaixo:
 
@@ -619,7 +973,13 @@ I^{'}(x + x^{'}, y + y^{'}) & \text{Representando o pixel na imagem de entrada (
 $$
 </p>
 
+Perceba que essa métrica nada mais é do que uma correlação de pearson entre as duas imagens, dado que:
 
+<p>
+  $$
+  \rho_{X, Y} = \frac{COV(X, Y)}{\sigma_{X} \cdot \sigma_{Y}} = \frac{\sum_{i=1}^{n}[(x_{i} - \bar{x})\cdot (y_{i} - \bar{y})]}{\sqrt{\sum_{i=1}^{n}(x_{i} - \bar{x})^{2}\cdot \sum_{i=1}^{n}(y_{i} - \bar{y})^{2}}}
+  $$
+</p>
 
 3) **Definição de corte para a similaridade:** será necessário a seleção de um ponto de corte da similaridade para definir um objeto contornado como uma letra **A**, para tanto será selecionado um ponto de corte de 0.5, ou seja:
 
@@ -907,10 +1267,12 @@ fig.suptitle("Amostra de letras e similaridade calculada")
 Aplicando o *threshold* de 0.5, não foi encontrado nenhuma letra **A** pelo algoritmo
 
 ```py
+# Achando indices dos valores que satisfazem a regra do threshold
 ks = np.where((np.array(contents["similarity"]) >= 0.5) & (np.array(contents["check_is_valid"]) == True))[0]
 n = math.ceil(math.sqrt(len(ks)))
 
 if n != 0:
+    # plots
     fig, axes = plt.subplots(
         n,
         n,
@@ -945,7 +1307,7 @@ else:
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k05.png?raw=true" alt="atv02-q08-i02_k05-img" width="600"/>
 </p>
-
+ -->
 
 # Questão 09
 
@@ -1064,6 +1426,7 @@ filtered_img = {
     )  # Aplicando um filtro gaussiano, com sigma = 1
 }
 
+# Plots
 fig, ax = plt.subplots(1, len(filtered_img.keys()) + 2, figsize=(20, 10))
 ax[0].set_title('Original')
 ax[0].imshow(imgs["cameraman_pattern"], cmap='gray')
