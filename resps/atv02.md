@@ -1301,7 +1301,7 @@ plt.show()
 
 ### Conclusão
 
-Ambos os filtros aplicados conseguiram sumir com as linhas existentes na imagem, porém ambos ainda sim causando um efeito de borramento, como era esperado de ambos. Para esse cenário especifico, o filtro box 2x2 conseguiu recuperar com mais detalhes, menos borrado quando comparado ao filtro gaussiano, não sendo tão fiel aos detalhes original.
+Todos os filtros box, exceto o 3x3, conseguiram retirar as linhas horizontais, sendo o 2x2 oque apresentou melhores resultados, tendo um menor boraremtno da imagem e conseguindo sumir com os tracejados, conseguindo recuperar de forma significante a imagem original. O filtro box 3x3 não foi efetivo para esse problema, retornando uma imagem aidna com linhas horizontais, ainda que tenha aumentado o contraste nas cores mais pretas, diminuindo o contraste das linhas. Por fim, o filtro box 4x4 conseguiu retirar as linhas, mas apresentou um maior borramento da imagem, quando comparado ao 2x2.
 
 
 # Questão 10
