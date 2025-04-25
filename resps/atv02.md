@@ -1273,15 +1273,10 @@ Foi escolhido o filtro passa-baixa gaussiano para aplicar na transformada de fou
 ```py
 filtered_img = {
     "Filtro box 2x2": cv2.blur(imgs["cameraman_pattern"], (2, 2)),  # aplicando um filtro box de dimensão 2x2
-    "Filtro gaussiano": cv2.GaussianBlur(
-        imgs["cameraman_pattern"],
-        (0, 0),
-        sigmaX=1,
-        sigmaY=1
-    )  # Aplicando um filtro gaussiano, com sigma = 1
+    "Filtro box 3x3": cv2.blur(imgs["cameraman_pattern"], (3, 3)),  # aplicando um filtro box de dimensão 3x3
+    "Filtro box 4x4": cv2.blur(imgs["cameraman_pattern"], (4, 4)),  # aplicando um filtro box de dimensão 4x4
 }
 
-# Plots
 fig, ax = plt.subplots(1, len(filtered_img.keys()) + 2, figsize=(20, 10))
 ax[0].set_title('Original')
 ax[0].imshow(imgs["cameraman_pattern"], cmap='gray')
@@ -1298,7 +1293,6 @@ for _ax, (title, content) in zip(ax[2:], filtered_img.items()):
 fig.tight_layout()
 fig.savefig(path_assets / "atv02-q09-01.png", dpi=400, bbox_inches='tight')
 plt.show()
-
 ```
 
 <p align="center" >
