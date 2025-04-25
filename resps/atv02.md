@@ -21,6 +21,15 @@
 
   4) `[Rascunhos para validação de resoluções] Códigos para outras questões:` [01_atv02_code](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/01_atv02_code.ipynb)
 
+# Imports
+
+```py
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+```
+
 # Funções 
 
 Abaixo, temos as funções criadas para utilizar ao decorrer da atividade, para as questões de implementação.
@@ -938,9 +947,13 @@ Possuí a letra A: False
 
 Apos a aplicação dessa solução, temos:
 
-1) `Book_1`: a letra `A` foi detectada na imagem, além de terem sido identificados 10 letras na imagem, pela logica do algoritmo implementado no decorrerda solução.
+1) `Book_1`: a letra `A` foi detectada na imagem, além de terem sido identificados 10 letras na imagem, pela logica do algoritmo implementado no decorrer da solução.
 
-2) `Book_2`: a letra `A` não foi detectada na imagem, pela logica do algoritmo implementado no decorrerda solução.
+2) `Book_2`: a letra `A` não foi detectada na imagem, pela logica do algoritmo implementado no decorrer da solução.
+
+
+## 4) **[Implementação] Via similaridade**
+
 
 ------------------------------------
 <!-- Antes  de prosseguir a atividade, é necessário a definição de alguns pontos, sendo eles os abaixos:
