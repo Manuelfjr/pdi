@@ -148,14 +148,22 @@ esse distúrbio em alguma parte (bem definida) da imagem.
 
 **R.:**
 
+## 1) **Solução 01: Gabor (1946)**
 
-Uma possivel estrategia para detectar esse tipo de anomalia localizada, como  o borramento em regiões especificas, pode ser segmentar a imagem em regiões menores, em especial no exemplo da questão, em quatro quadrantes, ai então aplicar a transformada de Fourier em cada quadrante. A ideia é que, ao analisar o espectro  individualmente para cada quadrante, será possível comparar as distribuições entre as regiões. O quadrante afetado pelo desfoque apresentará uma caracteristica diferente das outras, evidenciando o borramento.
+Uma apresentada em sala, é a técnica da Transformada de Fourier para Tempo Curto, ou *Short Time Fourier Transform (STFT)*, que considera uma janela que se desloca ao longo da imagem, avaliando cada momento de forma individual. Essa técnica pode ajudar a captar melhor borramentos localziamos em imagens, como ilustra a imagem abaixo:
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-09.png?raw=true" alt="q02-i02-img" width="500"/>
+</p>
 
 
+## 2) **Solução 02: Separar em quadrantes**
+
+Uma variação da *STFT* mencionada anteriormente, pode ser a separação direta em quadrantes a imagem, reduzindo o campo de busca para ruidos, e podendo comparar as transformadas de fourier entre elas. Em especial no exemplo da questão,  separar  em quatro quadrantes pode ser conveniente, então aplicar a transformada de Fourier em cada quadrante. A ideia é que, ao analisar o espectro  individualmente para cada quadrante, será possível comparar as distribuições entre as regiões. O quadrante afetado pelo desfoque apresentará uma caracteristica diferente das outras, evidenciando o borramento.
 Na imagem abaixo, da para notar a aplicação dessa solução de separação de quadrantes:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i07-img" width="500"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i02-img" width="500"/>
 </p>
 
 # Questão 03
@@ -666,7 +674,7 @@ Esse método busca dar um *match* entre um template escolhido e contornos de obj
    Busca por contornos de possíveis letras ou objetos da imagem.
 
 4. **Calculo de similaridade**  
-   Calculo de similaridade entre template e contornos encontrados na imagem original. A métrica basea-se em uma correlação entre o template e a contorno de objetivo, sendo ela:
+   Calculo de similaridade entre template e contornos encontrados na imagem original. A métrica basea-se em uma correlação entre o template e a contorno de objetivo. A logica pode ser encontrada no site da [*OpenCV*](https://docs.opencv.org/4.x/df/dfb/group__imgproc__object.html),  considerando `method = TM_CCOEFF_NORMED`. A formula para essa similidade pode ser expressa pela equação abaixo:
 
 <p>
 $$
@@ -694,6 +702,8 @@ Perceba que essa métrica nada mais é do que uma correlação de pearson entre 
   \rho_{X, Y} = \frac{COV(X, Y)}{\sigma_{X} \cdot \sigma_{Y}} = \frac{\sum_{i=1}^{n}[(x_{i} - \bar{x})\cdot (y_{i} - \bar{y})]}{\sqrt{\sum_{i=1}^{n}(x_{i} - \bar{x})^{2}\cdot \sum_{i=1}^{n}(y_{i} - \bar{y})^{2}}}
   $$
 </p>
+
+
 
 5. **Conclusão**  
    <p>
@@ -917,7 +927,7 @@ fig.savefig(path_assets / "atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-03.png?raw=true" alt="atv02-q08-s1-03.png" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-03.png?raw=true" alt="atv02-q08-s1-03.png" width="900"/>
 </p>
 
 Com a erosão seguida com a dilatação, considerando 3 iterações, é mais facil de visualizar graficamente a presença da letra "A".
@@ -954,373 +964,203 @@ Apos a aplicação dessa solução, temos:
 
 ## 4) **[Implementação] Via similaridade**
 
-
-------------------------------------
-<!-- Antes  de prosseguir a atividade, é necessário a definição de alguns pontos, sendo eles os abaixos:
-
-1) **Definição de um target ou template:** para podermos comparar contornos e objetos encontrados pelo algoritmo em uma imagem, se faz necessário um objeto para comparação, ou seja, um template do objeto de interesse, que nesse caso será a letra **A**. O template utilizado pode ser visualizado abaixo:
-
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-01_template_A.png?raw=true" alt="atv02-q08-01-img" width="300"/>
-</p>
-
-2) **Métrica para definir similaridade:** durante a questão, se faz necessário um meio de mensurar a similaridade entre uma imagem e o template, para tanto será definido a métrica `TM_CCOEFF_NORMED`, disponibilizada pelo proprio [*OpenCV*](https://docs.opencv.org/4.x/df/dfb/group__imgproc__object.html#ga3a7850640f1fe1f58fe91a2d7583695d), a qual é dada pela expressão abaixo:
-
-
-<p>
-$$
-R(x, y) = \frac{\sum_{x^{'}, y^{'}} (T^{'}(x^{'}, y^{'}) \cdot I^{'}(x + x^{'}, y + y^{'}))}{\sqrt{\sum_{x^{'}, y^{'}} T^{'}(x^{'}, y^{'})^{2} \cdot \sum_{x^{'}, y^{'}} I^{'}(x + x^{'}, y + y^{'})^{2}}}
-$$
-</p>
-
-Sendo:
-
-<p>
-$$
-\begin{cases} 
-x, y, & \text{coordenadas relativas do ponto na imagem;}\\
-x^{'}, y^{'} & \text{coordenadas relativas do ponto no template;}\\
-T^{'}(x^{'}, y^{'}), & \text{Valor do pixel (com T centralizado na média) no template para o ponto $(x^{'}, y^{'})$;}\\
-I^{'}(x + x^{'}, y + y^{'}) & \text{Representando o pixel na imagem de entrada (com I centralizado) em uma posição deslocada}.
-\end{cases}
-$$
-</p>
-
-Perceba que essa métrica nada mais é do que uma correlação de pearson entre as duas imagens, dado que:
-
-<p>
-  $$
-  \rho_{X, Y} = \frac{COV(X, Y)}{\sigma_{X} \cdot \sigma_{Y}} = \frac{\sum_{i=1}^{n}[(x_{i} - \bar{x})\cdot (y_{i} - \bar{y})]}{\sqrt{\sum_{i=1}^{n}(x_{i} - \bar{x})^{2}\cdot \sum_{i=1}^{n}(y_{i} - \bar{y})^{2}}}
-  $$
-</p>
-
-3) **Definição de corte para a similaridade:** será necessário a seleção de um ponto de corte da similaridade para definir um objeto contornado como uma letra **A**, para tanto será selecionado um ponto de corte de 0.5, ou seja:
-
-<p>
-$$
-\text{Resultado} = 
-\begin{cases} 
-\text{Letra 'A' encontrada}, & \text{se } thres \geq 0.5 \\
-\text{Letra 'A' não encontrada}, & \text{se } thres < 0.5
-\end{cases}
-$$
-</p>
-
-
-## 1) **1º Imagem**
-
-
-### 1.1) **Leitura das imagens**
-
-Primeiro, vamos realizar a leitura das imagens seguindo o código abaixo:
+### 4.0) **Leitura das imagens**
 
 ```py
 # Leitura de imagens
 file_path_template_A = str(path_assets / "atv02-q08-01_template_A.png")
-image_path = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
+image_path_1 = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
+image_path_2 = str(path_assets / "atv02_lista02-assets" / "Book_2.png")
 
-image_book = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 image_template = cv2.imread(file_path_template_A, cv2.IMREAD_GRAYSCALE)
+image_book_1 = cv2.imread(image_path_1, cv2.IMREAD_GRAYSCALE)
+image_book_2 = cv2.imread(image_path_2, cv2.IMREAD_GRAYSCALE)
 
-# parametros para salvar
-contents = {
-    "contornos": [],
-    "letra": [],
-    "letra_norm": [],
-    "similarity": [],
-    "check_is_valid": []
+# parametros a serem usados ao longo da implementação
+imgs = {
+    "Book_1": image_book_1,
+    "Book_2": image_book_2,
+    "Template_A": image_template
+}
+books_name = ["Book_1", "Book_2"]
+contents ={
+    name: {
+        "contornos": [],
+        "letra": [],
+        "letra_norm": [],
+        "similarity": [],
+        "check_is_valid": []
+    } for name in books_name
 }
 ```
 
-### 1.2) **Ilustração do processo de binarização e contornos**
+### 4.1) **Geração de contornos**
 
-Abaixo temos a imagem binarizada, apos a inversão e ao lado o contorno de cada letra encontrada.
+Nesse trecho, primeiro sera feito a inversão da cor da imagem, fundo branco com letra preta, será invertido para fundo preto com letra branca, para facilitar a detecção dos contornos.
+
+<p align="center" >
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03.png" width="800"/>
+</p>
+
+
+### 4.2) **Calculando similaridade**
+
+Abaixo, será aplicado a cada contorno encontrado o calculo de similaridade definido na seção (`02`) dessa atividade, a qual é explicado a métrica utilizada para calcular a similaridade entre template e contorno encontrado.
 
 ```py
-# Mostra imagem binarizada e com contornos lado a lado
-fig1, ax1 = plt.subplots(1, 2, figsize=(12, 5))
-ax1[0].set_title("Imagem Binarizada (Inversa)")
-ax1[0].imshow(img_bin, cmap='gray')
-ax1[0].axis('off')
+file_paths_imgs = {}
+for name in books_name:
+    fig, ax = plt.subplots(10, 10, figsize=(18, 16))
+    ax = ax.flatten()
+    for i, contorno in enumerate(imgs_processed[name]["contornos"]):
+        x, y, w, h = cv2.boundingRect(contorno)
 
-ax1[1].set_title("Contornos Detectados")
-ax1[1].imshow(imagem_com_contornos, cmap='gray')
-ax1[1].axis('off')
+        letra = imgs_processed[name]["img_bin"][y:(y + h), x:(x + w)]  # recorta a letra da iamgem
+        letra_resized = cv2.resize(
+            letra,
+            (imgs_processed["Template_A"]["img_bin"].shape[1], imgs_processed["Template_A"]["img_bin"].shape[0])
+        )  # redimensiona para o tamanho do template
 
-fig1.tight_layout()
-fig1.savefig(path_assets / "atv02-q08-i01_k03.png", dpi=400, bbox_inches='tight')
+        letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
+
+        # Outro formato de uso usando a biblioteca OpenCV ###############################################################
+        res = cv2.matchTemplate(
+        #     letra_norm.astype(np.float32),
+        #     image_template.astype(np.float32),
+        #     cv2.TM_CCOEFF_NORMED
+        # )[0][0]  # calculo de similaridade explicitado
+        #################################################################################################################
+        res = tm_ccoef_normed(letra_norm, image_template)  # calculo de similaridade
+        # simililarity = res[0][0]
+        simililarity = res[0][0]
+
+        contents[name]["contornos"].append(contorno)
+        contents[name]["letra"].append(letra)
+        contents[name]["letra_norm"].append(letra_norm)
+        contents[name]["similarity"].append(simililarity)
+
+        if w < 10 or h < 10:  # contornos muito pequenos não serão mostrados
+            if i < (10 * 10):
+                ax[i].axis("off")
+            contents[name]["check_is_valid"].append(False)
+            continue
+        contents[name]["check_is_valid"].append(True)
+
+        if i < (10 * 10):
+            ax[i].imshow(letra_norm, cmap='gray')
+            ax[i].axis("off")
+            ax[i].set_title(f"Sim: {simililarity:.2f}", fontsize=22)
+    fig.tight_layout()
+    file_paths_imgs[name] = path_assets / f"atv02-q08-i01_{name.lower()}.png"
+    fig.savefig(file_paths_imgs[name], dpi=400, bbox_inches='tight')
+    # fig.suptitle("Amostra de letras e similaridade calculada")
+    plt.close()
+
+# Mostra amostra de letras extraídas, juntas
+fig, ax = plt.subplots(1, 2, figsize=(22, 8))
+for idx, (name, file_path) in enumerate(file_paths_imgs.items()):
+    img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
+    ax[idx].imshow(img, cmap = 'gray')
+    ax[idx].set_title(f"Amostra de letras - {name}")
+    ax[idx].axis("off")
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv02-q08-i01_k04.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
-
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png?raw=true" alt="atv02-q08-i01_k04.png" width="800"/>
 </p>
 
-### 1.3) **Busca de similaridade com o template utilizado**
+### 4.3) Conclusão
 
-Abaixo, será aplicado a cada contorno encontrado um calculo de similaridade mencionado anteriormente (`TM_CCOEFF_NORMED`), com a implementação disponibilizada pela *OpenCV*. 
-
-```py
-fig, ax = plt.subplots(10, 10, figsize=(18, 16))
-ax = ax.flatten()
-for i, contorno in enumerate(contornos):
-    x, y, w, h = cv2.boundingRect(contorno)
-
-    letra = img_bin[y:(y + h), x:(x + w)]  # recorta a letra da iamgem
-    letra_resized = cv2.resize(
-        letra,
-        (image_template.shape[1], image_template.shape[0])
-    )  # redimensiona para o tamanho do template
-
-    letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
-
-    # Outro formato de uso usando a biblioteca OpenCV ###############################################################
-    # res = cv2.matchTemplate(
-    #     letra_norm.astype(np.float32),
-    #     image_template.astype(np.float32),
-    #     cv2.TM_CCOEFF_NORMED
-    # )[0][0]  # calculo de similaridade explicitado
-    #################################################################################################################
-    res = tm_ccoef_normed(letra_norm, image_template)  # calculo de similaridade
-    # simililarity = res[0][0]
-    simililarity = res[0][0]
-
-    contents["contornos"].append(contorno)
-    contents["letra"].append(letra)
-    contents["letra_norm"].append(letra_norm)
-    contents["similarity"].append(simililarity)
-
-    if w < 10 or h < 10:  # contornos muito pequenos não serão mostrados
-        if i < (10 * 10):
-            ax[i].axis("off")
-        contents["check_is_valid"].append(False)
-        continue
-    contents["check_is_valid"].append(True)
-
-    if i < (10 * 10):
-        ax[i].imshow(letra_norm, cmap='gray')
-        ax[i].axis("off")
-        ax[i].set_title(f"Sim: {simililarity:.2f}")
-fig.savefig(path_assets / "atv02-q08-i01_k04.png", dpi=400, bbox_inches='tight')
-fig.suptitle("Amostra de letras e similaridade calculada")
-```
-
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png?raw=true" alt="atv02-q08-i01_k04-img" width="400"/>
-</p>
-
-### 1.4) **Threshold para similaridade**
-
-Como dito anteriormente, vamos considerar um *threshold* de similaridade de 0.5, para definir que o objeto encontrado pelo contorno é a letra **A**. Podemos visualizar logo abaixo:
+Considerando a regra de decisão para *match* escolhida na seção (`02`), para um `threshold` igual a `0.5`, temos o seguinte resultado:
 
 ```py
 p = 0.5
-ks = np.where(
-  (np.array(contents["similarity"]) >= p) & (np.array(contents["check_is_valid"]) == True)
-)[0]  # achando os indices das letras com similirade >= 0.5
-n = math.ceil(math.sqrt(len(ks)))
-
-if n != 0:
-    fig, axes = plt.subplots(
-        n,
-        n,
-        figsize=(n * 3, n * 3)
-    )
-
-
-    for value, _axes in zip(ks, axes.flatten()):
-        _axes.imshow(contents["letra_norm"][value], cmap="gray")
-        _axes.set_title(f"Contorno: {value}")
-
-    for _axes in axes.flatten():
-        _axes.axis('off')
-
-    text = f"Letra 'A' {'encontrada' if len(ks) >= 1 else 'inexistente'}"
-    text += f" | Total: {len(ks)}"
-    fig.suptitle(text, fontsize=16, weight='bold')
-    fig.savefig(path_assets / "atv02-q08-i01_k05.png", dpi=400, bbox_inches='tight')
-    plt.show()
-else:
-    fig, axes = plt.subplots(
-        1,
-        1,
-        figsize=(1, 8)
-    )
-    axes.set_title("Letra 'A' não encontrada")
-    axes.axis('off')
-    fig.savefig(path_assets / "atv02-q08-i01_k05.png", dpi=400, bbox_inches='tight')
-```
-
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k05.png?raw=true" alt="atv02-q08-i01_k05-img" width="400"/>
-</p>
+file_paths_found = {}
+for name in books_name:
+    ks = np.where((np.array(contents[name]["similarity"]) >= p) & (np.array(contents[name]["check_is_valid"]) == True))[0]
+    n = math.ceil(math.sqrt(len(ks)))
+    contents[name]["contains_A"] = len(ks) > 0
+    contents[name]["total-of_A"] = len(ks)
+    file_paths_found[name] = path_assets / f"atv02-q08-i01_{name.lower()}_found.png"
+    if n != 0:
+        fig, axes = plt.subplots(
+            n,
+            n,
+            figsize=(n * 3, n * 3)
+        )
 
 
-### 1.5) **Conclusão**
+        for value, _axes in zip(ks, axes.flatten()):
+            _axes.imshow(contents[name]["letra_norm"][value], cmap="gray")
+            _axes.set_title(f"Contorno: {value}")
 
-Ao aplicarmos o algoritmo anterior, para a imagem do `Book_1.png`, foi visto que ele possuí a letra **A** em sua imagem. Um ponto a mais, com o formato da implementação utilizada, é possível listar o número de **A**'s encontrados, totalizando 10 para a imagem `Book_1.png`.
+        for _axes in axes.flatten():
+            _axes.axis('off')
 
+        text = f"Letra 'A' {'encontrada' if len(ks) >= 1 else 'inexistente'}"
+        text += f" | Total: {len(ks)}"
+        text += f" | Imagem: {name}"
+        fig.suptitle(text, fontsize=16, weight='bold')
+        fig.savefig(file_paths_found[name], dpi=400, bbox_inches='tight')
+        # plt.close()
+    else:
+        fig, axes = plt.subplots(
+            1,
+            1,
+            figsize=(16, 8)
+        )
+        fig.suptitle(f"Letra 'A' não encontrada | Imagem: {name}", weight='bold')
+        axes.axis('off')
+        fig.savefig(file_paths_found[name], dpi=400, bbox_inches='tight')
+    fig.tight_layout()
+    plt.close()
 
-## 2) **2º Imagem**
+# Mostra amostra de letras extraídas, juntas
+fig, ax = plt.subplots(1, 2, figsize=(22, 8))
+for idx, (name, file_path) in enumerate(file_paths_found.items()):
+    img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
+    ax[idx].imshow(img, cmap = 'gray')
+    # ax[idx].set_title(f"Amostra de letras - {name}")
+    ax[idx].axis("off")
 
-O procedimento para a segunda imagem será  analogo a primeira imagem, mudando apenas o objeto na leitura.
-
-### 2.1) **Leitura das imagens**
-
-Primeiro, vamos realizar a leitura das imagens seguindo o código abaixo:
-
-```py
-# Leitura de imagens
-file_path_template_A = str(path_assets / "atv02-q08-01_template_A.png")
-image_path = str(path_assets / "atv02_lista02-assets" / "Book_2.png")
-
-image_book = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-image_template = cv2.imread(file_path_template_A, cv2.IMREAD_GRAYSCALE)
-
-# parametros para salvar
-contents = {
-    "contornos": [],
-    "letra": [],
-    "letra_norm": [],
-    "similarity": [],
-    "check_is_valid": []
-}
-```
-
-### 2.2) **Ilustração do processo de binarização e contornos**
-
-Como no item anterior (1.2), fizemos a mesma inversão de cores, com a binarização, e ao lado o contorno de cada letra encontrada:
-
-```py
-# Pega os contornos e a imagem binarizada
-contornos, img_bin = find_contorno(image_book)
-
-# Faz uma cópia colorida da imagem original (para desenhar colorido)
-imagem_com_contornos = cv2.cvtColor(image_book, cv2.COLOR_GRAY2BGR)
-
-# Desenha os contornos
-_ = cv2.drawContours(imagem_com_contornos, contornos, -1, (0, 255, 0), 1)
-
-# Mostra imagem binarizada e com contornos lado a lado
-fig1, ax1 = plt.subplots(1, 2, figsize=(12, 5))
-ax1[0].set_title("Imagem Binarizada (Inversa)")
-ax1[0].imshow(img_bin, cmap='gray')
-ax1[0].axis('off')
-
-ax1[1].set_title("Contornos Detectados")
-ax1[1].imshow(imagem_com_contornos, cmap='gray')
-ax1[1].axis('off')
-
-fig1.tight_layout()
-fig1.savefig(path_assets / "atv02-q08-i02_k03.png", dpi=400, bbox_inches='tight')
+fig.tight_layout()
+fig.savefig(path_assets / "atv02-q08-i01_all-found.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
-
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k03.png?raw=true" alt="atv02-q08-i02_k03-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_all-found.png?raw=true" alt="atv02-q08-i01_all-found.png" width="800"/>
 </p>
-
-
-### 2.3) Busca de similaridade com o template utilizado
-
-Aplicando a mesma logica de similaridade do item (1.3), utilizando a similaridade escolhida. Podemos visualizar a amostra de alguns objetos encontrados abaixo:
 
 ```py
-fig, ax = plt.subplots(10, 10, figsize=(18, 16))
-ax = ax.flatten()
-for i, contorno in enumerate(contornos):
-    x, y, w, h = cv2.boundingRect(contorno)
-
-    letra = img_bin[y:(y + h), x:(x + w)]  # recorta a letra da iamgem
-    letra_resized = cv2.resize(
-        letra,
-        (image_template.shape[1], image_template.shape[0])
-    )  # redimensiona para o tamanho do template
-
-    letra_norm = 1 - letra_resized / 255.0 # re normalizando para retornar com o fundo branco e letra preta
-
-    # Outro formato de uso usando a biblioteca OpenCV ###############################################################
-    # res = cv2.matchTemplate(
-    #     letra_norm.astype(np.float32),
-    #     image_template.astype(np.float32),
-    #     cv2.TM_CCOEFF_NORMED
-    # )[0][0]  # calculo de similaridade explicitado
-    #################################################################################################################
-    res = tm_ccoef_normed(letra_norm, image_template)  # calculo de similaridade
-    simililarity = res[0][0]
-
-    contents["contornos"].append(contorno)
-    contents["letra"].append(letra)
-    contents["letra_norm"].append(letra_norm)
-    contents["similarity"].append(simililarity)
-
-    if w < 10 or h < 10:  # contornos muito pequenos não serão mostrados
-        if i < (10 * 10):
-            ax[i].axis("off")
-        contents["check_is_valid"].append(False)
-        continue
-    contents["check_is_valid"].append(True)
-
-    if i < (10 * 10):
-        ax[i].imshow(letra_norm, cmap='gray')
-        ax[i].axis("off")
-        ax[i].set_title(f"Sim: {simililarity:.2f}")
-fig.savefig(path_assets / "atv02-q08-i02_k04.png", dpi=400, bbox_inches='tight')
-fig.suptitle("Amostra de letras e similaridade calculada")
+for key, content in contents.items():
+    print("-" * 30)
+    print(key.split(" - ")[0])
+    print(f"Possuí a letra A: {content['contains_A']}")
+    if content["contains_A"]:
+        print(f"Total de letra A: {content['total-of_A']}")
+print("-"*30)
+```
+```
+------------------------------
+Book_1
+Possuí a letra A: True
+Total de letra A: 10
+------------------------------
+Book_2
+Possuí a letra A: False
+------------------------------
 ```
 
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k04.png?raw=true" alt="atv02-q08-i02_k04-img" width="400"/>
-</p>
+Apos a aplicação dessa solução, temos:
 
-### 2.4) Conclusão
+1) **Book_1:** como para a solução anterior (`01`), a letra `A` foi detectada na imagem, além de terem sido identificados 10 letras na imagem, e com esse método é possivel mensurar o quão parecidas o objeto e o template são.
 
-Aplicando o *threshold* de 0.5, não foi encontrado nenhuma letra **A** pelo algoritmo
-
-```py
-# Achando indices dos valores que satisfazem a regra do threshold
-ks = np.where((np.array(contents["similarity"]) >= 0.5) & (np.array(contents["check_is_valid"]) == True))[0]
-n = math.ceil(math.sqrt(len(ks)))
-
-if n != 0:
-    # plots
-    fig, axes = plt.subplots(
-        n,
-        n,
-        figsize=(n * 3, n * 3)
-    )
-
-
-    for value, _axes in zip(ks, axes.flatten()):
-        print("test")
-        _axes.imshow(contents["letra_norm"][value], cmap="gray")
-        _axes.set_title(f"Contorno: {value}")
-
-    for _axes in axes.flatten():
-        _axes.axis('off')
-
-    text = f"Letra 'A' {'encontrada' if len(ks) >= 1 else 'inexistente'}"
-    text += f" | Total: {len(ks)}"
-    fig.suptitle(text, fontsize=16, weight='bold')
-    fig.savefig(path_assets / "atv02-q08-i02_k05.png", dpi=400, bbox_inches='tight')
-    plt.show()
-else:
-    fig, axes = plt.subplots(
-        1,
-        1,
-        figsize=(1, 8)
-    )
-    axes.set_title("Letra 'A' não encontrada")
-    axes.axis('off')
-    fig.savefig(path_assets / "atv02-q08-i02_k05.png", dpi=400, bbox_inches='tight')
-```
-
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i02_k05.png?raw=true" alt="atv02-q08-i02_k05-img" width="600"/>
-</p>
- -->
+2) **Book_2:** também como na solução anterior, a letra `A` não foi detectada na imagem, uma vez que consideramos o `threshold` para a similaridade de `0.5`.
 
 # Questão 09
 
