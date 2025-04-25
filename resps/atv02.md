@@ -156,14 +156,16 @@ Uma apresentada em sala, é a técnica da Transformada de Fourier para Tempo Cur
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-09.png?raw=true" alt="q02-i02-img" width="500"/>
 </p>
 
+Como podemos ver,  ao aplicar janelas com saltos maiores e tamanhos menores, é mais dificil de notar a região possivelmente afetada pelo ruido, contudo ao reduzirmos o tamanho da janela e o espaçamento entre elas, aumentamos o número de possibilidades para avaliação, logo tendo mais detalhes, e  facilitando a detecção da região problema.
+
 
 ## 2) **Solução 02: Separar em quadrantes**
 
-Uma variação da *STFT* mencionada anteriormente, pode ser a separação direta em quadrantes a imagem, reduzindo o campo de busca para ruidos, e podendo comparar as transformadas de fourier entre elas. Em especial no exemplo da questão,  separar  em quatro quadrantes pode ser conveniente, então aplicar a transformada de Fourier em cada quadrante. A ideia é que, ao analisar o espectro  individualmente para cada quadrante, será possível comparar as distribuições entre as regiões. O quadrante afetado pelo desfoque apresentará uma caracteristica diferente das outras, evidenciando o borramento.
+Uma variação da *STFT* mencionada anteriormente, pode ser a separação direta em quadrantes a imagem, reduzindo o campo de busca para ruidos, e podendo comparar as transformadas de fourier entre elas. Em especial no exemplo da questão,  separar  em quatro quadrantes pode ser conveniente, então aplicar a transformada de Fourier em cada quadrante. Pode-se entender esta solução como um *STFT* aonde as janelas são disjuntas mas complementares para a imagem original. A ideia é que, ao analisar o espectro  individualmente para cada quadrante, será possível comparar as distribuições entre as regiões. O quadrante afetado pelo desfoque apresentará uma caracteristica diferente das outras, evidenciando o borramento.
 Na imagem abaixo, da para notar a aplicação dessa solução de separação de quadrantes:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i02-img" width="500"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i02-img" width="400"/>
 </p>
 
 # Questão 03
