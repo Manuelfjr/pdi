@@ -29,6 +29,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 from scipy.signal import convolve2d
+from scipy.fft import fft2, ifft2, fftshift
 ```
 
 # Funções 
@@ -1210,85 +1211,90 @@ plt.show()
 
 ```py
 img = imgs["cameraman_pattern"]
-rows, cols = img.shape
-crow, ccol = rows // 2 , cols // 2  # centro da imagem
 
 # Aplicar a Transformada de Fourier
 dft = np.fft.fft2(img)
 dft_shift = np.fft.fftshift(dft)
 
-# Criar o filtro Gaussiano
-sigmas = [10, 20, 40, 50, 100]
+# Definir os ranges e parametros
+nx = dft.shape[1]
+ny = dft.shape[0]
+cxrange = np.concatenate((np.arange(0, nx // 2 + 1), np.arange(-nx // 2 + 1, 0)))
+cyrange = np.concatenate((np.arange(0, ny // 2 + 1), np.arange(-ny // 2 + 1, 0)))
+cx, cy = np.meshgrid(cxrange, cyrange)
+fxrange = cxrange * 2 * np.pi / nx
+fyrange = cyrange * 2 * np.pi / ny
+fx, fy = np.meshgrid(fxrange, fyrange)
 
-# Plot
+# Lista de sigmas a serem procurados
+sigmas = [0.3, 0.5, 0.7, 0.9, 1, 1.5, 3]
+
 fig, ax = plt.subplots(2, (len(sigmas) // 2) + 1, figsize=(16, 10))
 ax = ax.flatten()
 ax[0].imshow(img, cmap='gray')
 ax[0].set_title('Original')
-ax[0].axis('off')
+for _ax in ax:
+    _ax.axis('off')
 for idx, sigma in enumerate(sigmas):
-    # Calcula filtro passa-baixa gaussiano
-    u = np.arange(-ccol, ccol)
-    v = np.arange(-crow, crow)
-    U, V = np.meshgrid(u, v)
-    D = np.sqrt(U**2 + V**2)
-    H = np.exp(-(D**2) / (2 * sigma**2))
+    # Filtro passa-baixa gaussiano
+    ms = np.exp(-(fx**2 + fy**2) / (2 * (sigma**2)))
 
     # Aplicar o filtro
-    filtered_dft = dft_shift * H
+    smoothF = dft * ms
+    smooth = np.abs(ifft2(smoothF))
 
-    # Transformada Inversa
-    f_ishift = np.fft.ifftshift(filtered_dft)
-    img_back = np.fft.ifft2(f_ishift)
-    img_back = np.abs(img_back)
-
-    ax[idx + 1].imshow(img_back, cmap='gray')
-    ax[idx + 1].set_title('Filtro Passa-Baixa Gaussiano ' + rf"($\sigma={sigma}$)")
+    # Exibir a imagem suavizada
+    ax[idx + 1].imshow(smooth, cmap='gray')
+    ax[idx + 1].set_title("Filtro Passa-Baixa Gaussiano " + rf"($\sigma={sigma}$)")
     ax[idx + 1].axis('off')
-fig.savefig(path_assets / "atv02-q09-a.png", bbox_inches='tight', dpi=400)
+fig.savefig(path_assets / "atv02-q09-a1.png", bbox_inches='tight', dpi=400)
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-a.png?raw=true" alt="atv02-q09-a-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-a1.png?raw=true" alt="atv02-q09-a1" width="600"/>
 </p>
 
 ### Conclusão
 
-Foi escolhido o filtro passa-baixa gaussiano para aplicar na transformada de fourier, variando em um range de &sigma;'s, apenas com o intuito de encontrar oque conseguiria retirar o ruido das linhas horizontais e também recuperar o máximo possivel da imagem original. Dessa forma, ao aplicarmos um range de &sigma; = [10, 20, 40, 50, 100], podemos escolher &sigma; = 40, uma vez que foi oque apresentou menor borramento da imagem e conseguiu retirar as linhas horizontais (a  primeira vista) totalmente.
+Analisando detalhadamente, podemos notar que os filtros considerando &sigma; = 3 e &sigma; = 0.3 podem ser descartados, uma vez que um apresentou ainda a presença do tracejado horizontal na imagem, enquanto o outro  apresenta um grau de borramento maior, quase sendo imperceptivel detectar detalhes do fundo da imagem, respectivamente.
 
+Considerando o &sigma; = 1.5, a imagem mantem um nivel de detalhes consideravel, contudo, ainda que leve, a imagem ainda apresenta linhas tracejadas no fundo, algumas sendo bem evidentes. Os valores de &sigma; = {0.5, 0.7, 0.9} apresentaram um pouco mais de detalhes, mas um nivel de borramento ainda elevado.
+
+Por fim, o &sigma; ideal para esse problema pode ser considerado 1, uma vez que ele conseguiu conservar detalhes da imagem, desparecendo com as linhas horizontais e ainda apresentando um nível de borramento mínimo.
 
 ## b)
 
 
-Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco a matriz h de tal forma que encontre a melhor máscara a ser aplicada.
+Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco a matriz h de tal forma que encontre a melhor máscara a ser aplicada. Dessa forma, vamos aplicar um conjunto de máscaras sobre a imagem, aplicando uma correlação cruzada.
 
 
 ```py
 # mascaras utilizadas
+k = 1 / 9
 hs = {
-    "Mascara 01":(1 / 9) * np.array(
+    "Mascara 01": k * np.array(
         [
             [0, 0, 0],
             [0, 1, 1],
             [0, 1, 1]
         ]
     ),
-    "Mascara 02":(1 / 9) * np.array(
+    "Mascara 02": k * np.array(
         [
             [0, 1, 0],
             [1, 0, 1],
             [0, 1, 0]
         ]
     ),
-    "Mascara 03":(1 / 9) * np.array(
+    "Mascara 03": k * np.array(
         [
             [1, 1, 1],
             [1, 0, 1],
             [1, 1, 1]
         ]
     ),
-    "Mascara 04":(1 / 9) * np.array(
+    "Mascara 04": k * np.array(
         [
             [1, 0, 1],
             [0, 0, 0],
