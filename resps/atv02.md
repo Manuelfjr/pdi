@@ -1268,31 +1268,31 @@ Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco
 
 
 ```py
+## metodo usando filtro linear
 # mascaras utilizadas
-k = 1 / 9
 hs = {
-    "Mascara 01": k * np.array(
+    "Mascara 01": np.array(
         [
             [0, 0, 0],
             [0, 1, 1],
             [0, 1, 1]
         ]
     ),
-    "Mascara 02": k * np.array(
+    "Mascara 02": np.array(
         [
             [0, 1, 0],
             [1, 0, 1],
             [0, 1, 0]
         ]
     ),
-    "Mascara 03": k * np.array(
+    "Mascara 03": np.array(
         [
             [1, 1, 1],
             [1, 0, 1],
             [1, 1, 1]
         ]
     ),
-    "Mascara 04": k * np.array(
+    "Mascara 04": np.array(
         [
             [1, 0, 1],
             [0, 0, 0],
@@ -1300,6 +1300,10 @@ hs = {
         ]
     ),
 }
+
+for key, h in hs.items():
+    # Normaliza a máscara
+    h = h / np.sum(h)
 
 # aplicação da correlação cruzada
 filtered_img = {
@@ -1359,13 +1363,13 @@ plt.show()
 
 ### Conclusão
 
-Entre as máscaras testadas, a Máscara 1 apresentou os melhores resultados, conseguindo remover completamente as linhas horizontais presentes na imagem cameraman_pattern.png. Além disso, essa máscara conseguiu manter os detalhes da imagem original e apresentou o menor nível de borramento.
+Entre os filtros testadas, o Filtro 1 apresentou os melhores resultados, conseguindo remover completamente as linhas horizontais presentes na imagem cameraman_pattern.png. Além disso, essa máscara conseguiu manter os detalhes da imagem original e apresentou o menor nível de borramento.
 
-A Máscara 2 também foi capaz de eliminar as linhas horizontais, mas apresentou um borramento mais evidente, o que comprometeu visualmente a qualidade da imagem. Por outro lado, as Máscaras 3 e 4 não foram eficazes. Ambas não foram eficientes em remover as linhas horizontais e ainda introduziram um efeito de borramento significativo, prejudicando a nitidez e os detalhes da imagem.
+O filtro 2 também foi capaz de eliminar as linhas horizontais, mas apresentou um borramento mais evidente, o que comprometeu visualmente a qualidade da imagem. Por outro lado, os filtros 3 e 4 não foram eficazes. Ambas não foram eficientes em remover as linhas horizontais e ainda introduziram um efeito de borramento significativo, prejudicando a nitidez e os detalhes da imagem.
 
-Dessa forma, temos que a **Máscara 1** foi a mais adequada para resolver o problema, equilibrando a remoção do padrão de linhas com a preservação da qualidade da imagem.
+Dessa forma, temos que o **filtro 1** foi a mais adequada para resolver o problema, equilibrando a remoção do padrão de linhas com a preservação da qualidade da imagem.
 
-* **Máscara selecionada:**
+* **Filtro selecionado:**
 <p>
 $$
 h = \left(\frac{1}{9}\right) \cdot \left[\begin{matrix}
