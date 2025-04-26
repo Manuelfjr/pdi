@@ -84,7 +84,6 @@ def tm_ccoef_normed(image: np.ndarray, template: np.ndarray) -> np.ndarray:
             result[y, x] = numerator / denominator if denominator != 0 else 0.0
 
     return result
-
 ```
 
 # Questão 01
@@ -120,7 +119,6 @@ Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-06.png?raw=true" alt="q01-i3-img" width="600"/>
 </p>
-
 
 
 # Questão 02
