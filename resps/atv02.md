@@ -28,6 +28,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from scipy.signal import convolve2d
 ```
 
 # Funções 
@@ -481,17 +482,6 @@ $$
   \end{matrix}
 \right]
 $$
-</p>
-
-
-Ilustrando graficamente o efeito desse filtro box, temos:
-
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-03.png?raw=true" alt="atv02-q05-03-img" width="800"/>
-</p>
-
-<p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-04.png?raw=true" alt="atv02-q05-04-img" width="800"/>
 </p>
 
 
@@ -1271,38 +1261,100 @@ Foi escolhido o filtro passa-baixa gaussiano para aplicar na transformada de fou
 ## b)
 
 ```py
-filtered_img = {
-    "Filtro box 2x2": cv2.blur(imgs["cameraman_pattern"], (2, 2)),  # aplicando um filtro box de dimensão 2x2
-    "Filtro box 3x3": cv2.blur(imgs["cameraman_pattern"], (3, 3)),  # aplicando um filtro box de dimensão 3x3
-    "Filtro box 4x4": cv2.blur(imgs["cameraman_pattern"], (4, 4)),  # aplicando um filtro box de dimensão 4x4
+# mascaras utilizadas
+hs = {
+    "Mascara 01":(1 / 9) * np.array(
+        [
+            [0, 0, 0],
+            [0, 1, 1],
+            [0, 1, 1]
+        ]
+    ),
+    "Mascara 02":(1 / 9) * np.array(
+        [
+            [0, 1, 0],
+            [1, 0, 1],
+            [0, 1, 0]
+        ]
+    ),
+    "Mascara 03":(1 / 9) * np.array(
+        [
+            [1, 1, 1],
+            [1, 0, 1],
+            [1, 1, 1]
+        ]
+    ),
+    "Mascara 04":(1 / 9) * np.array(
+        [
+            [1, 0, 1],
+            [0, 0, 0],
+            [1, 0, 1]
+        ]
+    ),
 }
 
-fig, ax = plt.subplots(1, len(filtered_img.keys()) + 2, figsize=(20, 10))
-ax[0].set_title('Original')
-ax[0].imshow(imgs["cameraman_pattern"], cmap='gray')
-ax[0].axis('off')
+# aplicação da correlação cruzada
+filtered_img = {
+    key: convolve2d(
+        imgs["cameraman_pattern"],
+        h,
+        mode='same',
+        boundary='fill',
+        fillvalue=0
+    ).round().astype(int) for key, h in hs.items()
+}
 
-ax[1].set_title('Original (sem linhas)')
-ax[1].imshow(imgs["cameraman"], cmap='gray')
-ax[1].axis('off')
+fig, ax = plt.subplots(2, len(filtered_img.keys()) + 1, figsize=(18, 8))
 
-for _ax, (title, content) in zip(ax[2:], filtered_img.items()):
-    _ax.imshow(content, cmap='gray')
-    _ax.set_title(title)
-    _ax.axis('off')
+ax[0, 0].set_title('Original')
+ax[0, 0].imshow(imgs["cameraman_pattern"], cmap='gray')
+ax[0, 0].axis('off')
+
+ax[1, 0].set_title('Original (sem linhas)')
+ax[1, 0].imshow(imgs["cameraman"], cmap='gray')
+ax[1, 0].axis('off')
+
+# Exibir as máscaras e as imagens filtradas
+for _ax, (title, content) in zip(ax.T[1:], filtered_img.items()):
+    # Normalizar a máscara para o intervalo [0, 1]
+    mask = hs[title]
+    mask_normalized = (mask - mask.min()) / (mask.max() - mask.min())
+
+    _ax[0].imshow(mask_normalized, cmap='gray')
+    _ax[0].set_title(title)
+    _ax[0].axis('off')
+
+    _ax[1].imshow(content, cmap='gray')
+    _ax[1].set_title(f"Filtrado ({title})")
+    _ax[1].axis('off')
+
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q09-02.png", dpi=400, bbox_inches='tight')
+fig.savefig(path_assets / "atv02-q09-03.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-02.png?raw=true" alt="atv02-q09-02-img" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-03.png?raw=true" alt="atv02-q09-03-img" width="800"/>
 </p>
 
 ### Conclusão
 
-Todos os filtros box, exceto o 3x3, conseguiram retirar as linhas horizontais, sendo o 2x2 oque apresentou melhores resultados, tendo um menor boraremtno da imagem e conseguindo sumir com os tracejados, conseguindo recuperar de forma significante a imagem original. O filtro box 3x3 não foi efetivo para esse problema, retornando uma imagem aidna com linhas horizontais, ainda que tenha aumentado o contraste nas cores mais pretas, diminuindo o contraste das linhas. Por fim, o filtro box 4x4 conseguiu retirar as linhas, mas apresentou um maior borramento da imagem, quando comparado ao 2x2.
+Entre as máscaras testadas, a Máscara 1 apresentou os melhores resultados, conseguindo remover completamente as linhas horizontais presentes na imagem cameraman_pattern.png. Além disso, essa máscara conseguiu manter os detalhes da imagem original e apresentou o menor nível de borramento.
 
+A Máscara 2 também foi capaz de eliminar as linhas horizontais, mas apresentou um borramento mais evidente, o que comprometeu visualmente a qualidade da imagem. Por outro lado, as Máscaras 3 e 4 não foram eficazes. Ambas não foram eficientes em remover as linhas horizontais e ainda introduziram um efeito de borramento significativo, prejudicando a nitidez e os detalhes da imagem.
+
+Dessa forma, temos que a **Máscara 1** foi a mais adequada para resolver o problema, equilibrando a remoção do padrão de linhas com a preservação da qualidade da imagem.
+
+* **Máscara selecionada:**
+<p>
+$$
+h = \left(\frac{1}{9}\right) \cdot \left[\begin{matrix}
+    0 & 0 & 0 \\
+    0 & 1 & 1 \\
+    0 & 1 & 1 \\
+\end{matrix}\right]
+$$
+</p>
 
 # Questão 10
 
