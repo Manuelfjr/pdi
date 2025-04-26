@@ -1260,6 +1260,10 @@ Foi escolhido o filtro passa-baixa gaussiano para aplicar na transformada de fou
 
 ## b)
 
+
+Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco a matriz h de tal forma que encontre a melhor máscara a ser aplicada.
+
+
 ```py
 # mascaras utilizadas
 hs = {
