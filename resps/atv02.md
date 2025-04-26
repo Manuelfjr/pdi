@@ -1353,12 +1353,12 @@ for _ax, (title, content) in zip(ax.T[1:], filtered_img.items()):
     _ax[1].axis('off')
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q09-b1.png", dpi=400, bbox_inches='tight')
+fig.savefig(path_assets / "atv02-q09-b2.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-b1.png?raw=true" alt="atv02-q09-b1-img" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-b2.png?raw=true" alt="atv02-q09-b2-img" width="800"/>
 </p>
 
 ### Conclusão
