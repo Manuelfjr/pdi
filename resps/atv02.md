@@ -29,7 +29,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 from scipy.signal import convolve2d
-from scipy.fft import fft2, ifft2, fftshift
+from scipy.fft import ifft2
 ```
 
 # Funções 
@@ -113,7 +113,7 @@ especule sobre o resultado esperado.
 
 **R.:**
 
-A Transformada de Fourier tem como foco principal analisar a distribuicao das frequências da iamgem e não elementos dispostos no espaço da imagem, ou seja, a posição de qualquer conteúdo na imagem caso seja alterado, de forma igual a não alterar a frequências presente na imagem,  espera-se que o resultado da transformada de fourier permaneça igual. Logo, a transformada de fourier independe da localização dos pixels sobre a imagem, caso não exista variação de intensidade entre as imagens. Apesar da transformada ser igual, pois independe da localização do objeto na iamgem e sim das frequências, a fase da transformada de fourier sera diferente, apesar de mesma magnitude.
+A Transformada de Fourier tem como foco principal analisar a distribuicao das frequências da iamgem e não elementos dispostos no espaço da imagem, ou seja, a posição de qualquer conteúdo na imagem caso seja alterado, de forma igual a não alterar a frequências presente na imagem,  espera-se que o resultado da transformada de fourier permaneça igual. Logo, a transformada de fourier independe da localização do objeto na imagem, caso não exista variação de intensidade entre as imagens. Contudo, se esse objeto for rotacionado em alguma angulação, essa alteração pode ser expressa na transformada de fourier. Apesar da transformada ser igual, pois independe da localização do objeto na imagem e sim das frequências, a fase da transformada de fourier sera diferente, apesar de mesma magnitude.
 
 Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
 
@@ -1244,7 +1244,7 @@ for idx, sigma in enumerate(sigmas):
     smooth = np.abs(ifft2(smoothF))
 
     # Exibir a imagem suavizada
-    ax[idx + 1].imshow(smooth, cmap='gray')
+    ax[idx + 1].imshow(smooth.round().astype(int), cmap='gray')
     ax[idx + 1].set_title("Filtro Passa-Baixa Gaussiano " + rf"($\sigma={sigma}$)")
     ax[idx + 1].axis('off')
 fig.savefig(path_assets / "atv02-q09-a1.png", bbox_inches='tight', dpi=400)
