@@ -1324,11 +1324,23 @@ ax[1, 0].axis('off')
 
 # Exibir as máscaras e as imagens filtradas
 for _ax, (title, content) in zip(ax.T[1:], filtered_img.items()):
-    # Normalizar a máscara para o intervalo [0, 1]
+    # Normalizar a máscara para  [0, 1]
     mask = hs[title]
     mask_normalized = (mask - mask.min()) / (mask.max() - mask.min())
 
-    _ax[0].imshow(mask_normalized, cmap='gray')
+    # _ax[0].imshow(mask_normalized, cmap='gray')
+    sns.heatmap(
+        mask_normalized,
+        ax=_ax[0],
+        cbar=False,
+        annot=True,
+        fmt=".0f",
+        annot_kws={"color": "black", "fontsize": 12, "weight": "bold"}, 
+        linewidths=0.5,
+        linecolor='black',
+        cmap='binary',
+        vmin=1, vmax=1
+    )
     _ax[0].set_title(title)
     _ax[0].axis('off')
 
@@ -1337,12 +1349,12 @@ for _ax, (title, content) in zip(ax.T[1:], filtered_img.items()):
     _ax[1].axis('off')
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q09-03.png", dpi=400, bbox_inches='tight')
+fig.savefig(path_assets / "atv02-q09-b1.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-03.png?raw=true" alt="atv02-q09-03-img" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-b1.png?raw=true" alt="atv02-q09-b1-img" width="800"/>
 </p>
 
 ### Conclusão
