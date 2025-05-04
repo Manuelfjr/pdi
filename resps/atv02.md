@@ -11,9 +11,9 @@
 
 * **Obs. (2):** Com respeito as questões de implementação (8, 9 e 10), além do código disponibilizado no pdf, os links para os notebooks utilizados para as aplicações estão abaixo:
 
-  1) `Questão 08:` 
-     * `Solução 01:` [02_01_atv02_code_q08_sol1](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_01_atv02_code_q08_sol1.ipynb)
-     * `Solução 02:` [02_02_atv02_code_q08_sol2](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_02_atv02_code_q08_sol2.ipynb)
+  1) `Questão 08:` [02_01_atv02_code_q08_sol1](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_01_atv02_code_q08_sol1.ipynb)
+     <!-- * `Solução 01:` [02_01_atv02_code_q08_sol1](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_01_atv02_code_q08_sol1.ipynb)
+     * `Solução 02:` [02_02_atv02_code_q08_sol2](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_02_atv02_code_q08_sol2.ipynb) -->
   
   2) `Questão 09:` [03_atv02_code_q09](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb)
 
@@ -27,12 +27,13 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 import cv2
 from scipy.signal import convolve2d
 from scipy.fft import ifft2
 ```
 
-# Funções 
+<!-- # Funções 
 
 Abaixo, temos as funções criadas para utilizar ao decorrer da atividade, para as questões de implementação.
 
@@ -84,7 +85,7 @@ def tm_ccoef_normed(image: np.ndarray, template: np.ndarray) -> np.ndarray:
             result[y, x] = numerator / denominator if denominator != 0 else 0.0
 
     return result
-```
+``` -->
 
 # Questão 01
 
@@ -112,13 +113,15 @@ especule sobre o resultado esperado.
 
 **R.:**
 
+<!-- **Obs.:** Apenas para ilustrar oque for escrito, foi retirado recortes da imagem, e aplicado a transformada, apenas para ilustrar o efeito -->
+
 A Transformada de Fourier tem como foco principal analisar a distribuicao das frequências da iamgem e não elementos dispostos no espaço da imagem, ou seja, a posição de qualquer conteúdo na imagem caso seja alterado, de forma igual a não alterar a frequências presente na imagem,  espera-se que o resultado da transformada de fourier permaneça igual. Logo, a transformada de fourier independe da localização do objeto na imagem, caso não exista variação de intensidade entre as imagens. Contudo, se esse objeto for rotacionado em alguma angulação, essa alteração pode ser expressa na transformada de fourier. Apesar da transformada ser igual, pois independe da localização do objeto na imagem e sim das frequências, a fase da transformada de fourier sera diferente, apesar de mesma magnitude.
 
-Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
+<!-- Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-06.png?raw=true" alt="q01-i3-img" width="600"/>
-</p>
+</p> -->
 
 
 # Questão 02
@@ -128,7 +131,7 @@ Vimos, nos slides 16 e 17 da aula de filtragem, que o embaçamento de uma imagem
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-01.png?raw=true" alt="q02-i01-img" width="500"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q02-01.png" alt="q02-i01-img" width="500"/>
 </p>
 
 <strong>
@@ -136,7 +139,7 @@ Essa imagem gera a magnitude da transformada de Fourier a seguir:
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-02.png?raw=true" alt="q02-i02-img" width="500"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q02-02.png" alt="q02-i02-img" width="500"/>
 </p>
 
 <strong>
@@ -148,16 +151,22 @@ esse distúrbio em alguma parte (bem definida) da imagem.
 
 **R.:**
 
-## 1) **Solução 01: Gabor (1946)**
+## 1) **Solução 01: Short Time Fourier Transform**
 
-Uma apresentada em sala, é a técnica da Transformada de Fourier para Tempo Curto, ou *Short Time Fourier Transform (STFT)*, que considera uma janela que se desloca ao longo da imagem, avaliando cada momento de forma individual. Essa técnica pode ajudar a captar melhor borramentos localziamos em imagens, como ilustra a imagem abaixo:
+<!-- Uma apresentada em sala, é a técnica da Transformada de Fourier para Tempo Curto, ou *Short Time Fourier Transform (STFT)* (Gabor, 1946), que considera uma janela que se desloca ao longo da imagem, avaliando cada momento de forma individual. Essa técnica pode ajudar a captar melhor borramentos localziamos em imagens, como ilustra a imagem abaixo:
 
 <p align="center" >
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-09.png?raw=true" alt="q02-i02-img" width="500"/>
 </p>
 
-Como podemos ver,  ao aplicar janelas com saltos maiores e tamanhos menores, é mais dificil de notar a região possivelmente afetada pelo ruido, contudo ao reduzirmos o tamanho da janela e o espaçamento entre elas, aumentamos o número de possibilidades para avaliação, logo tendo mais detalhes, e  facilitando a detecção da região problema.
+Como podemos ver,  ao aplicar janelas com saltos maiores e tamanhos menores, é mais dificil de notar a região possivelmente afetada pelo ruido, contudo ao reduzirmos o tamanho da janela e o espaçamento entre elas, aumentamos o número de possibilidades para avaliação, logo tendo mais detalhes, e  facilitando a detecção da região problema. No problema da imagem em questão, podemos ver um quadrado ficando cada vez mais definido na parte inferior direita da imagem, evidenciando um possivel região de problema. -->
 
+
+Uma técnica apresenta em sala que pode ser aplicada para a situação é a *Short Time Fourier Transform* (STFT) (Gabor, 1946), sendo uma técnica que utiliza uma janela deslizante para analisar regiões específicas de uma imagem de forma individual. Essa abordagem pode ser util para detectar borramentos localizados em quadrantes específicos da imagem.
+
+Aplicando a STFT, o tamanho da janela e o salto possuem um impacto signficante na detecção de anomalias na imagem, sendo janelas menores e saltos mais precisos permitem uma análise mais detalhada, facilitando a identificação de regiões afetadas pelo borramento.
+
+Essa técnica é eficaz para esse problema porque permite a análise local da imagem, dando enfase nas variações que poderiam passar despercebidas em uma análise global, sendo uma ferramenta poderosa para identificar problemas localizados em imagens, como borramentos em regiões especificas.
 
 ## 2) **Solução 02: Separar em quadrantes**
 
@@ -538,15 +547,36 @@ Então temos:
       12 & 16 & 12 \\
       8  & 12 & 9
     \end{matrix}
+  \right]
+  $$
+</p>
+
+Por fim, como a saida deve ser uma imagem em 16 tons de cinza, temos que aplicar um processo de clip entre 0 e 15, ou seja, se xij < 0, o valor sera atribuido para 0; caso xij > 15, o valor será atribuido para 15. Logo temos:
+
+<p>
+  $$
+  \frac{1}{9} \cdot \text{(Img * B)} = \frac{1}{9} \cdot \left[
+    \begin{matrix}
+      8  & 11 & 8 \\
+      12 & 16 & 12 \\
+      8  & 12 & 9
+    \end{matrix}
+  \right] = \frac{1}{9} \cdot \left[
+    \begin{matrix}
+      8  & 11 & 8 \\
+      12 & 15 & 12 \\
+      8  & 12 & 9
+    \end{matrix}
   \right] = \left[
     \begin{matrix}
       0.8889 & 1.2222 & 0.8889 \\
-      1.3333 & 1.7778 & 1.3333 \\
+      1.3333 & 1.6667 & 1.3333 \\
       0.8889 & 1.3333 & 1
     \end{matrix}
     \right]
   $$
 </p>
+
 
 Aplicando os devidos arredondamentos, temos:
 
@@ -597,7 +627,9 @@ Ao inves de serem tratadas como operações inversas, elas são complementares, 
 **R.:**
 
 
-Foi encontrado duas soluções possiveis para esse problema, sendo elas:
+<!-- Foi encontrado duas soluções possiveis para esse problema, sendo elas: -->
+
+Foi encontrado a seguinte solução para o problema, sendo ela:
 
 ## 1) **[Lógica] Via erosão**
 
@@ -648,7 +680,7 @@ Método rápido e facil de aplicar.
 ### 1.3) **Problema**
 
 Necessita que o corte para a imagem de template seja o mais preciso possivel, também é ainda mais sensivel a mudança de pixels e troca de fontes. Ao invés de recortar diretamente da imagem, e sim tirar um print da letra de interesse, o método pode não funcionar, uma vez que ele busca um struct especifico de pixels alinhados.
-
+<!-- 
 ## 2) **[Lógica] Via similaridade**
 
 Esse método busca dar um *match* entre um template escolhido e contornos de objetos encontrados na imagem, via uma métrica pré definida e também tendo um valor de corte para essa métrica (*threshold*), com o intuito de binarizar a decisão se a imagem contem **A** ou não.
@@ -715,12 +747,12 @@ Método pode considerar fontes com formato proximos, dando uma flexibilidade mai
 ### 2.3) **Problema**
 
 Pode ser custoso mais custoso quando lidamos com imagens maiores e com mais informações, gerando muitos contornos e tornando a busca de match exaustiva para o algoritmo.
+ -->
+
+## 2) **[Implementação] Via erosão**
 
 
-## 3) **[Implementação] Via erosão**
-
-
-### 3.0) **Leitura de imagens**
+### 2.0) **Leitura de imagens**
 
 ```py
 image_path_1 = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
@@ -730,7 +762,7 @@ image_book1 = cv2.imread(image_path_1, cv2.IMREAD_GRAYSCALE)
 image_book2 = cv2.imread(image_path_2, cv2.IMREAD_GRAYSCALE)
 ```
 
-### 3.1) **Definição de cortes**
+### 2.1) **Definição de cortes**
 
 Nesse momento, é feito a seleção de alguns cortes na imagem, para a seleção da letra de interesse para uso de template e `struct`. Cortes 2 e 3 são apenas ilustrativos do processo.
 
@@ -827,7 +859,7 @@ fig.savefig(path_assets / "atv02-q08-s1-01.png", dpi=400, bbox_inches='tight')
 </p>
 
 
-### 3.2) **Binarização**
+### 2.2) **Binarização**
 
 Aqui será feita a binarização da image, para fundo preto e letra branca.
 
@@ -862,7 +894,7 @@ plt.show()
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-02.png?raw=true" alt="atv02-q08-s1-02.png" width="600"/>
 </p>
 
-### 3.3) **Erosão**
+### 2.3) **Erosão**
 
 Neste momento, vamos aplicar o processo de erosão sobre o template, que será considerado o nosso struct.
 
@@ -923,7 +955,7 @@ fig.savefig(path_assets / "atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
 
 Com a erosão seguida com a dilatação, considerando 3 iterações, é mais facil de visualizar graficamente a presença da letra "A".
 
-### 3.4) **Conclusão**
+### 2.4) **Conclusão**
 
 
 ```py
@@ -952,7 +984,7 @@ Apos a aplicação dessa solução, temos:
 
 2) `Book_2`: a letra `A` não foi detectada na imagem, pela logica do algoritmo implementado no decorrer da solução.
 
-
+<!-- 
 ## 4) **[Implementação] Via similaridade**
 
 ### 4.0) **Leitura das imagens**
@@ -1151,7 +1183,7 @@ Apos a aplicação dessa solução, temos:
 
 1) **Book_1:** como para a solução anterior (`01`), a letra `A` foi detectada na imagem, além de terem sido identificados 10 letras na imagem, e com esse método é possivel mensurar o quão parecidas o objeto e o template são.
 
-2) **Book_2:** também como na solução anterior, a letra `A` não foi detectada na imagem, uma vez que consideramos o `threshold` para a similaridade de `0.5`.
+2) **Book_2:** também como na solução anterior, a letra `A` não foi detectada na imagem, uma vez que consideramos o `threshold` para a similaridade de `0.5`. -->
 
 # Questão 09
 
@@ -1206,6 +1238,8 @@ plt.show()
 
 
 ## a)
+
+Usaremos um filtro passa baixa gaussiano, aplicando um range de valores de &sigma; para apenas selecionar o melhor valor para a imagem em questão e poder ilustrar o impacto da alteração desse valor ao longo sobre a imagem. O range de busca será &sigma; = {0.3, 0.5, 0.7, 0.9, 1, 1.5, 3}
 
 ```py
 img = imgs["cameraman_pattern"]
@@ -1264,7 +1298,20 @@ Por fim, o &sigma; ideal para esse problema pode ser considerado 1, uma vez que 
 ## b)
 
 
-Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco a matriz h de tal forma que encontre a melhor máscara a ser aplicada. Dessa forma, vamos aplicar um conjunto de máscaras sobre a imagem, aplicando uma correlação cruzada.
+Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco a matriz h de tal forma que encontre a melhor máscara a ser aplicada. Dessa forma, vamos aplicar um conjunto de máscaras sobre a imagem, aplicando uma correlação cruzada. Abaixo temos as mascaras a serem testadas, foram selecionadas apartir de um conjunto de outras mascaras similares, e selecionadas apenas essas samples, com correções efetivas que elas causaram (Mascaras 01 e 02) e as que não conseguiram realizar a tarefa proposta (Mascaras 03 e 04)
+
+<p>
+  $$
+  \text{Máscara 01} = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 1 \\ 0 & 1 & 1 \end{bmatrix} \quad
+  \text{Máscara 02} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 1 \\ 0 & 1 & 0 \end{bmatrix}
+  $$
+</p>
+<p>
+  $$
+  \text{Máscara 03} = \begin{bmatrix} 1 & 1 & 1 \\ 1 & 0 & 1 \\ 1 & 1 & 1 \end{bmatrix} \quad
+  \text{Máscara 04} = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 0 & 0 \\ 1 & 0 & 1 \end{bmatrix}
+  $$
+</p>
 
 
 ```py
@@ -1372,7 +1419,7 @@ Dessa forma, temos que o **filtro 1** foi a mais adequada para resolver o proble
 * **Filtro selecionado:**
 <p>
 $$
-h = \left(\frac{1}{9}\right) \cdot \left[\begin{matrix}
+h = \left(\frac{1}{4}\right) \cdot \left[\begin{matrix}
     0 & 0 & 0 \\
     0 & 1 & 1 \\
     0 & 1 & 1 \\
