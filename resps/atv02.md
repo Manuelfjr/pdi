@@ -96,7 +96,7 @@ apresentada à direita:
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-01.png?raw=true" alt="q01-i1-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q01-01.png" alt="q01-i1-img" width="600"/>
 </p>
 
 <strong>
@@ -107,7 +107,7 @@ especule sobre o resultado esperado.
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-02.png?raw=true" alt="q01-i2-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q01-02.png?raw=true" alt="q01-i2-img" width="600"/>
 </p>
 
 
@@ -174,7 +174,7 @@ Uma variação da *STFT* mencionada anteriormente, pode ser a separação direta
 Na imagem abaixo, da para notar a aplicação dessa solução de separação de quadrantes:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i02-img" width="400"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i02-img" width="400"/>
 </p>
 
 # Questão 03
@@ -328,7 +328,7 @@ $$\therefore H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cd
 Então, aplicando a convolução teremos:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="800"/>
 </p>
 
 Logo, a matriz resultante da convolução será:
@@ -367,7 +367,7 @@ Logo, a matriz resultante da convolução será:
   Primeiramente, vamos rotacionar a segunda matriz, sendo ela **f**, devido a sua natureza, a rotação dela é igual a original, logo aplicando a revolução teremos:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="800"/>
 </p>
 
 
@@ -427,7 +427,7 @@ discreta de três filtros Box, como abaixo:
 Calculando, devido a simetria de B, a rotação será igual, logo temos:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-01.png?raw=true" alt="atv02-q05-01-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q05-01.png?raw=true" alt="atv02-q05-01-img" width="800"/>
 </p>
 
 
@@ -451,7 +451,7 @@ $$
 Analogo ao item anterior, devido a simetria de B, teremos rotação igual, logo temos:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q05-02.png?raw=true" alt="atv02-q05-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q05-02.png?raw=true" alt="atv02-q05-02-img" width="800"/>
 </p>
 
 Resultado em:
@@ -534,7 +534,7 @@ Como visto na aula de filtragem, apartir do slide 98, vamos aplicar uma convolu�
 Logo:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q06-01.png?raw=true" alt="atv02-q06-01-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q06-01.png?raw=true" alt="atv02-q06-01-img" width="800"/>
 </p>
 
 Então temos:
@@ -595,7 +595,7 @@ Aplicando os devidos arredondamentos, temos:
 A ilustração gráfica do procedimento realizado esta abaixo:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q06-02.png?raw=true" alt="atv02-q06-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q06-02.png?raw=true" alt="atv02-q06-02-img" width="800"/>
 </p>
 
 # Questão 07
@@ -617,11 +617,11 @@ Ao inves de serem tratadas como operações inversas, elas são complementares, 
 **Considere as imagens Book_1.png e Book_2.png disponibilizadas. Utilizando apenas técnicas de processamento de imagens, crie um algoritmo que verifique se essas imagens possuem a letra A ou não. Apenas o A maiúsculo deve ser procurado e não precisa retornar quantos têm; apenas se tem ou não. Observe que as imagens estão em preto e branco.**
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_1.png?raw=true" alt="atv02-q08-01-img" width="400"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02_lista02-assets/Book_1.png?raw=true" alt="atv02-q08-01-img" width="400"/>
 </p>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02_lista02-assets/Book_2.png?raw=true" alt="atv02-q08-02-img" width="400"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02_lista02-assets/Book_2.png?raw=true" alt="atv02-q08-02-img" width="400"/>
 </p>
 
 **R.:**
@@ -827,7 +827,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-00.png?raw=true" alt="atv02-q08-s1-00.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-00.png?raw=true" alt="atv02-q08-s1-00.png" width="600"/>
 </p>
 
 Template utilizado então será:
@@ -855,7 +855,7 @@ fig.savefig(path_assets / "atv02-q08-s1-01.png", dpi=400, bbox_inches='tight')
 ``` 
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-01.png?raw=true" alt="atv02-q08-s1-01.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-01.png?raw=true" alt="atv02-q08-s1-01.png" width="600"/>
 </p>
 
 
@@ -891,7 +891,7 @@ fig.savefig(path_assets / "atv02-q08-s1-02.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-02.png?raw=true" alt="atv02-q08-s1-02.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-02.png?raw=true" alt="atv02-q08-s1-02.png" width="600"/>
 </p>
 
 ### 2.3) **Erosão**
@@ -950,7 +950,7 @@ fig.savefig(path_assets / "atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-s1-03.png?raw=true" alt="atv02-q08-s1-03.png" width="900"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-03.png?raw=true" alt="atv02-q08-s1-03.png" width="900"/>
 </p>
 
 Com a erosão seguida com a dilatação, considerando 3 iterações, é mais facil de visualizar graficamente a presença da letra "A".
@@ -1196,7 +1196,7 @@ Apos a aplicação dessa solução, temos:
 
 **R.:**
 
-* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q09.ipynb).
+* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb).
 
 ## Lendo as imagens
 
@@ -1233,7 +1233,7 @@ plt.show()
 
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-init.png?raw=true" alt="atv02-q09-init-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-init.png?raw=true" alt="atv02-q09-init-img" width="600"/>
 </p>
 
 
@@ -1284,7 +1284,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-a1.png?raw=true" alt="atv02-q09-a1" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-a1.png?raw=true" alt="atv02-q09-a1" width="600"/>
 </p>
 
 ### Conclusão
@@ -1405,7 +1405,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q09-b2.png?raw=true" alt="atv02-q09-b2-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-b2.png?raw=true" alt="atv02-q09-b2-img" width="800"/>
 </p>
 
 ### Conclusão
@@ -1492,7 +1492,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q10-02.png?raw=true" alt="atv02-q10-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q10-02.png?raw=true" alt="atv02-q10-02-img" width="800"/>
 </p>
 
 * **&sigma; = 1**: existe diversas bordas, mostrando um nivel de detalhe bem significante, preservando pontos princiapis da imagem e secundários também. Isso se da possivelmente pelo valor de &sigma; baixo, causando um efeito de emabaçamento menor. 
