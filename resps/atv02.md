@@ -947,7 +947,9 @@ for idx, lista in enumerate(lista_books):
         _ax.axis("off")
     ax[idx, 0].set_title(lista)
     ax[idx, 1].set_title(lista.split(" - ")[0] + " - Erosão")
-    ax[idx, 2].set_title(lista.split(" - ")[0] + f" - Dilatação com {k_iter} iterações")
+    ax[idx, 2].set_title(
+      lista.split(" - ")[0] + f" - Dilatação com {k_iter} iterações"
+    )
 # fig.savefig("assets/atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
 ```
 
@@ -1205,11 +1207,24 @@ Apos a aplicação dessa solução, temos:
 ```py
 img_names = ["cameraman.png", "cameraman_pattern.png"]
 imgs = {
-    i.split(".")[0]: cv2.imread(f"assets/{i}", cv2.IMREAD_GRAYSCALE) for i in img_names
+    i.split(".")[0]: cv2.imread(
+      f"assets/atv02_lista02-assets/{i}",
+      cv2.IMREAD_GRAYSCALE
+    ) for i in img_names
 }
 ```
 
+
 ## Visualizando
+
+```py
+# Função para calcular transformada e obter magnitude
+def apply_fourier_transform(image):
+    f_transform = np.fft.fft2(image)
+    f_shift = np.fft.fftshift(f_transform)
+    magnitude = np.log(np.abs(f_shift) + 1)
+    return magnitude, f_shift
+```
 
 ```py
 fourier = {
@@ -1294,7 +1309,9 @@ for idx, sigma in enumerate(sigmas):
 
     # Exibir a imagem suavizada
     ax[idx + 1].imshow(smooth.round().astype(int), cmap='gray')
-    ax[idx + 1].set_title("Filtro Passa-Baixa Gaussiano " + rf"($\sigma={sigma}$)")
+    ax[idx + 1].set_title(
+      "Filtro Passa-Baixa Gaussiano " + rf"($\sigma={sigma}$)"
+    )
     ax[idx + 1].axis('off')
 # fig.savefig("assets/atv02-q09-a1.png", bbox_inches='tight', dpi=400)
 plt.show()
@@ -1462,7 +1479,7 @@ O intuito desse experimento é verificar a detecção das bordas apos a aplicaç
 ```py
 img_names = ["cameraman.png"]
 imgs = {
-    i.split(".")[0]: cv2.imread(f"assets/{i}", cv2.IMREAD_GRAYSCALE) for i in img_names
+    i.split(".")[0]: cv2.imread(f"assets/atv02_lista02-assets/{i}", cv2.IMREAD_GRAYSCALE) for i in img_names
 }
 ```
 
