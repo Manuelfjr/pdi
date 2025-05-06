@@ -1518,3 +1518,47 @@ plt.show()
 * **&sigma; = 4**: apenas as bordas principais da imagem são visíveis. Com o aumento da suavização, diversos detalhes desaparecem, restando apenas as transições de contraste mais evidentes.
 
 Essa progressão demonstra que, ao aumentar o valor de &sigma; no filtro Gaussiano, esta focando na imagem apenas os pontos mais caracteristicos, ou seja, apenas bordas maiores e mais importantes são conservadas. Dessa forma, diferentes bordas aparecem em diferentes escalas, demonstrando a ideia da análise escala-espaço como uma ferramenta bem interessante na segmentação  de imagens com muitos objetos visuais.
+
+
+##############
+
+A partir da Equação 1, temos a derivada de segunda ordem de segunda
+f(x) em relação a x, ou seja, ao longo dos 3 pontos passados, y se mantém constante. Então para obter a máscara de menor ordem, precisamos estruturar os coeficientes da função na matriz 3x3: 
+
+Com isso, temos: 
+$$
+  Coeficientes: \\
+      f(x-1,y):   1 \\
+    - 2f(x-1,y): -2 \\
+      f(x+1,y):  1 \\
+
+  Temos então: 
+    \begin{bmatrix}
+    0 & 1 & 0 \\
+    0 & -2 & 0 \\
+    0 & 1 & 0 \\
+    \end{bmatrix}
+$$
+
+As colunas 1 e 3 se mantém pois as coordenadas para y se mantém constantes.
+
+
+A partir da Equação 2, temos a derivada de segunda ordem de segunda
+f(x) em relação a y, ou seja, ao longo dos 3 pontos passados, x se mantém constante. Então para obter a máscara de menor ordem, precisamos estruturar os coeficientes da função na matriz 3x3: 
+
+$$
+Com isso, temos: 
+  Coeficientes: \\
+      f(x,y-1):   1 \\
+    - 2f(x-1,y): -2 \\
+      f(x,y+1):  1 \\
+
+  Temos então: 
+    \begin{bmatrix}
+    0 & 0 & 0 \\
+    1 & -2 & 1 \\
+    0 & 0 & 0 \\
+    \end{bmatrix}
+$$
+
+As linhas 1 e 3 se mantém pois as coordenadas para x se mantém constantes.

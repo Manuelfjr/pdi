@@ -56,14 +56,52 @@ Com a aplicação da transformada de fourier nessa imagem de 256 tons de cinza, 
 
 # Questão 03
 
-...
+## A)
+
+Vamos converter em mascaras d diretamente para cada equação, sendo então:
+
+1) para Eq. (1), com a equação:
+
+<p>
+$$
+\frac{\partial^2 f}{\partial x^2} \approx f(x - 1, y) - 2f(x, y) + f(x + 1, y)
+$$
+</p>
+
+temos: h<sub>x</sub> = [1 -2 1]
+
+2) para Eq. (1), com a equação:
+
+<p>
+$$
+\frac{\partial^2 f}{\partial y^2} \approx f(x, y - 1) - 2f(x, y) + f(x, y + 1)
+$$
+</p>
+
+temos: 
+
+</p>
+$$
+h_{y} = \left[\begin{matrix}
+1 \\
+-2 \\
+1
+\end{matrix}\right]
+$$
+</p>
+
+logo temos as mascaras, de menor ordem possivel.
+
+## B)
+
+
 
 # Questão 04
 
-Como temos um filtro e uma imagem, vamos aplicar uma correlação cruzada para a convolução. Resultado anexado.
+Como temos um filtro e uma imagem, vamos aplicar uma correlação cruzada para a convolução. Sendo f a imagem e h o filtro, temos que o filtro é simetrico, então a rotação sera igual a propria matriz. Resultado anexado.
 
 
-Além da resolucao em anexo, foi feito o processo realizado como na figura abaixo.
+Além da resolucao em anexo, foi feito o processo realizado como na figura abaixo ou clicando no [link](https://docs.google.com/spreadsheets/d/12o_qU6SxuKznBXWL_qrwQOmXumow0_PUY-tVPeBAhng/edit?usp=sharing). Para cada posição, o calculo se da baseado na soma de todos os valores na cor vermelha.
 
 <p align="center" >
     <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/01_prova_01_q04.png?raw=true" alt="q01-i2-img" width="600"/>
