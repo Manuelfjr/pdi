@@ -104,7 +104,7 @@ Como temos um filtro e uma imagem, vamos aplicar uma correlação cruzada para a
 Além da resolucao em anexo, foi feito o processo realizado como na figura abaixo ou clicando no [link](https://docs.google.com/spreadsheets/d/12o_qU6SxuKznBXWL_qrwQOmXumow0_PUY-tVPeBAhng/edit?usp=sharing). Para cada posição, o calculo se da baseado na soma de todos os valores na cor vermelha.
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/01_prova_01_q04.png?raw=true" alt="q01-i2-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/q04_prova01.png?raw=true" alt="q01-i2-img" width="600"/>
 </p>
 
 
