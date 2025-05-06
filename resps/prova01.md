@@ -68,7 +68,17 @@ $$
 $$
 </p>
 
-temos: h<sub>x</sub> = [1 -2 1]
+temos: 
+
+</p>
+$$
+h_{y} = \left[\begin{matrix}
+0 & 0 & 0\\
+1 & -2 & 1 \\
+0 & 0 & 0
+\end{matrix}\right]
+$$
+</p>
 
 2) para Eq. (1), com a equação:
 
@@ -83,9 +93,9 @@ temos:
 </p>
 $$
 h_{y} = \left[\begin{matrix}
-1 \\
--2 \\
-1
+0 & 1 & 0\\
+0 & -2 & 0 \\
+0 & 1 & 0
 \end{matrix}\right]
 $$
 </p>
@@ -94,11 +104,11 @@ logo temos as mascaras, de menor ordem possivel.
 
 ## B)
 
-
+Aplicando a convolução entre h<sub>x</sub> e h<sub>y</sub>, uma vez que a ambas são simetricas, torna-se mais facil o calculo. Em anexo os calculos.
 
 # Questão 04
 
-Como temos um filtro e uma imagem, vamos aplicar uma correlação cruzada para a convolução. Sendo f a imagem e h o filtro, temos que o filtro é simetrico, então a rotação sera igual a propria matriz. Resultado anexado.
+Como temos um filtro e uma imagem, vamos aplicar uma correlação cruzada para a convolução. Sendo f a imagem e h o filtro, temos que o filtro é simetrico, então a rotação sera igual a propria matriz. **Resultado anexado**.
 
 
 Além da resolucao em anexo, foi feito o processo realizado como na figura abaixo ou clicando no [link](https://docs.google.com/spreadsheets/d/12o_qU6SxuKznBXWL_qrwQOmXumow0_PUY-tVPeBAhng/edit?usp=sharing). Para cada posição, o calculo se da baseado na soma de todos os valores na cor vermelha.
