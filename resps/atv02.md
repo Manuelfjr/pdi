@@ -9,17 +9,18 @@
 
 * **Obs. (1):** Questões com necessidade de calculo de convolução, estarão todas as expressões no [link](https://docs.google.com/spreadsheets/d/1cWB3zNBbDXzFNvEKotBCVPIlnS8cde-SXRjCP55ISTM/edit?usp=sharing), para facilitar a visualização e leitura da atividade. Além disso, cada questão em anexo possui uma copia da sua operação que deve ser realizada. Cada sheet do link em anexo, possui no seu titulo a questão referente e operação referente.
 
-* **Obs. (2):** Com respeito as questões de implementação (8, 9 e 10), além do código disponibilizado no pdf, os links para os notebooks utilizados para as aplicações estão abaixo:
+<!-- * **Obs. (2):** Com respeito as questões de implementação (8, 9 e 10), além do código disponibilizado no pdf, os links para os notebooks utilizados para as aplicações estão abaixo:
 
   1) `Questão 08:` [02_01_atv02_code_q08_sol1](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_01_atv02_code_q08_sol1.ipynb)
      <!-- * `Solução 01:` [02_01_atv02_code_q08_sol1](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_01_atv02_code_q08_sol1.ipynb)
-     * `Solução 02:` [02_02_atv02_code_q08_sol2](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_02_atv02_code_q08_sol2.ipynb) -->
+     * `Solução 02:` [02_02_atv02_code_q08_sol2](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/02_02_atv02_code_q08_sol2.ipynb)
   
   2) `Questão 09:` [03_atv02_code_q09](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb)
 
   3) `Questão 10:` [04_atv02_code_q10](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb)
 
   4) `[Rascunhos para validação de resoluções] Códigos para outras questões:` [01_atv02_code](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/01_atv02_code.ipynb)
+-->
 
 # Imports
 
@@ -107,7 +108,7 @@ especule sobre o resultado esperado.
 </strong>
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q01-02.png?raw=true" alt="q01-i2-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q01-02.png" alt="q01-i2-img" width="600"/>
 </p>
 
 
@@ -120,7 +121,7 @@ A Transformada de Fourier tem como foco principal analisar a distribuicao das fr
 <!-- Na imagem abaixo, podemos ilustrar oque foi dito sobre o efeito da transformada de fourier:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-06.png?raw=true" alt="q01-i3-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-06.png" alt="q01-i3-img" width="600"/>
 </p> -->
 
 
@@ -156,7 +157,7 @@ esse distúrbio em alguma parte (bem definida) da imagem.
 <!-- Uma apresentada em sala, é a técnica da Transformada de Fourier para Tempo Curto, ou *Short Time Fourier Transform (STFT)* (Gabor, 1946), que considera uma janela que se desloca ao longo da imagem, avaliando cada momento de forma individual. Essa técnica pode ajudar a captar melhor borramentos localziamos em imagens, como ilustra a imagem abaixo:
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-09.png?raw=true" alt="q02-i02-img" width="500"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q02-09.png" alt="q02-i02-img" width="500"/>
 </p>
 
 Como podemos ver,  ao aplicar janelas com saltos maiores e tamanhos menores, é mais dificil de notar a região possivelmente afetada pelo ruido, contudo ao reduzirmos o tamanho da janela e o espaçamento entre elas, aumentamos o número de possibilidades para avaliação, logo tendo mais detalhes, e  facilitando a detecção da região problema. No problema da imagem em questão, podemos ver um quadrado ficando cada vez mais definido na parte inferior direita da imagem, evidenciando um possivel região de problema. -->
@@ -174,7 +175,7 @@ Uma variação da *STFT* mencionada anteriormente, pode ser a separação direta
 Na imagem abaixo, da para notar a aplicação dessa solução de separação de quadrantes:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q02-08.png?raw=true" alt="q02-i02-img" width="400"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q02-08.png" alt="q02-i02-img" width="400"/>
 </p>
 
 # Questão 03
@@ -328,7 +329,7 @@ $$\therefore H_{FPA}(u, v) = \frac{1}{1 + \bigg[\frac{D_0}{D(u, v)}\bigg]^{2 \cd
 Então, aplicando a convolução teremos:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q04-01.png?raw=true" alt="atv02-q04-01-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q04-01.png" alt="atv02-q04-01-img" width="800"/>
 </p>
 
 Logo, a matriz resultante da convolução será:
@@ -367,7 +368,7 @@ Logo, a matriz resultante da convolução será:
   Primeiramente, vamos rotacionar a segunda matriz, sendo ela **f**, devido a sua natureza, a rotação dela é igual a original, logo aplicando a revolução teremos:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q04-02.png?raw=true" alt="atv02-q04-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q04-02.png" alt="atv02-q04-02-img" width="800"/>
 </p>
 
 
@@ -427,7 +428,7 @@ discreta de três filtros Box, como abaixo:
 Calculando, devido a simetria de B, a rotação será igual, logo temos:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q05-01.png?raw=true" alt="atv02-q05-01-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q05-01.png" alt="atv02-q05-01-img" width="800"/>
 </p>
 
 
@@ -451,7 +452,7 @@ $$
 Analogo ao item anterior, devido a simetria de B, teremos rotação igual, logo temos:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q05-02.png?raw=true" alt="atv02-q05-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q05-02.png" alt="atv02-q05-02-img" width="800"/>
 </p>
 
 Resultado em:
@@ -534,7 +535,7 @@ Como visto na aula de filtragem, apartir do slide 98, vamos aplicar uma convolu�
 Logo:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q06-01.png?raw=true" alt="atv02-q06-01-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q06-01.png" alt="atv02-q06-01-img" width="800"/>
 </p>
 
 Então temos:
@@ -595,7 +596,7 @@ Aplicando os devidos arredondamentos, temos:
 A ilustração gráfica do procedimento realizado esta abaixo:
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q06-02.png?raw=true" alt="atv02-q06-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q06-02.png" alt="atv02-q06-02-img" width="800"/>
 </p>
 
 # Questão 07
@@ -617,15 +618,16 @@ Ao inves de serem tratadas como operações inversas, elas são complementares, 
 **Considere as imagens Book_1.png e Book_2.png disponibilizadas. Utilizando apenas técnicas de processamento de imagens, crie um algoritmo que verifique se essas imagens possuem a letra A ou não. Apenas o A maiúsculo deve ser procurado e não precisa retornar quantos têm; apenas se tem ou não. Observe que as imagens estão em preto e branco.**
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02_lista02-assets/Book_1.png?raw=true" alt="atv02-q08-01-img" width="400"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02_lista02-assets/Book_1.png" alt="atv02-q08-01-img" width="400"/>
 </p>
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02_lista02-assets/Book_2.png?raw=true" alt="atv02-q08-02-img" width="400"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02_lista02-assets/Book_2.png" alt="atv02-q08-02-img" width="400"/>
 </p>
 
 **R.:**
-
+<!-- 
+* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb). -->
 
 <!-- Foi encontrado duas soluções possiveis para esse problema, sendo elas: -->
 
@@ -755,8 +757,8 @@ Pode ser custoso mais custoso quando lidamos com imagens maiores e com mais info
 ### 2.0) **Leitura de imagens**
 
 ```py
-image_path_1 = str(path_assets / "atv02_lista02-assets" / "Book_1.png")
-image_path_2 = str(path_assets / "atv02_lista02-assets" / "Book_2.png")
+image_path_1 = "assets/atv02_lista02-assets/Book_1.png"
+image_path_2 = "assets/atv02_lista02-assets/Book_2.png"
 
 image_book1 = cv2.imread(image_path_1, cv2.IMREAD_GRAYSCALE)
 image_book2 = cv2.imread(image_path_2, cv2.IMREAD_GRAYSCALE)
@@ -822,12 +824,12 @@ for idx, (title, sliced) in enumerate(cortes.items()):
     ax[idx].set_title(title)
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q08-s1-00.png", dpi=400, bbox_inches='tight')
+# fig.savefig("assets/atv02-q08-s1-00.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-00.png?raw=true" alt="atv02-q08-s1-00.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-00.png" alt="atv02-q08-s1-00.png" width="600"/>
 </p>
 
 Template utilizado então será:
@@ -851,11 +853,11 @@ ax[1].set_title("Template retirado")
 for _ax in ax:
     _ax.axis("off")
 
-fig.savefig(path_assets / "atv02-q08-s1-01.png", dpi=400, bbox_inches='tight')
+# fig.savefig("assets/atv02-q08-s1-01.png", dpi=400, bbox_inches='tight')
 ``` 
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-01.png?raw=true" alt="atv02-q08-s1-01.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-01.png" alt="atv02-q08-s1-01.png" width="600"/>
 </p>
 
 
@@ -887,11 +889,11 @@ for (title, content), _ax in zip(imgs_mask.items(), ax.flatten()):
     _ax.set_title(title)
     _ax.axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q08-s1-02.png", dpi=400, bbox_inches='tight')
+# fig.savefig("assets/atv02-q08-s1-02.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-02.png?raw=true" alt="atv02-q08-s1-02.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-02.png" alt="atv02-q08-s1-02.png" width="600"/>
 </p>
 
 ### 2.3) **Erosão**
@@ -946,11 +948,11 @@ for idx, lista in enumerate(lista_books):
     ax[idx, 0].set_title(lista)
     ax[idx, 1].set_title(lista.split(" - ")[0] + " - Erosão")
     ax[idx, 2].set_title(lista.split(" - ")[0] + f" - Dilatação com {k_iter} iterações")
-fig.savefig(path_assets / "atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
+# fig.savefig("assets/atv02-q08-s1-03.png", dpi=400, bbox_inches='tight')
 ```
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-03.png?raw=true" alt="atv02-q08-s1-03.png" width="900"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q08-s1-03.png" alt="atv02-q08-s1-03.png" width="900"/>
 </p>
 
 Com a erosão seguida com a dilatação, considerando 3 iterações, é mais facil de visualizar graficamente a presença da letra "A".
@@ -1022,7 +1024,7 @@ contents ={
 Nesse trecho, primeiro sera feito a inversão da cor da imagem, fundo branco com letra preta, será invertido para fundo preto com letra branca, para facilitar a detecção dos contornos.
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png?raw=true" alt="atv02-q08-i01_k03.png" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k03.png" alt="atv02-q08-i01_k03.png" width="800"/>
 </p>
 
 
@@ -1093,7 +1095,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png?raw=true" alt="atv02-q08-i01_k04.png" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_k04.png" alt="atv02-q08-i01_k04.png" width="800"/>
 </p>
 
 ### 4.3) Conclusão
@@ -1156,7 +1158,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_all-found.png?raw=true" alt="atv02-q08-i01_all-found.png" width="800"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q08-i01_all-found.png" alt="atv02-q08-i01_all-found.png" width="800"/>
 </p>
 
 ```py
@@ -1196,15 +1198,14 @@ Apos a aplicação dessa solução, temos:
 
 **R.:**
 
-* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb).
+<!-- * **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/03_atv02_code_q09.ipynb). -->
 
 ## Lendo as imagens
 
 ```py
 img_names = ["cameraman.png", "cameraman_pattern.png"]
-# img = cv2.imread(path_assets / "atv02_lista02-assets" / 'cameraman_pattern.png', cv2.IMREAD_GRAYSCALE)
 imgs = {
-    i.split(".")[0]: cv2.imread(path_imgs_atv / i, cv2.IMREAD_GRAYSCALE) for i in img_names
+    i.split(".")[0]: cv2.imread(f"assets/{i}", cv2.IMREAD_GRAYSCALE) for i in img_names
 }
 ```
 
@@ -1226,14 +1227,14 @@ for _ax, name in zip(ax, fourier.keys()):
     _ax[1].set_title('Transformada de fourier')
     #_ax[0].axis('off')
     #_ax[1].axis('off')
-fig.savefig(path_assets / "atv02-q09-init.png", bbox_inches='tight', dpi=400)
+# fig.savefig("assets/atv02-q09-init.png", bbox_inches='tight', dpi=400)
 plt.show()
 
 ```
 
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-init.png?raw=true" alt="atv02-q09-init-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-init.png" alt="atv02-q09-init-img" width="600"/>
 </p>
 
 
@@ -1295,12 +1296,12 @@ for idx, sigma in enumerate(sigmas):
     ax[idx + 1].imshow(smooth.round().astype(int), cmap='gray')
     ax[idx + 1].set_title("Filtro Passa-Baixa Gaussiano " + rf"($\sigma={sigma}$)")
     ax[idx + 1].axis('off')
-fig.savefig(path_assets / "atv02-q09-a1.png", bbox_inches='tight', dpi=400)
+# fig.savefig("assets/atv02-q09-a1.png", bbox_inches='tight', dpi=400)
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-a1.png?raw=true" alt="atv02-q09-a1" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-a1.png" alt="atv02-q09-a1" width="600"/>
 </p>
 
 ### Conclusão
@@ -1312,7 +1313,6 @@ Considerando o &sigma; = 1.5, a imagem mantem um nivel de detalhes consideravel,
 Por fim, o &sigma; ideal para esse problema pode ser considerado 1, uma vez que ele conseguiu conservar detalhes da imagem, desparecendo com as linhas horizontais e ainda apresentando um nível de borramento mínimo.
 
 ## b)
-
 
 Baseado na lógica do filtro box 3x3 apresentado em aula, vamos alterar um pouco a matriz h de tal forma que encontre a melhor máscara a ser aplicada. Dessa forma, vamos aplicar um conjunto de máscaras sobre a imagem, aplicando uma correlação cruzada. Abaixo temos as mascaras a serem testadas, foram selecionadas apartir de um conjunto de outras mascaras similares, e selecionadas apenas essas samples, com correções efetivas que elas causaram (Mascaras 01 e 02) e as que não conseguiram realizar a tarefa proposta (Mascaras 03 e 04)
 
@@ -1416,12 +1416,12 @@ for _ax, (title, content) in zip(ax.T[1:], filtered_img.items()):
     _ax[1].axis('off')
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q09-b2.png", dpi=400, bbox_inches='tight')
+# fig.savefig("assets/atv02-q09-b2.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-b2.png?raw=true" alt="atv02-q09-b2-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q09-b2.png" alt="atv02-q09-b2-img" width="800"/>
 </p>
 
 ### Conclusão
@@ -1453,7 +1453,7 @@ $$
 
 **R.:**
 
-* **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb).
+<!-- * **Obs.:** o código em notebook para essa questão pode ser encontrado clicando no [link](https://github.com/Manuelfjr/pdi/blob/develop/notebooks/04_atv02_code_q10.ipynb). -->
 
 O intuito desse experimento é verificar a detecção das bordas apos a aplicação de três filtros gaussianos, e analisar o contorno encontrado apos cada filtro. Dessa forma, o esperado é que o nível de detalhe caia, a medida que se aumenta o sigma do filtro gaussiano, causando um efeito de perca de detalhes.
 
@@ -1462,7 +1462,7 @@ O intuito desse experimento é verificar a detecção das bordas apos a aplicaç
 ```py
 img_names = ["cameraman.png"]
 imgs = {
-    i.split(".")[0]: cv2.imread(path_imgs_atv / i, cv2.IMREAD_GRAYSCALE) for i in img_names
+    i.split(".")[0]: cv2.imread(f"assets/{i}", cv2.IMREAD_GRAYSCALE) for i in img_names
 }
 ```
 
@@ -1503,12 +1503,12 @@ for i, sigma in enumerate(sigmas):
     ax[i].set_title(f'Canny{low, high} | Filtro gaussiano:' + rf'$\sigma$={sigma}')
     ax[i].axis('off')
 fig.tight_layout()
-fig.savefig(path_assets / "atv02-q10-02.png", dpi=400, bbox_inches='tight')
+# fig.savefig("assets/atv02-q10-02.png", dpi=400, bbox_inches='tight')
 plt.show()
 ```
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q10-02.png?raw=true" alt="atv02-q10-02-img" width="800"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv02-q10-02.png" alt="atv02-q10-02-img" width="800"/>
 </p>
 
 * **&sigma; = 1**: existe diversas bordas, mostrando um nivel de detalhe bem significante, preservando pontos princiapis da imagem e secundários também. Isso se da possivelmente pelo valor de &sigma; baixo, causando um efeito de emabaçamento menor. 
