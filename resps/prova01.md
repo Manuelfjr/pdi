@@ -62,7 +62,13 @@ Com a aplicação da transformada de fourier nessa imagem de 256 tons de cinza, 
 
 Como temos um filtro e uma imagem, vamos aplicar uma correlação cruzada para a convolução. Resultado anexado.
 
-Imagem
+
+Além da resolucao em anexo, foi feito o processo realizado como na figura abaixo.
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/01_prova_01_q04.png?raw=true" alt="q01-i2-img" width="600"/>
+</p>
+
 
 
 # Questão 05
