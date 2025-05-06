@@ -656,8 +656,8 @@ Essa solução apresenta uma forma mais rápida para o match, aonde é recortado
   $$
   \text{Resultado} = 
   \begin{cases} 
-  \text{Letra 'A' encontrada}, & \text{se } \sum_{i = 1}^{n}\sum_{j}^{m}E_{ij} > 0 \\
-  \text{Letra 'A' não encontrada}, & \text{se } \sum_{i = 1}^{n}\sum_{j}^{m}E_{ij} = 0
+  \text{Letra 'A' encontrada}, & \text{se } \sum_{i = 1}^{n}\sum_{j = 1}^{m}E_{ij} > 0 \\
+  \text{Letra 'A' não encontrada}, & \text{se } \sum_{i = 1}^{n}\sum_{j = 1}^{m}E_{ij} = 0
   \end{cases}
   $$
   </p>
@@ -1244,21 +1244,37 @@ Usaremos um filtro passa baixa gaussiano, aplicando um range de valores de &sigm
 ```py
 img = imgs["cameraman_pattern"]
 
+# Adaptação do que foi visto em aula, para python:
+# Ref.: Slide 06 - Filtragem - Pagina 50
+
 # Aplicar a Transformada de Fourier
 dft = np.fft.fft2(img)
 dft_shift = np.fft.fftshift(dft)
 
-# Definir os ranges e parametros
+# Calculando valores para aplicar no filtro passa baixa
 nx = dft.shape[1]
 ny = dft.shape[0]
-cxrange = np.concatenate((np.arange(0, nx // 2 + 1), np.arange(-nx // 2 + 1, 0)))
-cyrange = np.concatenate((np.arange(0, ny // 2 + 1), np.arange(-ny // 2 + 1, 0)))
+
+cxrange = np.concatenate(
+    (
+        np.arange(0, nx // 2 + 1),
+        np.arange(-nx // 2 + 1, 0)
+    )
+)
+cyrange = np.concatenate(
+    (
+        np.arange(0, ny // 2 + 1),
+        np.arange(-ny // 2 + 1, 0)
+    )
+)
 cx, cy = np.meshgrid(cxrange, cyrange)
-fxrange = cxrange * 2 * np.pi / nx
-fyrange = cyrange * 2 * np.pi / ny
+
+fxrange = cxrange * 2 * (np.pi / nx)
+fyrange = cyrange * 2 * (np.pi / ny)
+
 fx, fy = np.meshgrid(fxrange, fyrange)
 
-# Lista de sigmas a serem procurados
+# Lista de sigmas a serem testados
 sigmas = [0.3, 0.5, 0.7, 0.9, 1, 1.5, 3]
 
 fig, ax = plt.subplots(2, (len(sigmas) // 2) + 1, figsize=(16, 10))
