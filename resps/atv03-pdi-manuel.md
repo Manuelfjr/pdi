@@ -28,6 +28,8 @@ intensidades da imagem Pattern1.
 
 **Nas imagens Pattern1 e Pattern2, calcule a magnitude da Transformada de Fourier e disserte sobre esse gráfico em relação às imagens originais, observando o que acontece com as altas e baixas frequências.**
 
+**R.:**
+
 Como pode ser visto na questão, a transformada de fourer é uma ferramente essencial para analise da frequência dos contrastes na imagem, podendo ajudar a identificar padrões espaciais distribuidos ao longo da imagem original, apartir de analises de altas e baixas frequências. Nesse caso, para as imagens *Pattern1* e *Pattern2*, é possivel observar dois comportamentos bem distintos como visto abaixo
 
 <p align="center" >
@@ -50,5 +52,9 @@ Comparando ambas as imagens e suas transformadas, podemos notar que uma imagem c
     <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_q01-02.png?raw=true" alt="q01-i2-img" width="600"/>
 </p>
 
+**R.:**
+
+
+Logo apos a primeira aplicação do filtro passa baixa, a imagem já tem seu ruido periodico retirado, os traços horizontais ao longo da imagem desparecem e ocorre o efeito de borramento esperado apos aplicação do filtro. Analisando a transformada de fourier, é mais nitido a cruz horizontal e vertical na magnitude bem definida, porém algumas altas frequências aparentam estar espalhadas ainda ao longo da matriz de transformada. Um ponto interessante de se ressaltar, é o desaparecimento dos picos de alta frequência anteriores, agora restando apenas um pico de alta frequência, com alguns outros picos espalhados mas maioria centrado ao longo da cruz. Apos aplicação do segundo filtro passa baixa, a cruza permanece ainda com altas frequência, mas ainda sim bem reduzidos comparado a primeira aplicação do filtro, e o comportamento das altas frequências espalhadas agoram se encontram mais proxima do centro, ou seja, mais eprto do pico de alta frequência da imagem.
 
 # Questão 04
