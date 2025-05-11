@@ -97,7 +97,7 @@ apresentada à direita:
 </strong>
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-01.png?raw=true" alt="q01-i1-img" width="600"/>
+    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv02-q01-00.png?raw=true" alt="q01-i1-img" width="600"/>
 </p>
 
 <strong>
