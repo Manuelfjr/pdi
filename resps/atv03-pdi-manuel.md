@@ -33,7 +33,7 @@ intensidades da imagem Pattern1.
 Como pode ser visto na questão, a transformada de fourer é uma ferramente essencial para analise da frequência dos contrastes na imagem, podendo ajudar a identificar padrões espaciais distribuidos ao longo da imagem original, apartir de analises de altas e baixas frequências. Nesse caso, para as imagens *Pattern1* e *Pattern2*, é possivel observar dois comportamentos bem distintos como visto abaixo
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_q01-01.png?raw=true" alt="q01-i1-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q01-01.png" alt="q01-i1-img" width="600"/>
 </p>
 
 A imagem *Pattern1* apresenta um padrão periodo, sendo ele definido por traçados diagonais  bem definidos e continuos, indicando uma periodicidade na estrutura da imagem, sendo evidenciado ainda mais ao analisar a FFT da imagem, com picos localizados e simétricos. O padrão regular encontrado na transformada de fourier evidencia o comportamento periodico da imagem original, devido a essa presença de picos e simetrias na magnitude da transformada.
@@ -49,13 +49,353 @@ Comparando ambas as imagens e suas transformadas, podemos notar que uma imagem c
 
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_q01-02.png?raw=true" alt="q01-i2-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q01-02.png" alt="q01-i2-img" width="600"/>
 </p>
 
 **R.:**
 
 
 Logo apos a primeira aplicação do filtro passa baixa, a imagem já tem seu ruido periodico retirado, os traços horizontais ao longo da imagem desparecem e ocorre o efeito de borramento esperado apos aplicação do filtro. Analisando a transformada de fourier, é mais nitido a cruz horizontal e vertical na magnitude bem definida, porém algumas altas frequências aparentam estar espalhadas ainda ao longo da matriz de transformada. Um ponto interessante de se ressaltar, é o desaparecimento dos picos de alta frequência anteriores, agora restando apenas um pico de alta frequência, com alguns outros picos espalhados mas maioria centrado ao longo da cruz. Apos aplicação do segundo filtro passa baixa, a cruza permanece ainda com altas frequência, mas ainda sim bem reduzidos comparado a primeira aplicação do filtro, e o comportamento das altas frequências espalhadas agoram se encontram mais proxima do centro, ou seja, mais eprto do pico de alta frequência da imagem.
+
+
+# Questão 03
+
+<strong>Nas imagens coloridas da questão, implemente um algoritmo automático que diminua a quantidade de cores das imagens, agrupando tons semelhantes (por exemplo, uma região de tons avermelhados deve ser tornar uma região com apenas um tom de vermelho). Não deve ser usado dithering. Considere que a imagem final pode ter, aproximadamente, de metade a um terço da quantidade de cores das imagens originais. Cada imagem tem: 
+</strong>
+
+* **araras.png**: 112.233 cores;  
+* **F1.png**: 85.837 cores;  
+* **green-water.png**: 33.801 cores;  
+* **surf.png**: 47.229 cores. 
+
+**O mesmo algoritmo deve ser usado nas 4 imagens. Observações:**
+
+1) **Se precisar, pode usar conversões entre modelos de cores já implementadas em Python ou qualquer outra linguagem.**
+
+2) **Não pode usar K-means ou  qualquer outra técnica de agrupamento.**
+
+3) **Só pode usar técnicas vistas na disciplina.**
+
+4) **Todo o processo deve ser automático sem participação do usuário.**
+
+**R.:**
+
+O algoritmo ira se basear em agrupar cores proximas, considerando faixas de bins  definidas entre 0 e 255 para cada canal de cor. Se o valor daquele pixel pertencer a esse intervalo, ele sera atribuido o ponto médio do intervalo.
+
+O algoritmo ira realizar uma busca exaustiva entre um numero x de bins a um numero y de bins, com salto definido como "p". O intuito dessa busca exaustiva é tentar achar o número de bins ideal para que seja satisfeita a condição de que o número total de cores da imagem esteja entre 1 / 3 da imagem original a 50% da imagem original.
+
+Vamos definir por partes, primeiro a logica da implementação, e em seguida a implementação utilizando o python.
+
+
+## [Algoritmo] Apoximação por bins
+
+
+1) **Definir condições de busca:**
+
+    * **Quantidade de bins:** para cada canal, será feito uma quebra em bins (ex.: 0 a 63, 64 a 127, 128 a 191 e 192 a 255, total de 5 bins). Nesse passo, será definido uma lista de possiveis bins para busca, por exemplo, se selecionar 50 a 256 com salto de 10, teremos o primeiro bin que ira quebrar o intervalo de 0 a 255 em 50 partes, o segundo bin irá quebrar o intervalo de 0 a 255 em 60 partes, o terceiro bin irá quebrar o intervalo de 0 a 255 em 70 partes, e assim por diante; na parametrização da solução vamos considerar o inicio igual a 50, e o final da procura em 150 bins, considerando um salto de 10.
+
+    * **Parâmetros usados:**
+        
+        Abaixo temos descrito quais parametros de range de busca foram utilizados.
+
+        * `inicio (a)`: 50
+        
+        * `final (b)`: 150
+
+        * `salto (step)`: 10
+
+2) **Definição de critério de parada:**
+
+    * **Critério de parada:** para cada iteração de bins do passo **(1)**, será realizado uma checagem de parada, aonde a condição será definida por:
+
+    <p>
+    $$
+    \begin{cases} 
+    \text{Parar busca e seleção do i-ésimo bin }  ( B = b^{(i)}), & \text{se } \frac{1}{3}\cdot T_{o} \leq T^{(i)}_{r} \leq 0.5 \cdot T_{o}\\
+    \text{Próxima iteração}, & \text{se } T^{(i)}_{r} < \frac{1}{3} \cdot T_{o} \text{ ou }  T^{(i)}_{r} > 0.5 \cdot T_{o} 
+    \end{cases}
+    $$
+    </p>
+
+    Sendo:
+
+    <p>
+    $$
+    \begin{cases}
+    T^{(i)}_{r}: &  \text{Total de cores da imagem reduzida para o } \text{ i - ésimo bin} \\
+    T_{o}: & \text{Total de cores da imagem original}
+    \end{cases}
+    $$
+    </p>
+
+    Além da checagem para convergência acima para cada iteração, em um caso de não satisfazer a condição definida para nenhum bin, será atribuido aquele que minimize o número de cores, ou seja:
+
+    <p>
+    $$
+    B = min_{a \leq i \leq b, step}\{ b^{(i)} \}
+    $$
+    </p>
+
+    Sendo:
+
+    <p>
+    $$
+    \begin{cases}
+    B: \text{ Bin escolhido ao longo das iterações} \\
+    b^{(i)}: \text{ i-ésimo bin a ser usado} \\
+    a: \text{ Número inicial de bins para procura} \\
+    b: \text{ Número final de bins para procura} \\
+    step: \text{ Salto a ser dado a cada iteração de um bin para o próximo}
+    \end{cases}
+    $$
+    </p>
+
+3) **Processo de calculo para redução:**
+    
+    **Obs.:** O processo a ser descrito será aplicado para cada canal existente.
+    
+    **Definição:** Para cada iteração, o i-ésimo bin, será gerado faixas baseado na média entre `bin[1:]` e `bin[:(-1)]`, ou seja:
+
+    <p>
+    $$
+    b^{(i)} = [x_{0}, x_{1}, \dots, x_{n}]
+    $$
+    </p>
+
+    aonde o novo valor a ser atribuido para cada pixel será definida pelas entradas do vetor abaixo:
+
+    <p>
+    $$
+    \text{V} = \frac{\left[\begin{matrix}
+    x_{1} \\
+    x_{2} \\
+    \vdots \\
+    x_{n}
+    \end{matrix}\right] + \left[\begin{matrix}
+    x_{0} \\
+    x_{1} \\
+    \vdots \\
+    x_{n - 1}
+    \end{matrix}\right]}{2} = \frac{
+        \left[
+            \begin{matrix}
+            x_1 + x_0 \\
+            x_2 + x_1 \\
+            \vdots \\
+            x_n + x_{n - 1}
+            \end{matrix}
+        \right]
+    }{2} = \left[
+        \begin{matrix}
+        \frac{x_1 + x_0}{2} \\
+        \frac{x_2 + x_1}{2} \\
+        \vdots \\
+        \frac{x_n + x_{n - 1}}{2}
+        \end{matrix}
+    \right]
+    $$
+    </p>
+
+    Logo, para cada valor novo por pixel para cada canal, teremos a atribuição abaixo:
+
+    <p>
+    $$
+    \begin{cases}
+    \frac{x_1 + x_0}{2}, &  \text{ se }  x_0 \leq pixel_{00} \leq x_1 \\
+    \frac{x_2 + x_1}{2}, &  \text{ se }  x_1 \leq pixel_{00} \leq x_2 \\
+    \vdots \\
+    \frac{x_{n} + x_{n - 1}}{2}, &  \text{ se }  x_{n - 1} \leq pixel_{00} \leq x_{n}
+    \end{cases}
+    $$
+    </p>
+
+    Isso será feito para cada canal da imagem (Img), pixel a pixel, ou seja, aplicado para cada canal na sua respectiva matriz abaixo:
+
+    <p>
+    $$
+    Img^{(c)} = \left[\begin{matrix}
+        pixel_{00} & pixel_{01}  & \cdots & pixel_{0m} \\
+        pixel_{10} & pixel_{11}  & \cdots & pixel_{1m} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        pixel_{n0} & pixel_{n1}  & \cdots & pixel_{nm} \\
+    \end{matrix}\right]_{c}
+    $$
+    </p>
+    
+    com c = {red, green, blue}.
+
+4) **Imagem reduzida:**
+
+    Apartir dos passos anteriores, é definido uma nova imagem, a qual o total de cores deve estar definido no intervalo de 1 / 3 da original a 50% da original.
+
+## [Implementação] Apoximação por bins
+
+1) **Leitura das imagens:**
+
+```py
+# Caminho para a imagem
+images_path = {
+    "araras": "/aatv03_lista-final/Q3/araras.png",
+    "F1": "/aatv03_lista-final/Q3/F1.png",
+    "green-water": "/aatv03_lista-final/Q3/green-water.png",
+    "surf": "/aatv03_lista-final/Q3/surf.png",
+}
+
+imgs = {}
+for key, path in images_path.items():
+    img = cv2.imread(path)
+    imgs[key] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+```
+
+2) **Funções:**
+
+```py
+def count_colores(
+        image: np.ndarray
+    ) -> int:
+    """
+    Conta o número de cores únicas em uma imagem RGB.
+
+    Args:
+        image (np.ndarray): Imagem RGB.
+
+    Returns:
+        int: Número de cores únicas.
+    """
+    # Converte a imagem para um array 2D
+    pixels = image.reshape(-1, 3)
+    # Conta as cores únicas
+    unique_colors = np.unique(pixels, axis=0)
+    return unique_colors.shape[0]
+
+def reduce_colors(
+        image: np.ndarray,
+        bins: int = 4
+    ) -> np.ndarray:
+    """
+    Reduz a quantidade de cores de uma imagem RGB, agrupando tons semelhantes.
+
+    Args:
+        image (np.ndarray): Imagem RGB.
+        bins (int): Número de intervalos para quantização em cada canal (R, G, B).
+
+    Returns:
+        np.ndarray: Imagem com cores reduzidas.
+    """
+    # Calcula os limites dos intervalos
+    bin_edges = np.linspace(
+        0,
+        256,
+        bins + 1,
+        dtype=np.int32
+    )
+    bin_centers = (
+        (bin_edges[:(-1)] + bin_edges[(1):]) / 2
+    ).astype(int)
+    
+    # Mapeia cada pixel para o centro do intervalo correspondente
+    quantized_image = np.zeros_like(image)
+    for i in range(3):  # Para cada canal (R, G, B)
+        channel = image[:, :, i]
+        indices = np.digitize(channel, bin_edges) - 1
+        quantized_image[:, :, i] = bin_centers[indices]
+
+    return quantized_image, bin_centers, bin_edges
+
+def adjust_bins(
+        image: np.ndarray,
+        list_range: list=[50, 150],
+        target_range: tuple = (1/3, 0.5)
+    ) -> int:
+    """
+    Ajusta o número de bins para garantir que a quantidade de cores reduzidas
+    esteja dentro do intervalo desejado.
+
+    Args:
+        image (np.ndarray): Imagem RGB.
+        list_range (list): Intervalo de bins a serem testados (mínimo, máximo).
+        target_range (tuple):
+            Intervalo desejado (mínimo, máximo) como fração da quantidade de cores originais.
+
+    Returns:
+        int: Número de bins ajustado.
+    """
+    original_colors = count_colores(image)
+    min_colors = int(original_colors * target_range[0])  # min % do numero de cores
+    max_colors = int(original_colors * target_range[1])  # max % do numero de cores
+
+    # Testar diferentes números de bins até atingir o intervalo desejado
+    for bins in range(*list_range):
+        reduced_image, _, _ = reduce_colors(image, bins)
+        reduced_colors = count_colores(reduced_image)
+        if min_colors <= reduced_colors <= max_colors:
+            return bins
+
+    # Caso não encontre, retorna o máximo de bins permitido
+    return np.min(list_range)
+```
+
+3) **Redução de imagem:**
+
+```py
+# Aplicar a redução de cores nas imagens
+reduced_imgs = {}
+bins_per_image = {}
+for key, img in imgs.items():
+    # Ajustar dinamicamente os bins para cada imagem
+    bin = adjust_bins(
+        img,
+        list_range=[50, 150, 10],  # parametro de procura de bins
+        target_range=(1 / 3, 0.5)  # parametro de stop
+    )#(1/3, 0.5))
+    bins_per_image[key] = bin
+    reduced_imgs[key] = reduce_colors(img, bins=bin)
+```
+
+4) **Salvando imagem de resultado:**
+
+```py
+for key, img in reduced_imgs.items():
+    img = img[0]
+    img_bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    cv2.imwrite(str(path_assets / f"atv03_q03-reduced-{key}.png"), img_bgr)
+```
+
+5) **Visualização do resultado:**
+
+```py
+# Exibir as imagens originais e reduzidas
+fig, ax = plt.subplots(len(reduced_imgs), 2, figsize=(16, 10))
+
+for idx, (key, img) in enumerate(reduced_imgs.items()):
+    count_original = count_colores(imgs[key])
+    count_reduced = count_colores(img[0])
+    count_perc = 100 * (count_reduced / count_original)
+
+    # Imagem original
+    ax[idx, 0].imshow(imgs[key])
+    ax[idx, 0].set_title(f"{key} - Original ({count_original} cores)")
+    ax[idx, 0].axis("off")
+
+    # Imagem reduzida
+    ax[idx, 1].imshow(img[0])
+    ax[idx, 1].set_title(f"{key} - Reduzida ({count_reduced} cores | {count_perc:.2f}%)")
+    ax[idx, 1].axis("off")
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q03_reduced_colors.png", dpi=400)
+plt.show()
+```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03_reduced_colors.png" alt="q04-i2-img" width="600"/>
+</p>
+
+
+6) **Conclusão**
+
+A solução proposta é robusta e flexivel, permite ao usuario a seleção de um percentual de cores ideal para que a imagem reduzida possua a partir da imagem original. Além disso, a redução foi significante, e ainda sim as imagens permanecem com seus contrastes,  mantendo a qualidade original da imagem.
+
 
 # Questão 04
 
@@ -71,15 +411,15 @@ Textura3.png
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
     <div style="text-align: center;">
-        <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_lista-final/Q4/Textura1.png?raw=true" alt="q04-i1-img" width="150"/>
+        <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_lista-final/Q4/Textura1.png" alt="q04-i1-img" width="150"/>
         <p><strong>Textura 1</strong></p>
     </div>
     <div style="text-align: center;">
-        <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_lista-final/Q4/Textura2.png?raw=true" alt="q04-i2-img" width="150"/>
+        <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_lista-final/Q4/Textura2.png" alt="q04-i2-img" width="150"/>
         <p><strong>Textura 2</strong></p>
     </div>
     <div style="text-align: center;">
-        <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_lista-final/Q4/Textura3.png?raw=true" alt="q04-i3-img" width="150"/>
+        <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_lista-final/Q4/Textura3.png" alt="q04-i3-img" width="150"/>
         <p><strong>Textura 3</strong></p>
     </div>
 </div>
@@ -295,7 +635,7 @@ plt.show()
 ```
 
 <p align="center" >
-    <img src="https://github.com/Manuelfjr/pdi/blob/develop/assets/atv03_q04-02.png?raw=true" alt="q04-i2-img" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q04-02.png" alt="q04-i2-img" width="600"/>
 </p>
 
 Como visto no gráfico, temos um valor de D = 0.21 para a *Textura2* e um valor de D = 0.82 para a *Textura3*, então pela regra de decisão definida, temos que a textura 2 pertence a classe 1 e a textura 3 pertence a classe 2.
