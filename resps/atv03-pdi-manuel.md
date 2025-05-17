@@ -391,8 +391,65 @@ plt.show()
     <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03_reduced_colors.png" alt="q04-i2-img" width="600"/>
 </p>
 
+6) **[Testes] Usando outros parametros:**
 
-6) **Conclusão**
+Testando outros parametros, com bins de menor tamanho, podemos ter resultados mais claros do efeito do algoritmo proposto. Vamos aplicar um teste para:
+
+* `a`: 5 (bin inicial de tamanho 5);
+
+* `b`: 50 (bin final de tamanho 50);
+
+* `step`: 1 (salto entre as iterações de 1 aumento);
+
+* `critério de parada`: entre 10% a 90% do total de cores da imagem original.
+
+Dessa forma, temos os resultados abaixo:
+
+```py
+# Aplicar a redução de cores nas imagens
+reduced_imgs = {}
+bins_per_image = {}
+for key, img in imgs.items():
+    # Ajustar dinamicamente os bins para cada imagem
+    bin = adjust_bins(
+        img,
+        list_range=[5, 50, 1],#[50, 150, 10],  # parametro de procura de bins
+        target_range=(0.1, 0.9)# (1 / 3, 0.5)  # parametro de stop
+    )#(1/3, 0.5))
+    bins_per_image[key] = bin
+    reduced_imgs[key] = reduce_colors(img, bins=bin)
+
+# salvando imagem
+for key, img in reduced_imgs.items():
+    img = img[0]
+    img_bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    cv2.imwrite(str(path_assets / f"atv03_q03-reduced-{key}.png"), img_bgr)
+
+# Exibir as imagens originais e reduzidas
+fig, ax = plt.subplots(len(reduced_imgs), 2, figsize=(16, 10))
+for idx, (key, img) in enumerate(reduced_imgs.items()):
+    count_original = count_colores(imgs[key])
+    count_reduced = count_colores(img[0])
+    count_perc = 100 * (count_reduced / count_original)
+
+    # Imagem original
+    ax[idx, 0].imshow(imgs[key])
+    ax[idx, 0].set_title(f"{key} - Original ({count_original} cores)")
+    ax[idx, 0].axis("off")
+
+    # Imagem reduzida
+    ax[idx, 1].imshow(img[0])
+    ax[idx, 1].set_title(f"{key} - Reduzida ({count_reduced} cores | {count_perc:.2f}%)")
+    ax[idx, 1].axis("off")
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q03_reduced_colors_test2.png", dpi=400)
+plt.show()
+```
+
+
+
+7) **Conclusão**
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
     <div style="text-align: center;">
