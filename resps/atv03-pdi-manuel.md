@@ -447,6 +447,9 @@ fig.savefig(path_assets / "atv03_q03_reduced_colors_test2.png", dpi=400)
 plt.show()
 ```
 
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03_reduced_colors_test2.png" alt="q04-i2-img" width="600"/>
+</p>
 
 
 7) **Conclusão**
