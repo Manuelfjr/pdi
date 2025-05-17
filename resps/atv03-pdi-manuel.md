@@ -394,6 +394,33 @@ plt.show()
 
 6) **Conclusão**
 
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <div style="text-align: center;">
+        <a href="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-araras.png" target="_blank">
+            <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-araras.png" alt="q04-i1-img" width="150"/>
+        </a>
+        <p><strong>Araras - Reduzida</strong></p>
+    </div>
+    <div style="text-align: center;">
+        <a href="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-F1.png" target="_blank">
+            <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-F1.png" alt="q04-i2-img" width="150"/>
+        </a>
+        <p><strong>F1 - Reduzida</strong></p>
+    </div>
+    <div style="text-align: center;">
+        <a href="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-green-water.png" target="_blank">
+            <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-green-water.png" alt="q04-i3-img" width="150"/>
+        </a>
+        <p><strong>Greem water - Reduzida</strong></p>
+    </div>
+    <div style="text-align: center;">
+        <a href="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-surf.png" target="_blank">
+            <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03-reduced-surf.png" alt="q04-i3-img" width="150"/>
+        </a>
+        <p><strong>Surf - Reduzida</strong></p>
+    </div>
+</div>
+
 A solução proposta é robusta e flexivel, permite ao usuario a seleção de um percentual de cores ideal para que a imagem reduzida possua a partir da imagem original. Além disso, a redução foi significante, e ainda sim as imagens permanecem com seus contrastes,  mantendo a qualidade original da imagem.
 
 
