@@ -751,3 +751,368 @@ Ou esse (com a região marcada na imagem):
 </p>
 
 **R.:**
+
+
+## [Algoritmo] Explicação
+
+Durante o processo para detectarmos o avanço do mar na faixa de areia, vamos aplicar algumas ténicas de processamento de imagem, sendo elas as listadas abaixo:
+
+1) **Conversão para HSV**
+2) **Recorte da imagem**
+3) **Filtro passa-baixa gaussiano**
+4) **Dilatação**
+5) **Binarização (OTSU)**
+6) **Operação morofologica (Fechamento)**
+7) **Operação morofologica (Abertura)**
+8) **Canny**
+9) **Resultado**
+
+
+Os passos acima serão detalhados abaixo:
+
+1) **Conversão para HSV**
+Inicialmente, convertemos a imagem original RGB para o formato HSV.
+Iremos selecionar o canal de saturação (S) para trabalhar, uma vez que essa saturação ajuda a evidenciar a transição entre a região de baixa saturação que é a areia para o de alta saturação que é o mar. Isso será particularmente util para o uso das técnicas seguintes.
+
+2) **Recorte da imagem**
+Aplicar um recorte da imagem mais proximo da região da praia, mais proximo da faixa de areia;
+
+Esse recorte tem como objetivo diminuir a variação de contrastes, e aproximar o local de busca, que trata-se da faixa que o mar evidencia ao tocar a região da areia. Dessa forma, vamos aplicar uma sequência de técnicas para tentar delinear a fronteira entre mar e agua.
+
+
+Será feito os processamentos a seguir em escala de cinza, baseado no canal de saturação obetido apartir do HSV.
+
+
+3) **Filtro Passa-Baixa gaussiana:** a aplicação desse filtro tem como intuito causar um borramento na imagem, suavizando variações abruptas de intensidade e reduzindo ruídos de alta frequência. Esse processo facilita a separação das regiões de interesse, tornando as transições entre mar e areia mais suaves e destacando as estruturas principais. O uso desse filtro também afeta o resultado final, em caso de não usar, ele causa em passos futuros, em especifico no passo de binarização, alguns desniveis grandes na fronteira entre o mar e a areia.
+
+    * **Parâmetros:**
+        
+        * &sigma; = 1
+        * **kernel**: matriz 3x3 de uns.
+
+4) **Dilatação:** aplicação de uma dilatação sobre o canal, considerando o kernel abaixo:
+
+$$
+Kernel_{(1)} = \left[\begin{matrix}
+    1 & 1 & 1 \\
+    1 & 1 & 1 \\
+    1 & 1 & 1 \\
+\end{matrix}\right]
+$$
+
+Essa aplicação tem como intuito dilatar as cores brancas para os vizinhos, com o intuito de expandir um pouco a fronteira entre areia e mar.
+
+
+5) **Binarização (OTSU):** o método de OTSU foi utilizado para binarizar a imagem, com o intuito de conseguir deixar a região da areia mais branca e a região da praia mais escura, uma vez que ela soma dos passos anteriores, a imagem encontra-se um contraste maior entre as duas regiões. Isso será mostrado mais a frente.
+
+
+6) **Operação morfologica (Fechamento):** será realizado um processo de fechamento com o intuito de preenchimento de falhas em contornos, em especial na fronteira entre mar e areia, preto e branco respectivamente, além de diminuir as areas de preto em especial as restantes na área da areia.
+
+Esse procedimento será aplicado um efeito em cascata, sendo aplicado por 5 iterações, ou seja, será aplicado 5 vezes.
+
+7) **Operação morfologica (Abertura):** dado o passo anterior, será realizado uma abertura para suavizar o contorno da fronteira entre o branco e preto da áreia e agua, respectivamente, ajudando a remover ramificações restantes ao longo do mar, e expandindo alguma área de preto restante na região do mar.
+
+Esse procedimento será aplicado um efeito em cascata, sendo aplicado por 5 iterações, ou seja, será aplicado 5 vezes.
+
+8) **Canny:** dado dos os passos todos anteriores, é obtido uma imagem com preto e branco, aonde é possivel notar a fronteira entre branco e preto, representando a fronteira entre mar e areia. Dado isso, é possivel aplicar um algoritmo para detecção de bordas, sendo ele o canny como o escolhido, para a separação dessa fronteira.
+
+9) **Resultado:**  por fim, teremos a fronteira bem definida entre agua e areia, com as imagens sobrepostas como no primeiro exemplo de resposta da questão.
+
+## **[Implementação] Código**
+
+
+Antes de dar seguimento, vamos ler a iamgem:
+
+
+```py
+imgs = {
+    "Merge_Timex_BoaViagem": cv2.imread(
+        str(path_imgs_atv / "Q5" / "Merge_Timex_BoaViagem.png")
+    )
+}
+img = cv2.cvtColor(imgs["Merge_Timex_BoaViagem"], cv2.COLOR_BGR2RGB)
+img_hsv = cv2.cvtColor(imgs["Merge_Timex_BoaViagem"], cv2.COLOR_BGR2HSV)
+```
+
+além disso, vamos definir os parâmetros a serem utilizados abaixo:
+
+```py
+# parametros
+kernel_morph = np.ones((7, 7), np.uint8)
+kernel_dilate = np.ones((3, 3), np.uint8)
+kernel_gaussian = (3, 3)
+sigma = 1
+iter_dilate = 1
+iterations = 5
+lim_inf = 50
+lim_sup = 210
+c_selected = "S"
+threshold1 = 100
+threshold2 = 200
+```
+
+1) **Conversão para HSV**
+
+Abaixo temos a imagem a esquerda em RGB, e a direita defindia no espaço HSV.
+
+```py
+# Conversão para hsv
+fig, ax = plt.subplots(2, 1, figsize=(16, 8))
+ax[0].imshow(img)
+ax[0].set_title("Imagem Original")
+# ax[0].axis("off")
+ax[1].imshow(img_hsv, cmap="gray")
+ax[1].set_title("Imagem HSV")
+# ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-01.png", dpi=400)
+```
+
+
+2) **Recorte da imagem**
+
+Vamos fazer um recorte da imagem que iremos trabalhar para os proximos passos.
+
+```py
+# Recorte da imagem parte 1: 
+img_cut_org = img[lim_inf:lim_sup, :]
+img_cut_hsv = img_hsv[lim_inf:lim_sup, :]
+fig, ax = plt.subplots(2, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_org)
+ax[0].set_title("Imagem Original")
+# ax[0].axis("off")
+ax[1].imshow(img_cut_hsv, cmap="hsv")   
+ax[1].set_title("Imagem HSV")
+# ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-02.png", dpi=400)
+```
+
+
+Como mencionado anteriormente, vamos trabalhar com o canal de Saturação (S), e vamos trabalhar em tons de cinza. Dessa forma temos:
+
+
+```PY
+# Recorte da imagem parte2:
+img_cut_hsv = {
+    c: {
+        "org": img[:, :, :],
+        "hsv_cut": img_hsv[:, :, idx],
+        "cut": img_hsv[lim_inf:lim_sup, :, idx]
+    } for idx, c in  enumerate(["H", "S", "V"])
+}
+
+# Plotar resultado
+fig, ax = plt.subplots(2, 1, figsize=(16, 8))
+ax[0].imshow(img_cut_hsv[c_selected]["hsv_cut"], cmap="gray")
+ax[0].set_title(f"Imagem HSV - Canal {c_selected}")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["cut"], cmap="gray")
+ax[1].set_title(f"Recorte")
+ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-03.png", dpi=400)
+```
+
+3) **Filtro Passa-Baixa gaussiana:**
+
+Abaixo será aplicado o filtro passa-baixa gaussiano, considerando um &sigma; = 1, logo:
+
+```PY
+# Aplicando o filtro passa-baixa gaussiano
+img_cut_hsv[c_selected]["processed"] = cv2.GaussianBlur(
+    img_cut_hsv[c_selected]["cut"],
+    kernel_gaussian,
+    sigmaX=sigma
+)
+
+# Plotando o resultado
+fig, ax = plt.subplots(2, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_hsv[c_selected]["cut"], cmap="gray")
+ax[0].set_title(f"Recorte")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["processed"], cmap="gray")
+ax[1].set_title(f"... + Passa-Baixa Gaussiano")
+ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-04.png", dpi=400)
+
+```
+
+4) **Dilatação:**
+
+Abaixo, aplicamos a dilatação considerando o kernel anteriormente citado.
+
+```py
+# Dilatação 
+img_cut_hsv[c_selected]["processed_dilate"] = cv2.dilate(
+    img_cut_hsv[c_selected]["processed"],
+    kernel_dilate,
+    iterations=iter_dilate
+)
+
+# Plotando o resultado
+fig, ax = plt.subplots(2, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_hsv[c_selected]["processed"], cmap="gray")
+ax[0].set_title(f"... + Passa-Baixa Gaussiano")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate"], cmap="gray")
+ax[1].set_title(f"... + Dilatação")
+ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-05.png", dpi=400)
+```
+
+5) **Binarização (OTSU):**
+
+Com a imagem dilatada anteriormente, vamos aplicar um processo de binarização utilizando do método do OTSU para seleção automática do threshold.
+
+```py
+# Binarização (OTSU)
+_, img_cut_hsv[c_selected]["processed_dilate_bin"] = cv2.threshold(
+    img_cut_hsv[c_selected]["processed_dilate"],
+    0,
+    255,
+    cv2.THRESH_BINARY + cv2.THRESH_OTSU
+)
+
+# Plotando o resultado
+fig, ax = plt.subplots(2, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_hsv[c_selected]["processed_dilate"], cmap="gray")
+ax[0].set_title(f"... + Dilatação")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin"], cmap="gray")
+ax[1].set_title(f"... + Binarização")
+ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-06.png", dpi=400)
+```
+
+6) **Operação morfologica (Fechamento):**
+
+Vamos aplicar o fechamento, para tentar desaparecer com os pontos pretos da região superior da imagem e expandir alguns pontos brancos na região preta abaixo.
+
+```py
+# Operação morfologica (Fechamento)
+img_cut_hsv[c_selected]["processed_dilate_bin_close"] = cv2.morphologyEx(
+    img_cut_hsv[c_selected]["processed_dilate_bin"],
+    cv2.MORPH_CLOSE,
+    kernel_morph,
+    iterations=iterations
+)
+
+# Plotando o resultado
+fig, ax = plt.subplots(2, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_hsv[c_selected]["processed_dilate_bin"], cmap="gray")
+ax[0].set_title(f"... + Binarização")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close"], cmap="gray")
+ax[1].set_title(f"... + Fechamento")
+ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-07.png", dpi=400)
+```
+
+7) **Operação morfologica (Abertura):**
+
+Aplicando a abertura com o intuito de suavização de contornos, e remoção de ramificações na região da fronteira entre branco e preto, além de tentar expandir a parte inferior restante de branco na região preta.
+
+
+```py
+# Operação morfologica (Abertura)
+img_cut_hsv[c_selected]["processed_dilate_bin_close_open"] = cv2.morphologyEx(
+    img_cut_hsv[c_selected]["processed_dilate_bin_close"],
+    cv2.MORPH_OPEN,
+    kernel_morph,
+    iterations=iterations
+)
+
+# Plotando o resultado
+fig, ax = plt.subplots(2, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close"], cmap="gray")
+ax[0].set_title(f"... + Fechamento")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close_open"], cmap="gray")
+ax[1].set_title(f"... + Abertura")
+ax[1].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-08.png", dpi=400)
+```
+
+
+8) **Canny:**
+
+Abaixo vamos aplicar o Canny na imagem resultante do passo anterior, adicionando um processo de dilatação apenas para visualizar de forma mais "robusta" a fronteira definida apos o canny.
+
+```py
+# Canny
+img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"] = cv2.Canny(
+    img_cut_hsv[c_selected]["processed_dilate_bin_close_open"],
+    threshold1=threshold1,
+    threshold2=threshold2
+)
+
+# Canny dilated
+img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dilated"] = cv2.dilate(
+    img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"],
+    kernel_dilate,
+    iterations=1
+)
+
+
+# Plotando o resultado
+fig, ax = plt.subplots(3, 1, figsize=(16, 4))
+ax[0].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close_open"], cmap="gray")
+ax[0].set_title(f"... + Abertura")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"], cmap="gray")
+ax[1].set_title(f"... + Canny (Fronteira encontrada)")
+ax[1].axis("off")
+ax[2].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dilated"], cmap="gray")
+ax[2].set_title(f"Aplicando dilatação para destaque da borda")
+ax[2].axis("off")
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-09.png", dpi=400)
+```
+
+9) **Resultado:**
+
+Abaixo, vamos sobrepor apenas a fronteira entre mar e areia encontrada sobre a imagem original, com três imagens, sendo a primeira a original, a segunda sendo a borda encontrada, e a terceira com uma dilatação dessa borda, para melhor visualização.
+
+
+```py
+# Sobreposição no recorte
+
+## Fronteira sem dilatação
+img_cut_hsv[c_selected]["img_final_nodilate"] = img_cut_hsv[c_selected]["org"].copy()
+img_cut_hsv[c_selected]["img_final_nodilate"][lim_inf:lim_sup, :, :][
+    img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"] > 0
+] = [255] * 3
+
+## Fronteira com dilatação
+img_cut_hsv[c_selected]["img_final_dilated"] = img_cut_hsv[c_selected]["org"].copy()
+img_cut_hsv[c_selected]["img_final_dilated"][lim_inf:lim_sup, :, :][
+    img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dilated"] > 0
+] = [255] * 3
+
+# Plotando o resultado
+fig, ax = plt.subplots(3, 1, figsize=(18, 10))
+ax[0].imshow(img_cut_hsv[c_selected]["org"], cmap="gray")
+ax[0].set_title("Imagem Original")
+ax[0].axis("off")
+ax[1].imshow(img_cut_hsv[c_selected]["img_final_nodilate"], cmap="gray")
+ax[1].set_title(
+    "Imagem com faixa do mar marcada"
+)
+ax[1].axis("off")
+ax[2].imshow(img_cut_hsv[c_selected]["img_final_dilated"], cmap="gray")
+ax[2].set_title(
+    "Imagem com faixa do mar marcada (dilatação)"
+)
+ax[2].axis("off")
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q05-10.png", dpi=400)
+```
+
+Acima, podemos ver que a fronteira foi encontrada, sendo bem definida, porém havendo alguns pontos de atenção a qual a fronteira encontra um pouco acima da linha do mar. Contudo, no geral, a fronteira foi bem definida para visualização do avanço do mar.
