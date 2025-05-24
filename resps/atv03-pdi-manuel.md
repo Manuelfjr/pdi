@@ -381,7 +381,6 @@ for idx, (key, img) in enumerate(reduced_imgs.items()):
     ax[idx, 1].axis("off")
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q03_reduced_colors.png", dpi=400)
 plt.show()
 ```
 
@@ -441,7 +440,6 @@ for idx, (key, img) in enumerate(reduced_imgs.items()):
     ax[idx, 1].axis("off")
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q03_reduced_colors_test2.png", dpi=400)
 plt.show()
 ```
 
@@ -663,7 +661,6 @@ for _ax in ax.flatten():
     _ax.legend()
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q04-02.png", dpi=400)
 plt.show()
 ```
 
@@ -753,7 +750,7 @@ Ou esse (com a região marcada na imagem):
 **R.:**
 
 
-## [Algoritmo] Explicação
+## **[Algoritmo] Explicação**
 
 Durante o processo para detectarmos o avanço do mar na faixa de areia, vamos aplicar algumas ténicas de processamento de imagem, sendo elas as listadas abaixo:
 
@@ -792,6 +789,7 @@ Será feito os processamentos a seguir em escala de cinza, baseado no canal de s
 
 4) **Dilatação:** aplicação de uma dilatação sobre o canal, considerando o kernel abaixo:
 
+<p>
 $$
 Kernel_{(1)} = \left[\begin{matrix}
     1 & 1 & 1 \\
@@ -799,6 +797,7 @@ Kernel_{(1)} = \left[\begin{matrix}
     1 & 1 & 1 \\
 \end{matrix}\right]
 $$
+</p>
 
 Essa aplicação tem como intuito dilatar as cores brancas para os vizinhos, com o intuito de expandir um pouco a fronteira entre areia e mar.
 
@@ -806,11 +805,17 @@ Essa aplicação tem como intuito dilatar as cores brancas para os vizinhos, com
 5) **Binarização (OTSU):** o método de OTSU foi utilizado para binarizar a imagem, com o intuito de conseguir deixar a região da areia mais branca e a região da praia mais escura, uma vez que ela soma dos passos anteriores, a imagem encontra-se um contraste maior entre as duas regiões. Isso será mostrado mais a frente.
 
 
-6) **Operação morfologica (Fechamento):** será realizado um processo de fechamento com o intuito de preenchimento de falhas em contornos, em especial na fronteira entre mar e areia, preto e branco respectivamente, além de diminuir as areas de preto em especial as restantes na área da areia.
+6) **Operação morfologica (Fechamento):** será realizado um processo de fechamento com o intuito de preenchimento de falhas em contornos, em especial na fronteira entre mar e areia, preto e branco respectivamente, além de diminuir as areas de preto em especial as restantes na área da areia. Será considerado um kernel sendo uma matriz 7x7 composta por 1, ou seja:
+
+<p>
+$$
+Kernel_{(2)} = \{1 \}_{7x7}
+$$
+</p>
 
 Esse procedimento será aplicado um efeito em cascata, sendo aplicado por 5 iterações, ou seja, será aplicado 5 vezes.
 
-7) **Operação morfologica (Abertura):** dado o passo anterior, será realizado uma abertura para suavizar o contorno da fronteira entre o branco e preto da áreia e agua, respectivamente, ajudando a remover ramificações restantes ao longo do mar, e expandindo alguma área de preto restante na região do mar.
+7) **Operação morfologica (Abertura):** dado o passo anterior, será realizado uma abertura para suavizar o contorno da fronteira entre o branco e preto da áreia e agua, respectivamente, ajudando a remover ramificações restantes ao longo do mar, e expandindo alguma área de preto restante na região do mar. O mesmo kernel utilizado no passo anterior, será utilizado aqui também.
 
 Esse procedimento será aplicado um efeito em cascata, sendo aplicado por 5 iterações, ou seja, será aplicado 5 vezes.
 
@@ -838,17 +843,17 @@ além disso, vamos definir os parâmetros a serem utilizados abaixo:
 
 ```py
 # parametros
-kernel_morph = np.ones((7, 7), np.uint8)
-kernel_dilate = np.ones((3, 3), np.uint8)
-kernel_gaussian = (3, 3)
-sigma = 1
-iter_dilate = 1
-iterations = 5
-lim_inf = 50
-lim_sup = 210
-c_selected = "S"
-threshold1 = 100
-threshold2 = 200
+kernel_morph = np.ones((7, 7), np.uint8)  # kernel utilizado para operações morfologicas
+kernel_dilate = np.ones((3, 3), np.uint8)  # kernel utilizado para dilatação 
+kernel_gaussian = (3, 3)  # kernel utilizado para passa baixa gaussiana
+sigma = 1  # sigma utilizado para operações morfologicas
+iter_dilate = 1  # iterações de dilatação
+iterations = 5  # iterações de operações morfologicas
+lim_inf = 50  # corte inicial em x
+lim_sup = 210  # corte final em x
+c_selected = "S"  # canal a ser utilizado do HSV - Saturação (S)
+threshold1 = 100  # valor minimo para o canny
+threshold2 = 200  # valor maximo para o canny
 ```
 
 1) **Conversão para HSV**
@@ -865,8 +870,11 @@ ax[1].imshow(img_hsv, cmap="gray")
 ax[1].set_title("Imagem HSV")
 # ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-01.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-01.png" alt="q05-01-img" width="600"/>
+</p>
 
 
 2) **Recorte da imagem**
@@ -885,8 +893,11 @@ ax[1].imshow(img_cut_hsv, cmap="hsv")
 ax[1].set_title("Imagem HSV")
 # ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-02.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-02.png" alt="q05-02-img" width="600"/>
+</p>
 
 
 Como mencionado anteriormente, vamos trabalhar com o canal de Saturação (S), e vamos trabalhar em tons de cinza. Dessa forma temos:
@@ -911,8 +922,11 @@ ax[1].imshow(img_cut_hsv[c_selected]["cut"], cmap="gray")
 ax[1].set_title(f"Recorte")
 ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-03.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-03.png" alt="q05-03-img" width="600"/>
+</p>
 
 3) **Filtro Passa-Baixa gaussiana:**
 
@@ -935,9 +949,11 @@ ax[1].imshow(img_cut_hsv[c_selected]["processed"], cmap="gray")
 ax[1].set_title(f"... + Passa-Baixa Gaussiano")
 ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-04.png", dpi=400)
-
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-04.png" alt="q05-04-img" width="600"/>
+</p>
 
 4) **Dilatação:**
 
@@ -960,8 +976,10 @@ ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate"], cmap="gray")
 ax[1].set_title(f"... + Dilatação")
 ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-05.png", dpi=400)
 ```
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-05.png" alt="q05-05-img" width="600"/>
+</p>
 
 5) **Binarização (OTSU):**
 
@@ -985,8 +1003,13 @@ ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin"], cmap="gray")
 ax[1].set_title(f"... + Binarização")
 ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-06.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-06.png" alt="q05-06-img" width="600"/>
+</p>
+
+Perceba que ainda existem regiões de preto na parte superior (região da areia) e um pequeno espaco branco na região preta (região do mar), isso será tratado com os dois processos de operações morfologicas abaixo, Fechamento e Abertura, respectivamente.
 
 6) **Operação morfologica (Fechamento):**
 
@@ -1010,8 +1033,11 @@ ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close"], cmap="gray")
 ax[1].set_title(f"... + Fechamento")
 ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-07.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-07.png" alt="q05-07-img" width="600"/>
+</p>
 
 7) **Operação morfologica (Abertura):**
 
@@ -1036,8 +1062,11 @@ ax[1].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close_open"], cmap="g
 ax[1].set_title(f"... + Abertura")
 ax[1].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-08.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-08.png" alt="q05-08-img" width="600"/>
+</p>
 
 
 8) **Canny:**
@@ -1072,8 +1101,11 @@ ax[2].imshow(img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dila
 ax[2].set_title(f"Aplicando dilatação para destaque da borda")
 ax[2].axis("off")
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-09.png", dpi=400)
 ```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-09.png" alt="q05-09-img" width="600"/>
+</p>
 
 9) **Resultado:**
 
@@ -1112,7 +1144,13 @@ ax[2].set_title(
 ax[2].axis("off")
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q05-10.png", dpi=400)
 ```
 
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-10.png" alt="q05-10-img" width="600"/>
+</p>
+
 Acima, podemos ver que a fronteira foi encontrada, sendo bem definida, porém havendo alguns pontos de atenção a qual a fronteira encontra um pouco acima da linha do mar. Contudo, no geral, a fronteira foi bem definida para visualização do avanço do mar.
+
+Abaixo podemos ver uma visão detalhada dos processamentos aplicados sobre o recorte no canal de saturação obtido pelo HSV:
+
