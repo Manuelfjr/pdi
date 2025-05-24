@@ -82,17 +82,15 @@ Logo apos a primeira aplicação do filtro passa baixa, a imagem já tem seu rui
 
 O algoritmo ira se basear em agrupar cores proximas, considerando faixas de bins  definidas entre 0 e 255 para cada canal de cor. Se o valor daquele pixel pertencer a esse intervalo, ele sera atribuido o ponto médio do intervalo.
 
-O algoritmo ira realizar uma busca exaustiva entre um numero x de bins a um numero y de bins, com salto definido como "p". O intuito dessa busca exaustiva é tentar achar o número de bins ideal para que seja satisfeita a condição de que o número total de cores da imagem esteja entre 1 / 3 da imagem original a 50% da imagem original.
+O algoritmo ira realizar uma busca exaustiva entre um numero "a" de bins a um numero "b" de bins, com salto definido como "p". O intuito dessa busca exaustiva é tentar achar o número de bins ideal para que seja satisfeita a condição de que o número total de cores da imagem esteja entre 1 / 3 da imagem original a 50% da imagem original.
 
 Vamos definir por partes, primeiro a logica da implementação, e em seguida a implementação utilizando o python.
 
-
 ## [Algoritmo] Apoximação por bins
-
 
 1) **Definir condições de busca:**
 
-    * **Quantidade de bins:** para cada canal, será feito uma quebra em bins (ex.: 0 a 63, 64 a 127, 128 a 191 e 192 a 255, total de 5 bins). Nesse passo, será definido uma lista de possiveis bins para busca, por exemplo, se selecionar 50 a 256 com salto de 10, teremos o primeiro bin que ira quebrar o intervalo de 0 a 255 em 50 partes, o segundo bin irá quebrar o intervalo de 0 a 255 em 60 partes, o terceiro bin irá quebrar o intervalo de 0 a 255 em 70 partes, e assim por diante; na parametrização da solução vamos considerar o inicio igual a 50, e o final da procura em 150 bins, considerando um salto de 10.
+    * **Quantidade de bins:** para cada canal, será feito uma quebra em bins (ex.: 0 a 63, 64 a 127, 128 a 191 e 192 a 255, total de 1 bin com 5 faixas). Nesse passo, será definido uma lista de possiveis bins para busca, por exemplo, se selecionar 50 a 150 com salto de 10, teremos o primeiro bin que ira quebrar o intervalo de 0 a 255 em 50 partes de tamanho igual, o segundo bin irá quebrar o intervalo de 0 a 255 em 60 partes, o terceiro bin irá quebrar o intervalo de 0 a 255 em 70 partes, e assim por diante, até chegar no bin que dividirá em 150 partes; na parametrização da solução vamos considerar o inicio igual a 50, e o final da procura em 150 bins, considerando um salto de 10.
 
     * **Parâmetros usados:**
         
@@ -122,7 +120,7 @@ Vamos definir por partes, primeiro a logica da implementação, e em seguida a i
     <p>
     $$
     \begin{cases}
-    T^{(i)}_{r}: &  \text{Total de cores da imagem reduzida para o } \text{ i - ésimo bin} \\
+    T^{(i)}_{r}: &  \text{Total de cores da imagem para o } \text{ i - ésimo bin} \\
     T_{o}: & \text{Total de cores da imagem original}
     \end{cases}
     $$
@@ -224,7 +222,7 @@ Vamos definir por partes, primeiro a logica da implementação, e em seguida a i
     
     com c = {red, green, blue}.
 
-4) **Imagem reduzida:**
+4) **Imagem com quantidade de cores reduzida:**
 
     Apartir dos passos anteriores, é definido uma nova imagem, a qual o total de cores deve estar definido no intervalo de 1 / 3 da original a 50% da original.
 
@@ -364,7 +362,7 @@ for key, img in reduced_imgs.items():
 5) **Visualização do resultado:**
 
 ```py
-# Exibir as imagens originais e reduzidas
+# Exibir as imagens originais e com cores reduzidas
 fig, ax = plt.subplots(len(reduced_imgs), 2, figsize=(16, 10))
 
 for idx, (key, img) in enumerate(reduced_imgs.items()):
@@ -377,7 +375,7 @@ for idx, (key, img) in enumerate(reduced_imgs.items()):
     ax[idx, 0].set_title(f"{key} - Original ({count_original} cores)")
     ax[idx, 0].axis("off")
 
-    # Imagem reduzida
+    # Imagem com cores reduzida
     ax[idx, 1].imshow(img[0])
     ax[idx, 1].set_title(f"{key} - Reduzida ({count_reduced} cores | {count_perc:.2f}%)")
     ax[idx, 1].axis("off")
@@ -425,7 +423,7 @@ for key, img in reduced_imgs.items():
     img_bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     cv2.imwrite(str(path_assets / f"atv03_q03-reduced-{key}.png"), img_bgr)
 
-# Exibir as imagens originais e reduzidas
+# Exibir as imagens originais e com cores reduzidas
 fig, ax = plt.subplots(len(reduced_imgs), 2, figsize=(16, 10))
 for idx, (key, img) in enumerate(reduced_imgs.items()):
     count_original = count_colores(imgs[key])
@@ -437,7 +435,7 @@ for idx, (key, img) in enumerate(reduced_imgs.items()):
     ax[idx, 0].set_title(f"{key} - Original ({count_original} cores)")
     ax[idx, 0].axis("off")
 
-    # Imagem reduzida
+    # Imagem com cores reduzida
     ax[idx, 1].imshow(img[0])
     ax[idx, 1].set_title(f"{key} - Reduzida ({count_reduced} cores | {count_perc:.2f}%)")
     ax[idx, 1].axis("off")
@@ -449,6 +447,12 @@ plt.show()
 
 <p align="center" >
     <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03_reduced_colors_test2.png" alt="q04-i2-img" width="600"/>
+</p>
+
+Podemos notar que a qualidade da imagem ainda continua alta, com os contrastes ainda bem nitidos, mesmo com uma redução para 10% de cores da imagem original. Na figura abaixo é possivel notar o efeito que uma má seleção de parametros, como um range de bins com tamanhos pequenos podem afetar a resolução da imagem, além de um critério de parada mal selecionado. Podemos ver a diferença clara entre regiões da imagem de referencia "green-water" e "green-water" com quantidade de cores reduzida.
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q03_img-comparison-test2.png" alt="q04-i2-img" width="600"/>
 </p>
 
 
@@ -481,7 +485,17 @@ plt.show()
     </div>
 </div>
 
-A solução proposta é robusta e flexivel, permite ao usuario a seleção de um percentual de cores ideal para que a imagem reduzida possua a partir da imagem original. Além disso, a redução foi significante, e ainda sim as imagens permanecem com seus contrastes,  mantendo a qualidade original da imagem.
+**Obs.:** essa solução final mostrada trata-se do uso dos parâmetros:
+
+* `a`: 50;
+
+* `b`: 150;
+
+* `step`: 10;
+
+* `critério de parada`: entre 1 / 3 das cores originais da imagem a 50%.
+
+A solução proposta é robusta e flexivel, permite ao usuario a seleção de um percentual de cores ideal para que a imagem com uma quantidade de cores reduzida possua a partir da imagem original. Além disso, a redução foi significante, e ainda sim as imagens permanecem com seus contrastes,  mantendo a qualidade original da imagem.
 
 
 # Questão 04
@@ -517,7 +531,7 @@ As imagens Textura1 e Textura2 são de um mesmo material (suponha Classe 1), ten
 
 **R.:**
 
-## Solução 1) Coeficiente de variação
+## Parte 01) Coeficiente de variação
 
 Vamos analisar, em conjunto, a variabilidade em torno da média da transformada de fourier, utilizando do **Coeficiente de Variação**, cuja formula pode ser expressa abaixo
 
@@ -559,108 +573,40 @@ data_stats
 | **desvio** | 1.19     | 1.17     | 0.81     |
 | **cv**     | 19.43    | 17.75    | 9.26     |
 
-Dado os coeficientes de variação acima, como definido antes, vamos utilizar o coeficiente de variação da imagem *Textura1* como referência, ou seja, 19.43%. Dessa forma, com 5% de permissão de variabilidade sobre o coeficiente de variação, temos o limite superior de 19.43% + 5% = 24.43% e limite inferior de 19.43% - 5% = 14.43%, ou seja, para que a textura seja da classe 1, então o coeficiente de variação da imagem deve estar entre  temos definido a regra abaixo:
+Dado os coeficientes de variação acima, como definido antes, vamos utilizar o coeficiente de variação da imagem *Textura1* como referência, ou seja, 19.43%. Dessa forma, com 5% de permissão de variabilidade sobre o coeficiente de variação, temos o limite superior de 19.43% + 5% = 24.43% e limite inferior de 19.43% - 5% = 14.43%, ou seja, para que a textura seja da classe 1, então  uma das condições para o algoritmo será o coeficiente de variação da imagem estar definido segundo a regra abaixo a regra abaixo:
 
 <p>
 $$
 \begin{cases}
 i\in \text{Classe 1}: \text{ se } 14.43 \leq cv_{i} \leq 24.43 \\
-i\in \text{Classe 2}: \text{ se } cv_{i} \leq 14.43 \text{ ou } cv_{i} \geq 24.43
+% i\in \text{Classe 2}: \text{ se } cv_{i} < 14.43 \text{ ou } cv_{i} > 24.43
 \end{cases}
 $$
 </p>
-
-Por fim, temos um método automático para decisão se a textura exibida pertence ao mesmo padrão da 1 e da 2, ou seja, a classe 1.
 
 Este método considera a variabilidade entre os valores de frequências na matriz de magnitudes de fourier, considerando o percentual de variabilidade em torno da média. Dessa forma, o algoritmo leva em consideração a média dos pixels e o desvio padrão da imagem.
 
 
-## Solução 02) Mean Absolute Percentage Error - MAPE
+## Parte 02) Estatística de Komolgorov-Smirnov 
 
-É possivel também, utilizando a *Textura1* como  padrão para comparação sobre a classe 1, também podemos aplicar calculos matemáticos para comparar uma nova textura com a imagem utilizada. Dessa forma, vamos utilizar a métrica conhecida como *Mean Absolute Percentage Error* (MAPE), para compararmos novas texturas com a escolhida para representar a classe 1. Essa métrica tem como intuito avaliar o quão proximo uma estimativa esta proxima ao valor real; nesse contexto, vamos considerar como uma proximidade, ou seja, quão proximo a 0, mais proximo as frequências de magnitude da transformada de fourier da imagem em questão estão da imagem a ser comparada, apresentando caracteristicas proximas.
-
-
-A formula para o MAPE, adaptada para a situação matricial, pode ser expressa abaixo:
-
-<p>
-$$
-MAPE_{\%} = 100 \cdot \sum_{j = 1}^{m}\sum_{i = 1}^{n}  \frac{|y_{ij} - \hat{y}_{ij}|}{|y_{ij}|}
-$$
-</p>
-
-sendo:
-
-<p>
-$$
-\begin{cases}
-y_{ij}: \text{ i-ésima linha e j-ésima coluna da matriz de transformada de fourier para a matriz de referência} \\
-\hat{y}_{ij}: \text{ i-ésima linha e j-ésima coluna da matriz de transformada de fourier para a matriz de comparação}
-\end{cases}
-$$
-</p>
-
-
-Será necessário considerar também um threshold para garantir um comportamento parecido entre ambas frequências na matriz de magnitude de fourier. Vamos considerar um threshold de 25% para que seja considerado uma imagem similar a de comparação, ou seja, se MAPE<sub>%</sub> < 25%, então a imagem pertence a classe 1; caso contrário, pertence a classe 2.
-
-<p>
-$$
-\begin{cases}
-i \in \text{Classe 1}: \text{ se } MAPE_{\%} \leq 25\% \\
-i \in \text{Classe 2}: \text{ se } MAPE_{\%} > 25\%
-\end{cases}
-$$
-</p>
-
-Abaixo, vamos calcular esses valores:
-
-```py
-def mape(y_true, y_pred):
-    """Calcula o erro percentual médio absoluto (MAPE)"""
-    y_true, y_pred = np.array(y_true), np.array(y_pred)
-    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-
-img_refer = "Textura1"
-data_mapes = {}
-for key in ["Textura2", "Textura3"]:
-    data_mapes[key] = {
-        "mape": mape(
-            imgs[img_refer]["img_fft"].flatten(),
-            imgs[key]["img_fft"].flatten()
-        )
-    }
-data_mapes = pd.DataFrame(data_mapes).round(2)
-data_mapes
-```
-
-|          | Textura2 | Textura3 |
-|----------|----------|----------|
-| **mape** |  14.65   | 47.97    |
-
-
-Acima, podemos ver que para a *Textura2* o valor de MAPE foi inferior ao threshold escolhido, então podemos afirmar que essa textura pertence a classe 1 também, já a *Textura3*, o valor é superior, logo pela regra sera considerado da classe 2.
-
-Com todas as regras definidas, temos bem claro um algoritmo automático para decisão a qual classe a textura pertence.
-
-## Solução 03) Estatística de Komolgorov-Smirnov 
-
-Nesta solução, podemos utilizar a estatística calculada para o teste de Komolgorov-Smirnov, aonde o intuito é calcular a distância entre duas distribuições e mensurar quão proximas elas são. A formula é definida abaixo:
+Nesta parte do algoritmo, podemos utilizar a estatística calculada para o teste de Komolgorov-Smirnov, aonde o intuito é calcular a distância entre duas distribuições e mensurar quão proximas elas são. A formula é definida abaixo:
 
 $$
 D = max_{n}\{|F_{n}(x) - F(x)|\}
 $$
 
-Sendo "D" então como a máxima distãncia entre as distribuições acumuladas empirica amostrada (F<sub>n</sub>(x)) e a distribuição acumulada empirica a ser comparada (F(x)). No contexto atual, vamos considerar como F<sub>n</sub>(x) sendo a distribuição acumulada empirica magnitude obtida apartir da transformada de fourier para as imagens *Textura2* e *Textura3* a compararem com a distribuica acumulada empirica da magnitude da transformada de fourier para a imagem *Textura1* (F(x)). Para usar essa métrica, também é necessário selecionar um threshold, e dessa forma vamos fixar um valor de até 0.5 para ser considerada da classe 1, caso contrário, será da classe 2, logo:
+Sendo "D" então como a máxima distãncia entre as distribuições acumuladas empirica amostrada (F<sub>n</sub>(x)) e a distribuição acumulada empirica a ser comparada (F(x)). No contexto atual, vamos considerar como F<sub>n</sub>(x) sendo a distribuição acumulada empirica magnitude obtida apartir da transformada de fourier para as imagens *Textura2* e *Textura3* a compararem com a distribuica acumulada empirica da magnitude da transformada de fourier para a imagem *Textura1* (F(x)). Para usar essa métrica, também é necessário selecionar um threshold, e dessa forma vamos fixar um valor de até 0.5 para ser parte da regra de decisão se a imagem será considerada da classe 1, logo:
 
 <p>
 $$
 \begin{cases}
-i \in \text{Classe 1}: \text{ se } D \leq 0.5 \\
-i \in \text{Classe 2}: \text{ se } D > 0.5
+i \in \text{Classe 1}: \text{ se } D \leq 0.5
 \end{cases}
 $$
 </p>
+<!-- % i \in \text{Classe 2}: \text{ se } D > 0.5 -->
 
-Abaixo podemos visualizar o proximo, aonde na primeira imagem é feito a comparação da distribuição entre os histogramas das imagens, evidenciando claramente um distribuição afastada para a imagem *Textura3* longe das outras duas. Olhando para a segunda imagem, é possivel ver as distribuições de F<sub>n</sub>(x) para todas as texturas, mostrando a diferença de distribuições entre as classes.
+Abaixo, primeira imagem é feito a comparação da distribuição entre os histogramas das imagens, evidenciando claramente um distribuição afastada para a imagem *Textura3* longe das outras duas. Olhando para a segunda imagem, é possivel ver as distribuições de F<sub>n</sub>(x) para todas as texturas, mostrando a diferença de distribuições entre as classes.
 
 ```py
 def ecdf(data):
@@ -725,6 +671,49 @@ plt.show()
     <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q04-02.png" alt="q04-i2-img" width="600"/>
 </p>
 
-Como visto no gráfico, temos um valor de D = 0.21 para a *Textura2* e um valor de D = 0.82 para a *Textura3*, então pela regra de decisão definida, temos que a textura 2 pertence a classe 1 e a textura 3 pertence a classe 2.
+Como visto no gráfico, temos um valor de D = 0.21 para a *Textura2* e um valor de D = 0.82 para a *Textura3*, então pela regra de decisão definida, temos que a textura 2 satisfaz a condição da parte (2) para pertencimento a classe 1.
 
-Dessa forma, temos um meio automático para decisão a qual classe pertence  a textura testada.
+Agora, para o algoritmo, para pertencimento a classe 1 ou classe 2, precisa ser feito uma combinação das partes (1) e (2)
+
+## Algoritmo) Conclusão
+
+Por fim, o algoritmo aborda as partes (1) e (2) em conjunto, aonde cada método carrega uma checagem latente, sendo:
+
+
+1) **Parte 01:** Essa parte carrega de forma intrisica uma checagem sobre a variabilidade em torno da média das frequências dos contrastes na imagem.
+
+2) **Parte 02:** Analise de diferença entre distribuições acumuladas empiricas, utiliznado-se de metodos estatisticos mais robusto como a estatistica de komolgorov-smirnov, avaliando a distância global entre as distribuições.
+
+Por fim, se:
+
+<p>
+$$
+\begin{cases}
+14.43 \leq cv_{i} \leq 24.43 \\
+\text{ e } \\
+% MAPE_{\%} \leq 25\% \\
+% \text{ e } \\
+D \leq 0.5
+\end{cases}
+$$
+</p>
+
+Então a imagem "i" será atribuido a classe 1.
+
+Já para a classe 2, a imagem "i" será atribuido a ela se:
+
+<p>
+$$
+\begin{cases}
+cv_{i} < 14.43 \text{ ou } cv_{i} > 24.43 \\
+\text{ ou } \\
+% MAPE_{\%} > 25\% \\
+% \text{ e } \\
+D > 0.5
+\end{cases}
+$$
+</p>
+
+Perceba a existência de um "ou" na classificação da classe 2, ou seja, se apenas uma das condições do algoritmo não for valida, o algoritmo rejeita o pertencimento a classe 1, alocando a classe 2. Essa caracteristica ajuda a garantir um padrão homogeneo da classe 1, garantindo uma variabilidade controlada ainda (devido a parte 1 do algoritmo).
+
+Logo, temos as condições acima para atribuir a imagem "i" para a classe 1 ou para a classe 2.
