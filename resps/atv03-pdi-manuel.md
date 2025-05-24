@@ -717,3 +717,37 @@ $$
 Perceba a existência de um "ou" na classificação da classe 2, ou seja, se apenas uma das condições do algoritmo não for valida, o algoritmo rejeita o pertencimento a classe 1, alocando a classe 2. Essa caracteristica ajuda a garantir um padrão homogeneo da classe 1, garantindo uma variabilidade controlada ainda (devido a parte 1 do algoritmo).
 
 Logo, temos as condições acima para atribuir a imagem "i" para a classe 1 ou para a classe 2.
+
+
+# Questão 05
+
+<strong>
+
+Questão 5: 
+Aplicação real: 
+
+A imagem Merge_Timex_BoaViagem.png foi tirada por uma câmera colocada no topo de um prédio na Av. Boa Viagem em Recife. Ela tira diversas fotos que são agrupadas, posteriormente. O objetivo é medir o avanço do mar na faixa de areia. A mancha preta na parte central superior da imagem é a câmera. As “manchas” inclinadas que vemos na faixa de areia são objetos (ou sombras) distorcidos pela lente da câmera. Veja a figura a seguir:
+</strong>
+
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-00-00.png" alt="q05-00-00-img" width="600"/>
+</p>
+
+<strong>
+Implemente um algoritmo automático e apenas com técnicas vistas na disciplina que detecte a região onde o mar encontra a faixa de areia. Por exemplo, seu resultado final poderia ser esse: 
+</strong>
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-00-01.png" alt="atv03_q05-00-01-img" width="600"/>
+</p>
+
+<strong>
+Ou esse (com a região marcada na imagem):
+</strong>
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-00-02.png" alt="atv03_atv03_q05-00-02-img" width="600"/>
+</p>
+
+**R.:**
