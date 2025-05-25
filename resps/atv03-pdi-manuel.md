@@ -82,7 +82,7 @@ Logo apos a primeira aplicação do filtro passa baixa, a imagem já tem seu rui
 
 O algoritmo ira se basear em agrupar cores proximas, considerando faixas de bins  definidas entre 0 e 255 para cada canal de cor. Se o valor daquele pixel pertencer a esse intervalo, ele sera atribuido o ponto médio do intervalo.
 
-O algoritmo ira realizar uma busca exaustiva entre um numero "a" de bins a um numero "b" de bins, com salto definido como "p". O intuito dessa busca exaustiva é tentar achar o número de bins ideal para que seja satisfeita a condição de que o número total de cores da imagem esteja entre 1 / 3 da imagem original a 50% da imagem original.
+O algoritmo ira realizar uma busca exaustiva entre um numero "a" de bins a um numero "b" de bins, com salto definido como "p". O intuito dessa busca exaustiva é tentar achar o número de bins ideal para que seja satisfeita a condição de que o número total de cores da imagem esteja entre 1 / 3 a 50% do total de cores da imagem original.
 
 Vamos definir por partes, primeiro a logica da implementação, e em seguida a implementação utilizando o python.
 
@@ -224,7 +224,7 @@ Vamos definir por partes, primeiro a logica da implementação, e em seguida a i
 
 4) **Imagem com quantidade de cores reduzida:**
 
-    Apartir dos passos anteriores, é definido uma nova imagem, a qual o total de cores deve estar definido no intervalo de 1 / 3 da original a 50% da original.
+    Apartir dos passos anteriores, é definido uma nova imagem, a qual o total de cores deve estar definido no intervalo de 1 / 3  a 50% da quantidade de cores da imagem original.
 
 ## [Implementação] Apoximação por bins
 
@@ -491,7 +491,7 @@ Podemos notar que a qualidade da imagem ainda continua alta, com os contrastes a
 
 * `step`: 10;
 
-* `critério de parada`: entre 1 / 3 das cores originais da imagem a 50%.
+* `critério de parada`: entre 1 / 3 a 50% do total de cores da imagem original.
 
 A solução proposta é robusta e flexivel, permite ao usuario a seleção de um percentual de cores ideal para que a imagem com uma quantidade de cores reduzida possua a partir da imagem original. Além disso, a redução foi significante, e ainda sim as imagens permanecem com seus contrastes,  mantendo a qualidade original da imagem.
 
@@ -718,13 +718,12 @@ Logo, temos as condições acima para atribuir a imagem "i" para a classe 1 ou p
 
 # Questão 05
 
-<strong>
 
-Questão 5: 
-Aplicação real: 
 
-A imagem Merge_Timex_BoaViagem.png foi tirada por uma câmera colocada no topo de um prédio na Av. Boa Viagem em Recife. Ela tira diversas fotos que são agrupadas, posteriormente. O objetivo é medir o avanço do mar na faixa de areia. A mancha preta na parte central superior da imagem é a câmera. As “manchas” inclinadas que vemos na faixa de areia são objetos (ou sombras) distorcidos pela lente da câmera. Veja a figura a seguir:
-</strong>
+<strong><u>Aplicação real:</u></strong>
+
+<strong>A imagem Merge_Timex_BoaViagem.png foi tirada por uma câmera colocada no topo de um prédio na Av. Boa Viagem em Recife. Ela tira diversas fotos que são agrupadas, posteriormente. O objetivo é medir o avanço do mar na faixa de areia. A mancha preta na parte central superior da imagem é a câmera. As “manchas” inclinadas que vemos na faixa de areia são objetos (ou sombras) distorcidos pela lente da câmera. Veja a figura a seguir:</strong>
+
 
 
 <p align="center" >
@@ -1120,12 +1119,21 @@ img_cut_hsv[c_selected]["img_final_nodilate"] = img_cut_hsv[c_selected]["org"].c
 img_cut_hsv[c_selected]["img_final_nodilate"][lim_inf:lim_sup, :, :][
     img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"] > 0
 ] = [255] * 3
+img_cut_hsv[c_selected]["cut_img_final_nodilate"] = img_cut_hsv[c_selected]["cut"].copy()
+img_cut_hsv[c_selected]["cut_img_final_nodilate"][
+    img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"] > 0
+] = 255
+
 
 ## Fronteira com dilatação
 img_cut_hsv[c_selected]["img_final_dilated"] = img_cut_hsv[c_selected]["org"].copy()
 img_cut_hsv[c_selected]["img_final_dilated"][lim_inf:lim_sup, :, :][
     img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dilated"] > 0
 ] = [255] * 3
+img_cut_hsv[c_selected]["cut_img_final_dilated"] = img_cut_hsv[c_selected]["cut"].copy()
+img_cut_hsv[c_selected]["cut_img_final_dilated"][
+    img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dilated"] > 0
+] = 255
 
 # Plotando o resultado
 fig, ax = plt.subplots(3, 1, figsize=(18, 10))
@@ -1154,3 +1162,28 @@ Acima, podemos ver que a fronteira foi encontrada, sendo bem definida, porém ha
 
 Abaixo podemos ver uma visão detalhada dos processamentos aplicados sobre o recorte no canal de saturação obtido pelo HSV:
 
+
+```py
+imgs_dict = {
+    "Filtro Passa-Baixa Gaussiano": img_cut_hsv[c_selected]["processed"],
+    "... + Dilatação": img_cut_hsv[c_selected]["processed_dilate"],
+    "... + Binarização (OTSU)": img_cut_hsv[c_selected]["processed_dilate_bin"],
+    "... + Fechamento": img_cut_hsv[c_selected]["processed_dilate_bin_close"],
+    "... + Abertura": img_cut_hsv[c_selected]["processed_dilate_bin_close_open"],
+    "... + Canny": img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny"],
+    "... + Dilatação (Engrossar a fronteira)": img_cut_hsv[c_selected]["processed_dilate_bin_close_open_canny_dilated"],
+    "S - Recorte com fronteira": img_cut_hsv[c_selected]["cut_img_final_dilated"],
+}
+
+## Plotando todas as imagens
+fig, ax = plt.subplots(len(imgs_dict), 1, figsize=(16, 20))
+for i, (key, img) in enumerate(imgs_dict.items()):
+    ax[i].imshow(img, cmap="gray")
+    ax[i].set_title(key)
+    ax[i].axis("off")
+fig.tight_layout()
+```
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q05-11.png" alt="q05-11-img" width="600"/>
+</p>
