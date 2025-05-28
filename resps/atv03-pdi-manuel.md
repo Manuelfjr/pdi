@@ -58,6 +58,23 @@ Comparando ambas as imagens e suas transformadas, podemos notar que uma imagem c
 Logo apos a primeira aplicação do filtro passa baixa, a imagem já tem seu ruido periodico retirado, os traços horizontais ao longo da imagem desparecem e ocorre o efeito de borramento esperado apos aplicação do filtro. Analisando a transformada de fourier, é mais nitido a cruz horizontal e vertical na magnitude bem definida, porém algumas altas frequências aparentam estar espalhadas ainda ao longo da matriz de transformada. Um ponto interessante de se ressaltar, é o desaparecimento dos picos de alta frequência anteriores, agora restando apenas um pico de alta frequência, com alguns outros picos espalhados mas maioria centrado ao longo da cruz. Apos aplicação do segundo filtro passa baixa, a cruza permanece ainda com altas frequência, mas ainda sim bem reduzidos comparado a primeira aplicação do filtro, e o comportamento das altas frequências espalhadas agoram se encontram mais proxima do centro, ou seja, mais eprto do pico de alta frequência da imagem.
 
 
+# Questão 02
+
+<strong>
+ara esta questão, considere a imagem XRay.png. 
+Três ações são necessárias para esse tipo de aplicação: 
+
+a) Detectar a mão; 
+
+b) Detectar os ossos; 
+
+c) Detectar o anel. 
+
+Os resultados esperados (aproximados) podem ser vistos nas figuras abaixo: 
+</strong>
+
+atv03-q02-00
+
 # Questão 03
 
 <strong>Nas imagens coloridas da questão, implemente um algoritmo automático que diminua a quantidade de cores das imagens, agrupando tons semelhantes (por exemplo, uma região de tons avermelhados deve ser tornar uma região com apenas um tom de vermelho). Não deve ser usado dithering. Considere que a imagem final pode ter, aproximadamente, de metade a um terço da quantidade de cores das imagens originais. Cada imagem tem: 
@@ -717,8 +734,6 @@ Logo, temos as condições acima para atribuir a imagem "i" para a classe 1 ou p
 
 
 # Questão 05
-
-
 
 <strong><u>Aplicação real:</u></strong>
 
