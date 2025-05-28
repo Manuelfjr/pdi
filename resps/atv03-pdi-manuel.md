@@ -284,7 +284,7 @@ img_add = cv2.dilate(img_add, np.ones((3, 3), np.uint8), iterations=2)  # dilata
 
 ```py
 # Imagem final
-img_sobre[img_add > 0] = [255, 0, 0]  # Verde para a imagem final
+img_sobre[img_add > 0] = [255, 0, 0]  # Vermelho para a imagem final
 
 # Organizando as imagens e títulos em um dicionário, com ordem de aplicação
 imgs_ossos = {
@@ -322,10 +322,107 @@ plt.show()
 Abaixo temos os resultados encontrados por cada etapa de processamento anterior.
 
 <p align="center" >
-    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-02.png.png" alt="atv03_q02-02.png" width="600"/>
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-02.png" alt="atv03_q02-02" width="600"/>
 </p>
 
 Podemos notar que os procedimentos adotados tiveram um efeito positivo no resultado final, aonde somamos uma técnica que auxiliou a detectar as bordas dos ossos, mais um grupo de técnicas que auxilio a deixar mais branco as partes internas dos osso, apesar de algumas regiões não conseguirem serem preenchidas totalmente.
+
+## **3) Anel**
+
+* **1) Leitura da imagem:** A imagem "XRay.png" é lida em escala de cinza e as duas primeiras colunas são removidas para corrigir artefatos.
+
+```py
+# Leitura
+file_path_img = "XRay.png"
+img = cv2.imread(path_imgs_atv / "Q2" / file_path_img, cv2.IMREAD_GRAYSCALE)
+img = img[:, 2:]
+
+# 1. Imagem original (colorida para no final visualização)
+img_color_anel = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+```
+
+* **2) Separação em quadrantes:** A imagem é dividida em duas partes: superior (cima) e inferior (baixo). A parte inferior é zerada, mantendo apenas a parte superior para análise.
+
+```py
+# 2. Separação em quadrantes
+img_cut = img.copy()
+img_cut_cima = img_cut[:(img_cut.shape[0] // 2), :].copy()  # parte superior
+img_cut_baixo = img_cut[(img_cut.shape[0] // 2):, :].copy()  # parte inferior
+img_cut_baixo[:] = 0  # zerando a parte inferior, que não é nosso interesse
+```
+
+* **3) Cálculo do pixel modal e threshold:** O valor modal (mais frequente) dos pixels da parte superior é calculado. Um limiar (threshold) é definido como a média entre o valor máximo e o modal. A parte superior é binarizada usando esse limiar, criando uma máscara.
+
+```py
+## Pixel modal
+def pixel_modal(img):
+    # Calcular o histograma
+    hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+    # Encontrar o valor do pixel com a maior contagem
+    modal_pixel = np.argmax(hist)
+    return modal_pixel, hist
+
+pixel_modal_value, histogram = pixel_modal(img_cut_cima)  # pegando o valor do pixel modal
+thres = ((img_cut_cima.max() + pixel_modal_value) / 2).astype(np.uint8)  # definicao do threshold
+_, mascara = cv2.threshold(img_cut_cima, thres, 255, cv2.THRESH_BINARY)  # binarização
+```
+
+* **4) Construção da máscara completa:** A máscara binária da parte superior é concatenada com uma máscara de zeros da parte inferior, formando uma máscara do tamanho original da imagem.
+
+```py
+mascara_inferior = np.zeros_like(img_cut_baixo)
+mascara_full = np.concatenate((mascara, mascara_inferior), axis=0)  # concatenação das matrizes
+```
+
+
+* **5) Operações morfológicas:** Um fechamento morfológico é aplicado para remover pequenas falhas e conectar regiões próximas. A máscara é dilatada para expandir as regiões detectadas. O processo de fechamento ira considerar um kernel de dimensão 5x5, com uma iteração; Além disso, na dilatação, será considerado uma matriz 7x7 de 1's para o kernel, fazendo uma aplicação de duas iterações.
+
+```py
+kernel_close = np.ones((5, 5), np.uint8)
+mascara_morph = cv2.morphologyEx(
+    mascara_full,
+    cv2.MORPH_CLOSE,
+    kernel_close,
+    iterations=1
+)  # fechamento
+mascara_morph = cv2.dilate(
+    mascara_morph,
+    np.ones((7, 7), np.uint8),
+    iterations=2
+)  # dilatação 
+```
+
+
+* **6) Conclusão** 
+
+A máscara final é sobreposta na imagem original convertida para RGB, colorindo de vermelho as regiões detectadas do anel.
+
+```py
+img_rec = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+img_rec[mascara_morph > 0] = [255, 0, 0]  # Vermelho
+
+imgs_anel = {
+    (0, 0): {"img": img_color_anel, "title": "1) Imagem original"},
+    (0, 1): {"img": img_cut_cima.copy(), "title": "2) Parte superior (cima)"},
+    (0, 2): {"img": mascara.copy(), "title": "3) Otsu na parte superior"},
+    (1, 0): {"img": mascara_full.copy(), "title": "4) Máscara completa (antes morfologia)"},
+    (1, 1): {"img": mascara_morph.copy(), "title": "5) Máscara após morfologia"},
+    (1, 2): {"img": img_rec.copy(), "title": "6) Anel isolado (sobreposição)"},
+}
+
+# Plotando as imagens do processo do anel
+rows, cols = 2, 3
+fig, ax = plt.subplots(rows, cols, figsize=(16, 10))
+for (i, j), data in imgs_anel.items():
+    ax[i, j].imshow(data["img"], cmap='gray')
+    ax[i, j].set_title(data["title"])
+    ax[i, j].axis('off')
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q02-03.png", dpi=400)
+plt.show()
+```
+
+
 
 # Questão 03
 
