@@ -422,6 +422,18 @@ fig.savefig(path_assets / "atv03_q02-03.png", dpi=400)
 plt.show()
 ```
 
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-03.png" alt="atv03_q02-03" width="600"/>
+</p>
+
+Acima, podemos notar que os procedimentos anteriormente adotados conseguiram auxiliar de forma eficiente a deteção do anel, de forma bem preenchida.
+
+
+## **Conclusão**
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-04.png" alt="atv03_q02-04" width="600"/>
+</p>
 
 
 # Questão 03
