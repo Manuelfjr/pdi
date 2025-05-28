@@ -61,7 +61,7 @@ Logo apos a primeira aplicação do filtro passa baixa, a imagem já tem seu rui
 # Questão 02
 
 <strong>
-ara esta questão, considere a imagem XRay.png. 
+Para esta questão, considere a imagem XRay.png. 
 Três ações são necessárias para esse tipo de aplicação: 
 
 a) Detectar a mão; 
@@ -73,7 +73,134 @@ c) Detectar o anel.
 Os resultados esperados (aproximados) podem ser vistos nas figuras abaixo: 
 </strong>
 
-atv03-q02-00
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03-q02-00.png" alt="atv03-q02-00" width="600"/>
+</p>
+
+<strong>
+Reforço que as imagens acima são resultados aproximados apenas. Desenvolva algoritmo(s) que resolvam os problemas acima de <u>forma automática</u>, com as 
+técnicas vistas na disciplina. Pode ser um algoritmo apenas que sirva para os três casos, pode ser um algoritmo para cada caso, mas tem que ser automático e tem que usar apenas técnicas vistas na disciplina (ou manipulação matemática comum para matrizes).
+</strong>
+
+**R.:**
+
+Obs.: Os três procedimentos possuem formas de busca distintas.
+
+## **1) Mão**
+
+* **1) Leitura da imagem:** A imagem "XRay.png" é lida em escala de cinza e ajustada para remover as duas primeiras colunas.
+
+```py
+# Leitura
+file_path_img = "XRay.png"
+img = cv2.imread(path_imgs_atv / "Q2" / file_path_img, cv2.IMREAD_GRAYSCALE)
+img = img[:, 2:]  # exclusão do bug de duas colunas de pixel branca na imagem
+```
+
+* **2) Quantização dos tons de cinza:** A imagem é quantizada em 4 níveis de intensidade usando os quartis dos valores de pixel. Cada pixel é substituído pelo valor médio do intervalo ao qual pertence, reduzindo a quantidade de tons e agrupando regiões semelhantes. Essa técnica se assemelha a usada na questão 03. Dado os 4 níveis, teremos o seguinte:
+
+dada a imagem:
+
+<p>
+$$
+Img = \left[\begin{matrix}
+    pixel_{00} & pixel_{01} & \dots & pixel_{0m} \\
+    pixel_{10} & pixel_{11} & \dots & pixel_{1m} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    pixel_{n0} & pixel_{n1} & \dots & pixel_{nm} \\
+\end{matrix}\right]
+$$
+</p>
+
+e que, como dividimos em 4 niveis, temos os valores [0, 0.25, 0.5, 0.75], ou seja, calculando o ponto médio de cada intervalo, temos:
+
+<p>
+$$
+\begin{cases}
+    \frac{q_{0\%} + q_{25\%}}{2} & \text{ se } q_{0\%} \leq pixel_{ij} \leq q_{25\%}; \\
+    \frac{q_{25\%} + q_{50\%}}{2} & \text{ se } q_{25\%} \leq pixel_{ij} \leq q_{50\%}; \\
+    \frac{q_{50\%} + q_{75\%}}{2} & \text{ se } q_{50\%} \leq pixel_{ij} \leq q_{75\%}. \\
+\end{cases}
+$$
+</p>
+
+com "i" variando na linha e "j" na coluna da matriz da imagem, sendo feita uma checagem ao longo da imagem para cada pixel, agrupando as cores pertencentes a aquele range. Abaixo temos o codigo:
+
+```py
+# agrupamento de tons
+img_test = img.copy()
+k_bins = 4  # número de faixas a ser procurada.
+quantils = np.arange(0, 1, 1 / k_bins)  # quantis [0, 0.25, 0.50, 0.75]
+img_quantiles = np.quantile(img_test, quantils)
+values = ((img_quantiles[1:] + img_quantiles[:-1]) / 2).astype(int)  # calculo do valor a ser substituido.
+for row in range(img_test.shape[0]):
+    for col in range(img_test.shape[1]):
+        idx = np.digitize(img_test[row, col], img_quantiles) - 1
+        idx = np.clip(idx, 0, len(values) - 1)
+        img_test[row, col] = values[idx]
+```
+
+* **3) Binarização (Otsu):** A imagem quantizada é binarizada automaticamente pelo método de Otsu, separando regiões claras e escuras.
+
+```py
+img_bin = cv2.threshold(img_test, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+```
+
+* **4) Fechamento morfológico:** Um fechamento morfológico é aplicado para remover pequenos buracos e ruídos na máscara binária.
+
+```py
+kernel = np.ones((5, 5), np.uint8)
+img_close = cv2.morphologyEx(img_bin, cv2.MORPH_CLOSE, kernel, iterations=1)
+```
+
+* **5) Suavização (Gaussian Blur):** Um filtro Gaussiano é aplicado para suavizar a máscara, tornando as bordas menos abruptas.
+
+```py
+img_gaussian = cv2.GaussianBlur(img_close, (3, 3), 1)
+```
+
+* **6) Sobreposição da máscara na imagem original:** A máscara resultante é sobreposta na imagem original convertida para RGB, colorindo de azul as regiões detectadas.
+
+```py
+img_rec = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+img_rec[img_gaussian > 0] = [0, 0, 255]  # Azul
+```
+
+* **7) Conclusão:** Todas as etapas intermediárias e finais são armazenadas em um dicionário para facilitar a visualização e comparação dos resultados. Abaixo, é ilustrado os procedimentos anteriores em sequência.
+
+```py
+imgs_mao = {
+    (0, 0): {"img": img_color, "title": "1) Imagem original"},
+    (0, 1): {"img": img_test, "title": "2) Quantização (Agrupamento de tons)"},
+    (0, 2): {"img": img_bin, "title": "3) Binarização (Otsu)"},
+    (1, 0): {"img": img_close, "title": "4) Fechamento morfológico"},
+    (1, 1): {"img": img_gaussian, "title": "5) Suavização (Gaussian Blur)"},
+    (1, 2): {"img": img_rec, "title": "6) Imagem final"}
+}
+
+# Plotando as imagens usando o dicionário
+rows, cols = 2, 3
+fig, ax = plt.subplots(rows, cols, figsize=(16, 10))
+for (i, j), data in imgs_mao.items():
+    ax[i, j].imshow(data["img"], cmap='gray')
+    ax[i, j].set_title(data["title"])
+    ax[i, j].axis('off')
+
+# Esconde os subplots não usados
+for _ax in ax.flatten():
+    _ax.axis('off')
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q02-01.png", dpi=400)
+plt.show()
+```
+
+Podemos ver que o método desenvolvido conseguiu demarcar bem a região da mão, tendo dificuldade na região do menor dedo e o anelar. O procedimento mostrou efetivo para a imagem, conseguindo mapear todo o contorno da mão.
+
+## **2) Ossos**
+
+
 
 # Questão 03
 
