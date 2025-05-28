@@ -196,11 +196,136 @@ fig.savefig(path_assets / "atv03_q02-01.png", dpi=400)
 plt.show()
 ```
 
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-01.png" alt="atv03_q02-01" width="600"/>
+</p>
+
 Podemos ver que o método desenvolvido conseguiu demarcar bem a região da mão, tendo dificuldade na região do menor dedo e o anelar. O procedimento mostrou efetivo para a imagem, conseguindo mapear todo o contorno da mão.
 
 ## **2) Ossos**
 
 
+* **1) Leitura da imagem:** A imagem "XRay.png" é lida em escala de cinza e as duas primeiras colunas são removidas para corrigir artefatos.
+
+```py
+img = cv2.imread(path_imgs_atv / "Q2" / file_path_img, cv2.IMREAD_GRAYSCALE)
+img = img[:, 2:]
+img_org = img.copy()
+img_sobre = img.copy()
+img_sobre = cv2.cvtColor(img_sobre, cv2.COLOR_GRAY2BGR)
+```
+
+* **2) Ajuste de contraste na parte superior:** A metade superior da imagem tem seu contraste aumentado, considerando 1.115 para o constraste e 1 para o brilho. A imagem é reconstruída juntando a parte superior ajustada com a inferior original.
+
+```py
+cima = img[:img.shape[0] // 2, :].copy()
+cima = cv2.convertScaleAbs(cima, alpha=1.155, beta=1)  # ajuste no contraste
+img = np.concatenate((cima, img[img.shape[0] // 2:, :]))
+```
+
+* **3) Passa-baixa gaussiano:** Aplicamos um filtro passa-baixa gaussian para suavizar a imagem e reduzir ruídos. O valor de &sigma; adotado foi igual a 3, considerando um kernel 3x3, composto de 1 seu interior.
+
+```py
+blurred = cv2.GaussianBlur(img, (5, 5), sigmaX=3, sigmaY=3)
+```
+
+* **4) Realce de bordas (Sobel):** O operador Sobel é aplicado nas direções x e y para detectar bordas. A magnitude do gradiente é calculada e convertida para uint8. Será considerado uma janela para os calculos de tamanho 3 (ksize = 3).
+
+```py
+sobelx = cv2.Sobel(blurred, cv2.CV_64F, 1, 0, ksize=3)
+sobely = cv2.Sobel(blurred, cv2.CV_64F, 0, 1, ksize=3)
+sobel = np.sqrt(sobelx**2 + sobely**2)
+sobel = np.uint8(sobel)
+```
+
+* **5) Ajuste de contraste nas bordas:** O resultado do Sobel é realçado novamente com ajuste de contraste, considerando 1.4 para o constraste e 5 para o brilho.
+
+```py
+sobel_contraste = cv2.convertScaleAbs(sobel, alpha=1.4, beta=5)
+```
+
+* **6) Binarização (Otsu):** A imagem realçada é binarizada automaticamente pelo método de Otsu, separando a estrutura ossea do fundo.
+
+```py
+img_bin = cv2.threshold(sobel_contraste, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+```
+
+* **7) Fechamento morfológico:** Um fechamento morfológico é aplicado para remover pequenos buracos e conectar regiões próximas. O kernel utilizado será também uma matriz 3x3, composta de 1's, será aplicado apenas uma iteração de fechamento.
+
+```py
+img_close = cv2.morphologyEx(img_bin, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8), iterations=1)
+```
+
+* **8) Dilatação:** A imagem é dilatada para expandir as regiões detectadas. O kernel utilizado é de dimensão 3x3, com apenas 1 em suas entradas, foi realizada apenas uma iteração.
+
+```py
+img_dilate = cv2.dilate(img_close, np.ones((3, 3), np.uint8), iterations=1)
+```
+
+* **9) Processamento alternativo:** Uma segunda binarização de Otsu é feita diretamente sobre a imagem suavizada (Passo 3), seguida de fechamento morfológico e dilatação. Neste procedimento, considerando o fechamento, foi utilizado um kernel de tamanho 9x9, aplicando apenas uma iteração. Além disso, o processo de dilatação ira considerar um kernel 3x3, aplicando apenas uma iteração.
+
+```py
+img_bin_new = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+img_bin_new = cv2.morphologyEx(img_bin_new, cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8), iterations=1)
+img_bin_new = cv2.dilate(img_bin_new, np.ones((3, 3), np.uint8), iterations=1)
+```
+
+* **10) Combinação de máscaras:** As máscaras obtidas são somadas e passam por operações de fechamento, erosão e dilatação para refinar o resultado. Para o fechamento, o kernel considerado sera uma matriz de 1's, de dimensão 7x7; para a erosão e a dilatação, respectivamente, aplicamos um kernel 3x3 composto por 1, aplicando duas iterações para cada.
+
+```py
+img_add = cv2.add(img_dilate, img_bin_new)
+kernel = np.ones((7,7), np.uint8)
+closing = cv2.morphologyEx(img_add, cv2.MORPH_CLOSE, kernel)  # fechamento
+img_add = cv2.erode(img_add, np.ones((3, 3), np.uint8), iterations=2)  # erosão
+img_add = cv2.dilate(img_add, np.ones((3, 3), np.uint8), iterations=2)  # dilatação
+```
+
+* **11) Conclusão**
+
+```py
+# Imagem final
+img_sobre[img_add > 0] = [255, 0, 0]  # Verde para a imagem final
+
+# Organizando as imagens e títulos em um dicionário, com ordem de aplicação
+imgs_ossos = {
+    (0, 0): {"img": img_org, "title": "1) Imagem Original"},
+    (0, 1): {"img": img, "title": "2) Aumento de contraste na parte superior"},
+    (0, 2): {"img": blurred, "title": "3) Blurred (Gaussian)"},
+    (0, 3): {"img": sobel, "title": "4) Passo 3 + Sobel (Magnitude)"},
+    (1, 0): {"img": sobel_contraste, "title": "5) Passo 4 + Contraste"},
+    (1, 1): {"img": img_bin, "title": "6) Passo 5 + Otsu"},
+    (1, 2): {"img": img_close, "title": "7) Passo 6 + Fechamento"},
+    (1, 3): {"img": img_dilate, "title": "8) Passo 7  + Dilatação"},
+    # (2, 2): {"img": img_sub_new, "title": "9) Subtração (Passo 3 - Passo 2)"},
+    (2, 0): {"img": img_bin_new, "title": "9) Passo 3 + Otsu + Dilatação"},
+    (2, 1): {"img": img_add, "title": "10) Soma (Passo 8 + Passo 9)"},
+    (2, 2): {"img": img_sobre, "title": "11) Imagem Final (Sobreposição)"},
+}
+
+# Plotando as imagens usando o dicionário
+rows, cols = 3, 4
+fig, ax = plt.subplots(rows, cols, figsize=(16, 10))
+for (i, j), data in imgs_ossos.items():
+    ax[i, j].imshow(data["img"], cmap='gray')
+    ax[i, j].set_title(data["title"])
+    ax[i, j].axis('off')
+
+# Esconde os subplots não usados
+for _ax in ax.flatten():
+    _ax.axis('off')
+
+fig.tight_layout()
+fig.savefig(path_assets / "atv03_q02-02.png", dpi=400)
+plt.show()
+```
+
+Abaixo temos os resultados encontrados por cada etapa de processamento anterior.
+
+<p align="center" >
+    <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-02.png.png" alt="atv03_q02-02.png" width="600"/>
+</p>
+
+Podemos notar que os procedimentos adotados tiveram um efeito positivo no resultado final, aonde somamos uma técnica que auxiliou a detectar as bordas dos ossos, mais um grupo de técnicas que auxilio a deixar mais branco as partes internas dos osso, apesar de algumas regiões não conseguirem serem preenchidas totalmente.
 
 # Questão 03
 
