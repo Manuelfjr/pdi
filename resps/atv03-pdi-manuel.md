@@ -192,7 +192,6 @@ for _ax in ax.flatten():
     _ax.axis('off')
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q02-01.png", dpi=400)
 plt.show()
 ```
 
@@ -315,7 +314,6 @@ for _ax in ax.flatten():
     _ax.axis('off')
 
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q02-02.png", dpi=400)
 plt.show()
 ```
 
@@ -418,7 +416,6 @@ for (i, j), data in imgs_anel.items():
     ax[i, j].set_title(data["title"])
     ax[i, j].axis('off')
 fig.tight_layout()
-fig.savefig(path_assets / "atv03_q02-03.png", dpi=400)
 plt.show()
 ```
 
@@ -435,6 +432,7 @@ Acima, podemos notar que os procedimentos anteriormente adotados conseguiram aux
     <img src="https://raw.githubusercontent.com/Manuelfjr/pdi/refs/heads/develop/assets/atv03_q02-04.png" alt="atv03_q02-04" width="600"/>
 </p>
 
+Podemos notar que para os três cenários (a), (b) e (c), os métodos especificados de forma sequencial nas seções anteriores conseguem satisfazer as tarefas de deteção da mão, ossos e anel, respectivamente. 
 
 # Questão 03
 
